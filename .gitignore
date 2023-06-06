@@ -1,0 +1,20 @@
+# Logs
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+/build/Release
+/build
+
+# Dependency directories
+node_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# dotenv environment variables file
+.env
+
+.eslintcache
+
+coverage/

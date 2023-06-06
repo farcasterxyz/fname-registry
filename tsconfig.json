@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "build",
+    "rootDir": ".",
+    "rootDirs": ["src", "tests"],
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["src/*"],
+      "~tests/*": ["tests/*"]
+    },
+    "inlineSourceMap": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext",
+    "noErrorTruncation": true,
+    "experimentalDecorators": true
+  },
+  "ts-node": {
+    "swc": true
+  },
+  "exclude": [
+    ".eslintrc.js",
+    "build",
+    "node_modules"
+  ]
+}

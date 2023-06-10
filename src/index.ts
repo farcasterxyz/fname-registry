@@ -1,20 +1,22 @@
-import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import {getDb} from "./db";
-
 dotenv.config();
 
+import express, { Express, Request, Response } from 'express';
+import {getDb} from "./db";
 
-const app: Express = express();
-const port = process.env.PORT || "2284";
-const db = getDb();
 
-app.get('/transfers', (req: Request, res: Response) => {
-    db.from('transfers').select('timestamp', 'username', 'from', 'to', 'signature').then((rows: any) => {
-        res.send(rows);
+(async () => {
+    const app: Express = express();
+    const port = process.env.PORT || "2284";
+    const db = await getDb();
+
+    app.get('/transfers', (req: Request, res: Response) => {
+        db.from('transfers').select('timestamp', 'username', 'owner', 'from', 'to', 'signature').then((rows: any) => {
+            res.send({transfers: rows});
+        });
     });
-});
 
-app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+    app.listen(port, () => {
+        console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    });
+})();

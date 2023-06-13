@@ -1,0 +1,5 @@
+# Specify desired versions of all the tools this repository requires, then run:
+#
+#   asdf install
+
+nodejs 20.2.0

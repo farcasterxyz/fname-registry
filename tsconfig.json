@@ -4,32 +4,23 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["esnext"],
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "build",
-    "rootDir": ".",
-    "rootDirs": ["src", "tests"],
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["src/*"],
-      "~tests/*": ["tests/*"]
-    },
+    "baseUrl": "./src",
     "inlineSourceMap": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext",
-    "noErrorTruncation": true,
-    "experimentalDecorators": true
+    "target": "es2022",
+    "noErrorTruncation": true
   },
-  "ts-node": {
-    "swc": true
-  },
+  "include": ["src/**/*.ts"],
   "exclude": [
-    ".eslintrc.js",
     "build",
     "node_modules"
   ]

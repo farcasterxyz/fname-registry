@@ -1,0 +1,14 @@
+/build
+/.db
+README*
+jest.config.*
+Dockerfile*
+node_modules
+tests
+tmp
+.git
+.github
+.gitignore
+.tool-versions
+.node-version
+.vscode

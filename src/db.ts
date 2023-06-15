@@ -1,15 +1,21 @@
-import knex from "knex";
-import {ethers} from "ethers";
-import {generateSignature} from "./signature";
+import knex from 'knex';
+import { ethers } from 'ethers';
+import { generateSignature } from './signature.js';
+import { promises as fsPromises } from 'fs';
+import path from 'path';
 
 const MNEMONIC = process.env.MNEMONIC || "test test test test test test test test test test test junk";
+const DB_FILE = process.env.SQLITE_DB_FILE || './.db/registry.sqlite';
 
 export async function getDb () {
-    const db = knex({
+    if (DB_FILE !== ':memory:') {
+        await fsPromises.mkdir(path.dirname(DB_FILE), { recursive: true });
+    }
+
+    const db = knex.knex({
         client: 'sqlite3',
         connection: {
-            // memory
-            filename: ':memory:',
+            filename: DB_FILE,
         }
     });
 

@@ -14,7 +14,7 @@ jobs:
 
       # Build image with Depot and push it to AWS ECR
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           mask-aws-account-id: no

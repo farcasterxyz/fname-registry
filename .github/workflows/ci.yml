@@ -40,6 +40,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Start background services
+        run: docker compose up --detach postgres
+        shell: bash
+
       - uses: actions/setup-node@v3
 
       - name: Restore cached dependencies for Node modules.
@@ -51,6 +55,10 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+
+      - name: Create test DB
+        run: echo 'create database registry_test' | PGPASSWORD=password psql -h localhost -p 6543 -U app registry_dev
+        shell: bash
 
       - name: Run tests
         run: yarn test

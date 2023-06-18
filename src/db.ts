@@ -1,53 +1,78 @@
-import knex from 'knex';
-import { ethers } from 'ethers';
-import { generateSignature } from './signature.js';
-import { promises as fsPromises } from 'fs';
-import path from 'path';
+import { Kysely, CamelCasePlugin, Generated, GeneratedAlways, Migrator, FileMigrationProvider } from 'kysely';
+import { PostgresJSDialect } from 'kysely-postgres-js';
+import postgres from 'postgres';
+import * as path from 'path';
+import { promises as fs } from 'fs';
+import { fileURLToPath } from 'url';
+import { Logger } from './log.js';
+import { err, ok, Result } from 'neverthrow';
 
-const MNEMONIC = process.env.MNEMONIC || "test test test test test test test test test test test junk";
-const DB_FILE = process.env.SQLITE_DB_FILE || './.db/registry.sqlite';
+const POSTGRES_URL = process.env['ENVIRONMENT'] === 'test'
+  ? 'postgres://app:password@localhost:6543/registry_test'
+  : process.env['POSTGRES_URL'] || 'postgres://app:password@localhost:6543/registry_dev';
 
-export async function getDb () {
-    if (DB_FILE !== ':memory:') {
-        await fsPromises.mkdir(path.dirname(DB_FILE), { recursive: true });
-    }
-
-    const db = knex.knex({
-        client: 'sqlite3',
-        connection: {
-            filename: DB_FILE,
-        }
-    });
-
-    const exists = await db.schema.hasTable('transfers')
-    if (!exists) {
-        await db.schema.createTable('transfers', (table) => {
-            table.bigIncrements('id', { primaryKey: true });
-            table.integer('timestamp').notNullable();
-            table.string('username').notNullable().index();
-            table.string('owner').notNullable();
-            table.integer('from').notNullable().index();
-            table.integer('to').notNullable().index();
-            table.text('signature').notNullable();
-            table.timestamps(true, true);
-            table.unique(['timestamp', 'username']); // Cannot have two proofs for the same username at the same time
-        });
-
-        const signer = ethers.Wallet.fromPhrase(MNEMONIC);
-        console.log(`Using signer address ${signer.address}`);
-        const testData = [
-            {timestamp: Math.floor(Date.now()/1000), username: 'test1', owner: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', from: 0, to: 1},
-            {timestamp: Math.floor(Date.now()/1000), username: 'test2', owner:'0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', from: 0, to: 2},
-            {timestamp: Math.floor(Date.now()/1000), username: 'test3', owner: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' , from: 0, to: 3},
-            {timestamp: (Math.floor(Date.now()/1000) + 1), username: 'test3', owner: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', from: 3, to: 0},
-        ]
-
-        for (const row of testData) {
-            await db.table('transfers').insert(
-                {...row, signature: await generateSignature(row.username, row.timestamp, row.owner, signer)}
-            );
-        }
-        console.log(`Seeded data`);
-    }
-    return db;
+export interface Database {
+  transfers: {
+    id: GeneratedAlways<number>;
+    createdAt: Generated<Date>;
+    updatedAt: Generated<Date>;
+    timestamp: number;
+    username: string;
+    owner: Uint8Array;
+    from: number;
+    to: number;
+    signature: Uint8Array | null;
+  };
 }
+
+export const getDbClient = () => {
+  return new Kysely<Database>({
+    dialect: new PostgresJSDialect({
+      connectionString: POSTGRES_URL,
+      options: {
+        max: 10,
+        types: {
+          // BigInts will not exceed Number.MAX_SAFE_INTEGER for our use case.
+          // Return as JavaScript's `number` type so it's easier to work with.
+          bigint: {
+            to: 20,
+            from: 20,
+            parse: (x: any) => Number(x),
+            serialize: (x: any) => x.toString(),
+          },
+        },
+      },
+      postgres,
+    }),
+    plugins: [new CamelCasePlugin()],
+  });
+};
+
+export const migrateToLatest = async (db: Kysely<any>, log: Logger): Promise<Result<void, unknown>> => {
+  const migrator = new Migrator({
+    db,
+    provider: new FileMigrationProvider({
+      fs,
+      path,
+      migrationFolder: path.join(path.dirname(fileURLToPath(import.meta.url)), 'migrations'),
+    }),
+  });
+
+  const { error, results } = await migrator.migrateToLatest();
+
+  results?.forEach((it) => {
+    if (it.status === 'Success') {
+      log.info(`migration "${it.migrationName}" was executed successfully`);
+    } else if (it.status === 'Error') {
+      log.error(`failed to execute migration "${it.migrationName}"`);
+    }
+  });
+
+  if (error) {
+    log.error('failed to migrate');
+    log.error(error);
+    return err(error);
+  }
+
+  return ok(undefined);
+};

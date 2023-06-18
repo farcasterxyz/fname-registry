@@ -1,20 +1,24 @@
 import express, { Express } from "express";
-import { getDb } from './db.js';
+import { getDbClient, migrateToLatest } from './db.js';
+import { log } from './log.js';
 
 const PAGE_SIZE = 100;
 
-const db = await getDb();
+const db = await getDbClient();
+migrateToLatest(db, log);
+
 export const app: Express = express();
 
 app.get('/transfers', async (req, res) => {
-  const since = req.query.since ?? 0;
-  db.from('transfers')
-    .select('id', 'timestamp', 'username', 'owner', 'from', 'to', 'signature')
+  const since = Number(req.query.since ?? 0);
+  const transfers = await db
+    .selectFrom('transfers')
+    .select(['id', 'timestamp', 'username', 'owner', 'from', 'to', 'signature'])
     .where('id', '>', since)
     .limit(PAGE_SIZE)
-    .then((rows: any) => {
-      res.send({transfers: rows});
-    });
+    .execute();
+
+  res.send({ transfers });
 });
 
 app.get('/_health', async (_req, res) => {

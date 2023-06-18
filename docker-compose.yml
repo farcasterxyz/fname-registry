@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: 'postgres:15-alpine'
+    restart: unless-stopped
+    ports:
+      - '6543:5432' # Use a port unlikely to be in use so the example "Just Works"
+    environment:
+      - POSTGRES_DB=registry_dev
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Need to specify name/user to avoid `FATAL: role "root" does not exist` errors in logs
+      test: ['CMD-SHELL', 'env', 'pg_isready', '--dbname', '$$POSTGRES_DB', '-U', '$$POSTGRES_USER']
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    networks:
+      - my_network
+
+volumes:
+  pgdata:
+
+networks:
+  my_network:

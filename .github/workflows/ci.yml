@@ -61,4 +61,10 @@ jobs:
         shell: bash
 
       - name: Run tests
+        env:
+          GOERLI_ALCHEMY_SECRET: 'dummy'
+          MAINNET_ALCHEMY_SECRET: 'dummy'
+          INFURA_PROJECT_ID: 'dummy'
+          INFURA_PROJECT_SECRET: 'dummy'
+          ETHERSCAN_API_SECRET: 'dummy'
         run: yarn test

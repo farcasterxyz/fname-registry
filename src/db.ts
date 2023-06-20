@@ -12,17 +12,20 @@ const POSTGRES_URL = process.env['ENVIRONMENT'] === 'test'
   : process.env['POSTGRES_URL'] || 'postgres://app:password@localhost:6543/registry_dev';
 
 export interface Database {
-  transfers: {
-    id: GeneratedAlways<number>;
-    createdAt: Generated<Date>;
-    updatedAt: Generated<Date>;
-    timestamp: number;
-    username: string;
-    owner: Uint8Array;
-    from: number;
-    to: number;
-    signature: Uint8Array | null;
-  };
+  transfers: TransfersTable;
+}
+
+export interface TransfersTable {
+  id: GeneratedAlways<number>;
+  createdAt: Generated<Date>;
+  updatedAt: Generated<Date>;
+  timestamp: number;
+  username: string;
+  owner: Uint8Array;
+  from: number;
+  to: number;
+  user_signature: Uint8Array | null;
+  server_signature: Uint8Array | null;
 }
 
 export const getDbClient = () => {

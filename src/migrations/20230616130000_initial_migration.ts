@@ -10,7 +10,8 @@ export const up = async (db: Kysely<any>) => {
     .addColumn('owner', 'bytea', (col) => col.notNull())
     .addColumn('from', 'integer', (col) => col.notNull())
     .addColumn('to', 'integer', (col) => col.notNull())
-    .addColumn('signature', 'bytea', (col) => col.notNull())
+    .addColumn('user_signature', 'bytea', (col) => col.notNull())
+    .addColumn('server_signature', 'bytea', (col) => col.notNull())
     .execute();
 
   await db.schema

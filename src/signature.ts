@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 
 export const signer = ethers.Wallet.fromPhrase(process.env.MNEMONIC || "test test test test test test test test test test test junk");
+export const signerAddress = signer.address;
 
 const domain = {
   name: 'Farcaster name verification',

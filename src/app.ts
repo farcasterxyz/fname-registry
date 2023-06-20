@@ -1,5 +1,6 @@
 import express, { Express } from "express";
 import { getDbClient, migrateToLatest } from './db.js';
+import './env.js';
 import { log } from './log.js';
 import {signerAddress} from "./signature.js";
 

@@ -33,6 +33,28 @@ jobs:
           load: true
           tags: farcasterxyz/fname-registry:test
 
+  lint:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+
+      - name: Restore cached dependencies for Node modules.
+        id: module-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ runner.os }}--node--${{ matrix.node_version}}--${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint
+        run: yarn lint
+
   test:
     timeout-minutes: 10
     runs-on: ubuntu-latest

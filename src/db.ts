@@ -7,9 +7,10 @@ import { fileURLToPath } from 'url';
 import { Logger } from './log.js';
 import { err, ok, Result } from 'neverthrow';
 
-const POSTGRES_URL = process.env['ENVIRONMENT'] === 'test'
-  ? 'postgres://app:password@localhost:6543/registry_test'
-  : process.env['POSTGRES_URL'] || 'postgres://app:password@localhost:6543/registry_dev';
+const POSTGRES_URL =
+  process.env['ENVIRONMENT'] === 'test'
+    ? 'postgres://app:password@localhost:6543/registry_test'
+    : process.env['POSTGRES_URL'] || 'postgres://app:password@localhost:6543/registry_dev';
 
 export interface Database {
   transfers: TransfersTable;

@@ -1,4 +1,15 @@
-import { LogDescription, ParamType, Result, getBytes, toBeHex, toQuantity, concat, toUtf8Bytes, BigNumberish, ZeroHash } from 'ethers';
+import {
+  LogDescription,
+  ParamType,
+  Result,
+  getBytes,
+  toBeHex,
+  toQuantity,
+  concat,
+  toUtf8Bytes,
+  BigNumberish,
+  ZeroHash,
+} from 'ethers';
 
 export type EventArgBasicValue = string | number | boolean;
 type EventArgValue = EventArgBasicValue | EventArgBasicValue[] | EventArgs;
@@ -82,5 +93,5 @@ export function hexToBytes(value: string): Uint8Array {
 }
 
 export function currentTimestamp(): number {
-    return Math.floor(Date.now()/1000);
+  return Math.floor(Date.now() / 1000);
 }

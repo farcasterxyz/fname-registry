@@ -19,7 +19,7 @@
     "target": "es2022",
     "noErrorTruncation": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "jest.config.ts"],
   "exclude": [
     "build",
     "node_modules"

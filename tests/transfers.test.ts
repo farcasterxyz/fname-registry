@@ -2,7 +2,8 @@ import {getDbClient, migrateToLatest} from "../src/db";
 import {log} from "../src/log";
 import {sql} from "kysely";
 import {getCurrentUsername, getLatestTransfer} from "../src/transfers";
-import {createTestTransfer, currentTimestamp} from "./utils";
+import {currentTimestamp} from "../src/util";
+import {createTestTransfer} from "./utils";
 import {generateSignature, signer, signerAddress, signerFid} from "../src/signature";
 import {ethers} from "ethers";
 

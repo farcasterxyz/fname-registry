@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "dotenv": "^16.3.1",
+    "body-parser": "^1.20.2",
     "ethers": "^6.6.0",
     "express": "^4.18.2",
     "kysely": "^0.25.0",

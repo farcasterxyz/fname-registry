@@ -24,8 +24,9 @@ export interface TransfersTable {
   owner: Uint8Array;
   from: number;
   to: number;
-  user_signature: Uint8Array | null;
-  server_signature: Uint8Array | null;
+  userSignature: Uint8Array;
+  serverSignature: Uint8Array;
+  userFid: number;
 }
 
 export const getDbClient = () => {

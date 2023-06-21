@@ -1,23 +1,23 @@
-import {Kysely} from "kysely";
-import {Database} from "./db.js";
-import {generateSignature, signer} from "./signature.js";
+import {Kysely, Selectable} from "kysely";
+import {Database, TransfersTable} from "./db.js";
+import {ADMIN_KEYS, generateSignature, signer, verifySignature} from "./signature.js";
+import {bytesToHex, hexToBytes} from "./util.js";
+import {currentTimestamp} from "../tests/utils.js";
 
+const PAGE_SIZE = 100;
+const TIMESTAMP_TOLERANCE = 60; // 1 minute
 
 type TransferRequest = {
     timestamp: number;
     username: string;
-    owner: Uint8Array;
+    owner: string;
     from: number;
     to: number;
-    user_signature?: Uint8Array;
+    userSignature: string;
+    userFid: number;
 }
 
-type ValidTransfer = TransferRequest & {
-    user_signature: Uint8Array;
-    server_signature: Uint8Array;
-}
-
-type ErrorCode = 'USERNAME_TAKEN' | 'TOO_MANY_NAMES' | 'UNAUTHORIZED' | 'USERNAME_NOT_FOUND';
+type ErrorCode = 'USERNAME_TAKEN' | 'TOO_MANY_NAMES' | 'UNAUTHORIZED' | 'USERNAME_NOT_FOUND' | 'INVALID_SIGNATURE' | 'INVALID_TIMESTAMP';
 export class ValidationError extends Error {
     public readonly code: ErrorCode;
     constructor(code: ErrorCode) {
@@ -26,27 +26,41 @@ export class ValidationError extends Error {
     }
 }
 
-export async function createTransfer(transferRequest: TransferRequest, db: Kysely<Database>) {
-    await validateTransfer(transferRequest, db);
-    const server_signature = await generateSignature(transferRequest.username, transferRequest.timestamp, transferRequest.owner, signer);
-    // TODO: Allow empty user signature for admin transfers?
-    const transfer: ValidTransfer = {...transferRequest, server_signature, user_signature: transferRequest.user_signature ?? server_signature};
-    return await db.insertInto('transfers').values(transfer).executeTakeFirst();
+export async function createTransfer(req: TransferRequest, db: Kysely<Database>) {
+    await validateTransfer(req, db);
+    const serverSignature = await generateSignature(req.username, req.timestamp, req.owner, signer);
+    const transfer = {...req, serverSignature, owner: hexToBytes(req.owner), userSignature: hexToBytes(req.userSignature)};
+    return await db.insertInto('transfers').values(transfer).returning('id').executeTakeFirst();
 }
 
-export async function validateTransfer(transferRequest: TransferRequest, db: Kysely<Database>) {
-    const existingTransfer = await getLatestTransfer(transferRequest.username, db);
+export async function validateTransfer(req: TransferRequest, db: Kysely<Database>) {
 
-    if (transferRequest.from === 0 ) {
+    const verifierAddress = ADMIN_KEYS[req.userFid];
+    if (!verifierAddress) {
+        // Only admin transfers are allowed until we finish migrating
+        throw new ValidationError('UNAUTHORIZED');
+    }
+
+    if (!verifySignature(req.username, req.timestamp, req.owner, req.userSignature, signer.address)) {
+        throw new ValidationError('INVALID_SIGNATURE');
+    }
+
+    const existingTransfer = await getLatestTransfer(req.username, db);
+
+    if (req.timestamp > currentTimestamp() + TIMESTAMP_TOLERANCE) {
+        throw new ValidationError('INVALID_TIMESTAMP');
+    }
+
+    if (existingTransfer && existingTransfer.timestamp > req.timestamp) {
+        throw new ValidationError('INVALID_TIMESTAMP');
+    }
+
+    if (req.from === 0 ) {
         // Mint
         if (existingTransfer && existingTransfer.to !== 0) {
             throw new ValidationError('USERNAME_TAKEN');
         }
-
-        if (await getCurrentUsername(transferRequest.to, db)) {
-            throw new ValidationError('TOO_MANY_NAMES');
-        }
-    } else if (transferRequest.to === 0) {
+    } else if (req.to === 0) {
         // Burn
         if (!existingTransfer || existingTransfer.to === 0) {
             throw new ValidationError('USERNAME_NOT_FOUND');
@@ -64,5 +78,41 @@ export async function getLatestTransfer(name: string, db: Kysely<Database>) {
 }
 
 export async function getCurrentUsername(fid: number, db: Kysely<Database>) {
+    // TODO: We need a table of fids to usernames for this to work correctly
     return db.selectFrom('transfers').select(['username']).where('to', '=', fid).orderBy('timestamp', 'desc').limit(1).executeTakeFirst();
+}
+
+function toTransferResponse(row: Selectable<TransfersTable> | undefined) {
+    if (!row) {
+        return undefined;
+    }
+    return {
+        id: row.id,
+        timestamp: row.timestamp,
+        username: row.username,
+        owner: bytesToHex(row.owner),
+        from: row.from,
+        to: row.to,
+        user_signature: bytesToHex(row.userSignature),
+        server_signature: bytesToHex(row.serverSignature),
+    }
+}
+
+export async function getTransferById(id: number, db: Kysely<Database>) {
+    const row = await db
+        .selectFrom('transfers')
+        .selectAll()
+        .where('id', '=', id)
+        .executeTakeFirst();
+    return toTransferResponse(row);
+}
+
+export async function getTransferHistory(since: number, db: Kysely<Database>) {
+    const res = await db
+        .selectFrom('transfers')
+        .selectAll()
+        .where('id', '>', since)
+        .limit(PAGE_SIZE)
+        .execute();
+    return res.map(toTransferResponse);
 }

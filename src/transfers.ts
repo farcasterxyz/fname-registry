@@ -51,7 +51,7 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('UNAUTHORIZED');
   }
 
-  if (!verifySignature(req.username, req.timestamp, req.owner, req.userSignature, signer.address)) {
+  if (!verifySignature(req.username, req.timestamp, req.owner, req.userSignature, verifierAddress)) {
     throw new ValidationError('INVALID_SIGNATURE');
   }
 

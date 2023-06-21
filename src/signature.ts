@@ -20,6 +20,7 @@ const domain = {
   name: 'Farcaster name verification',
   version: '1',
   chainId: 1,
+  // TODO: When changing, remember to also update on the backend!
   verifyingContract: '0xe3be01d99baa8db9905b33a3ca391238234b79d1', // name registry contract, will be the farcaster ENS CCIP contract later
 };
 const types = {

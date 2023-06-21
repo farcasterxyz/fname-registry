@@ -17,6 +17,13 @@ type TransferRequest = {
   userFid: number;
 };
 
+export type TransferHistoryFilter = {
+  fromTs?: number;
+  fromId?: number;
+  name?: string;
+  fid?: number;
+};
+
 type ErrorCode =
   | 'USERNAME_TAKEN'
   | 'TOO_MANY_NAMES'
@@ -125,7 +132,29 @@ export async function getTransferById(id: number, db: Kysely<Database>) {
   return toTransferResponse(row);
 }
 
-export async function getTransferHistory(since: number, db: Kysely<Database>) {
-  const res = await db.selectFrom('transfers').selectAll().where('id', '>', since).limit(PAGE_SIZE).execute();
+export async function getTransferHistory(filterOpts: TransferHistoryFilter, db: Kysely<Database>) {
+  let query = db.selectFrom('transfers').selectAll();
+  if (filterOpts.fromId) {
+    query = query.where('id', '>', filterOpts.fromId);
+  }
+  if (filterOpts.fromTs) {
+    query = query.where('timestamp', '>', filterOpts.fromTs);
+  }
+  if (filterOpts.name) {
+    query = query.where('username', '=', filterOpts.name);
+  }
+  if (filterOpts.fid) {
+    const _fid = filterOpts.fid;
+    query = query.where(({ or, cmpr }) => {
+      return or([cmpr('from', '=', _fid), cmpr('to', '=', _fid)]);
+    });
+  }
+
+  // If we're filtering by timestamp, we need to order by timestamp first because clients may use that as the high watermark
+  if (filterOpts.fromTs) {
+    query = query.orderBy('timestamp');
+  }
+
+  const res = await query.orderBy('id').limit(PAGE_SIZE).execute();
   return res.map(toTransferResponse);
 }

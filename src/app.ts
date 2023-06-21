@@ -4,7 +4,13 @@ import { getDbClient, migrateToLatest } from './db.js';
 import './env.js';
 import { log } from './log.js';
 import { signerAddress } from './signature.js';
-import { createTransfer, getTransferById, getTransferHistory, ValidationError } from './transfers.js';
+import {
+  createTransfer,
+  getTransferById,
+  getTransferHistory,
+  TransferHistoryFilter,
+  ValidationError,
+} from './transfers.js';
 
 const db = getDbClient();
 await migrateToLatest(db, log);
@@ -13,8 +19,20 @@ export const app: Express = express();
 app.use(bodyParser.json());
 
 app.get('/transfers', async (req, res) => {
-  const since = Number(req.query.since ?? 0);
-  const transfers = await getTransferHistory(since, db);
+  const filterOpts: TransferHistoryFilter = {};
+  if (req.query.from_id) {
+    filterOpts.fromId = parseInt(req.query.from_id.toString());
+  }
+  if (req.query.name) {
+    filterOpts.name = req.query.name.toString();
+  }
+  if (req.query.from_ts) {
+    filterOpts.fromTs = parseInt(req.query.from_ts.toString());
+  }
+  if (req.query.fid) {
+    filterOpts.fid = parseInt(req.query.fid.toString());
+  }
+  const transfers = await getTransferHistory(filterOpts, db);
   res.send({ transfers });
 });
 

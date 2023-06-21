@@ -17,14 +17,14 @@ beforeAll(async () => {
 });
 
 describe('app', () => {
-  beforeAll(async () => {
-    const now = currentTimestamp();
+  const now = currentTimestamp();
 
+  beforeAll(async () => {
     await sql`TRUNCATE TABLE transfers RESTART IDENTITY`.execute(db);
     await createTestTransfer(db, { username: 'test1', to: 1, timestamp: now });
     await createTestTransfer(db, { username: 'test2', to: 2, timestamp: now });
-    await createTestTransfer(db, { username: 'test3', to: 3, timestamp: now });
-    await createTestTransfer(db, { username: 'test3', from: 3, to: 0, timestamp: now + 1 });
+    await createTestTransfer(db, { username: 'test3', to: 3, timestamp: now + 1 });
+    await createTestTransfer(db, { username: 'test3', from: 3, to: 0, timestamp: now + 2 });
   });
 
   describe('get transfers', () => {
@@ -34,10 +34,42 @@ describe('app', () => {
       expect(response.body.transfers).toHaveLength(4);
     });
 
-    test('should returns transfers since an id', async () => {
-      const response = await request(app).get('/transfers?since=2');
+    test('should returns transfers from an id', async () => {
+      const response = await request(app).get('/transfers?from_id=2');
       expect(response.status).toBe(200);
       expect(response.body.transfers).toHaveLength(2);
+    });
+
+    test('should returns transfers from a timestamp', async () => {
+      const response = await request(app).get(`/transfers?from_ts=${now}`);
+      expect(response.status).toBe(200);
+      expect(response.body.transfers).toHaveLength(2);
+      expect(response.body.transfers[0]).toMatchObject({ timestamp: now + 1 });
+      expect(response.body.transfers[1]).toMatchObject({ timestamp: now + 2 });
+    });
+
+    test('should returns transfers for a name', async () => {
+      const response = await request(app).get('/transfers?name=test2');
+      expect(response.status).toBe(200);
+      expect(response.body.transfers).toHaveLength(1);
+      expect(response.body.transfers[0]).toMatchObject({ username: 'test2' });
+    });
+
+    test('should returns transfers for an fid', async () => {
+      const response = await request(app).get('/transfers?fid=3');
+      expect(response.status).toBe(200);
+      // Includes both from and to
+      expect(response.body.transfers).toHaveLength(2);
+      expect(response.body.transfers[0]).toMatchObject({ username: 'test3', from: 0, to: 3 });
+      expect(response.body.transfers[1]).toMatchObject({ username: 'test3', from: 3, to: 0 });
+    });
+
+    test('combines multiple queries', async () => {
+      const response = await request(app).get(`/transfers?name=test3&from_ts=${now + 1}`);
+      expect(response.status).toBe(200);
+      // Includes both from and to
+      expect(response.body.transfers).toHaveLength(1);
+      expect(response.body.transfers[0]).toMatchObject({ username: 'test3', from: 3, to: 0, timestamp: now + 2 });
     });
   });
 

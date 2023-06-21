@@ -15,18 +15,19 @@ beforeAll(async () => {
     await sql`TRUNCATE TABLE transfers RESTART IDENTITY`.execute(db);
     await createTestTransfer(db, {username: 'test123', to: 1});
     await createTestTransfer(db, {username: 'test123', from: 1, to: 2, timestamp: currentTimestamp() + 10});
+    await createTestTransfer(db, {username: 'test3', to: 3, timestamp: currentTimestamp() - 2});
 });
 
 describe('transfers', () => {
     describe(('createTransfer'), () => {
         test('should throw error if validation fails', async () => {
-            await expect(createTestTransfer(db, {username: 'test123', to: 1})).rejects.toThrow('USERNAME_TAKEN');
+            await expect(createTestTransfer(db, {username: 'test3', to: 4})).rejects.toThrow('USERNAME_TAKEN');
         });
     });
 
     describe(('validateTransfer'), () => {
         test('cannot register an existing name', async () => {
-            await expect(createTestTransfer(db, {username: 'test123', to: 1})).rejects.toThrow('USERNAME_TAKEN');
+            await expect(createTestTransfer(db, {username: 'test3', to: 4})).rejects.toThrow('USERNAME_TAKEN');
         });
 
         xtest('same fid cannot register twice', async () => {
@@ -39,7 +40,15 @@ describe('transfers', () => {
         });
 
         test('cannot transfer a nonexistent name', async () => {
-            await expect(createTestTransfer(db, {username: 'non-existent', from: 1, to: 2})).rejects.toThrow('USERNAME_NOT_FOUND');
+            await expect(createTestTransfer(db, {username: 'nonexistent', from: 1, to: 2})).rejects.toThrow('USERNAME_NOT_FOUND');
+        });
+
+        test('must have a valid timestamp', async () => {
+            // Timestamp cannot be older than existing transfer
+            await expect(createTestTransfer(db, {username: 'test123', from: 1, to: 2, timestamp: currentTimestamp() - 100})).rejects.toThrow('INVALID_TIMESTAMP');
+
+            // Timestamp cannot be too far in the future
+            await expect(createTestTransfer(db, {username: 'test123', from: 2, to: 3, timestamp: currentTimestamp() + 100})).rejects.toThrow('INVALID_TIMESTAMP');
         });
 
         test('fails for an invalid signature', async () => {

@@ -2,8 +2,10 @@ import {Kysely, Selectable} from "kysely";
 import {Database, TransfersTable} from "./db.js";
 import {ADMIN_KEYS, generateSignature, signer, verifySignature} from "./signature.js";
 import {bytesToHex, hexToBytes} from "./util.js";
+import {currentTimestamp} from "../tests/utils.js";
 
 const PAGE_SIZE = 100;
+const TIMESTAMP_TOLERANCE = 60; // 1 minute
 
 type TransferRequest = {
     timestamp: number;
@@ -15,7 +17,7 @@ type TransferRequest = {
     userFid: number;
 }
 
-type ErrorCode = 'USERNAME_TAKEN' | 'TOO_MANY_NAMES' | 'UNAUTHORIZED' | 'USERNAME_NOT_FOUND' | 'INVALID_SIGNATURE'
+type ErrorCode = 'USERNAME_TAKEN' | 'TOO_MANY_NAMES' | 'UNAUTHORIZED' | 'USERNAME_NOT_FOUND' | 'INVALID_SIGNATURE' | 'INVALID_TIMESTAMP';
 export class ValidationError extends Error {
     public readonly code: ErrorCode;
     constructor(code: ErrorCode) {
@@ -44,6 +46,14 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     }
 
     const existingTransfer = await getLatestTransfer(req.username, db);
+
+    if (req.timestamp > currentTimestamp() + TIMESTAMP_TOLERANCE) {
+        throw new ValidationError('INVALID_TIMESTAMP');
+    }
+
+    if (existingTransfer && existingTransfer.timestamp > req.timestamp) {
+        throw new ValidationError('INVALID_TIMESTAMP');
+    }
 
     if (req.from === 0 ) {
         // Mint

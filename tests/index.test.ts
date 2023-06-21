@@ -4,7 +4,8 @@ import { sql } from 'kysely';
 import { getDbClient, migrateToLatest } from '../src/db.js'
 import { log } from '../src/log.js';
 import {generateSignature, signer, signerAddress, signerFid, verifySignature} from "../src/signature";
-import {createTestTransfer, currentTimestamp} from "./utils";
+import {currentTimestamp} from "../src/util";
+import {createTestTransfer} from "./utils";
 import {ethers} from "ethers";
 import {bytesToHex} from "../src/util";
 

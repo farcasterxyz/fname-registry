@@ -80,3 +80,7 @@ export function bytesToHex(value: Uint8Array): string {
 export function hexToBytes(value: string): Uint8Array {
   return Uint8Array.from(Buffer.from(value.replace(/^0x/, ''), 'hex'));
 }
+
+export function currentTimestamp(): number {
+    return Math.floor(Date.now()/1000);
+}

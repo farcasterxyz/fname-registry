@@ -2,7 +2,7 @@ import {Kysely, Selectable} from "kysely";
 import {Database, TransfersTable} from "./db.js";
 import {ADMIN_KEYS, generateSignature, signer, verifySignature} from "./signature.js";
 import {bytesToHex, hexToBytes} from "./util.js";
-import {currentTimestamp} from "../tests/utils.js";
+import {currentTimestamp} from "./util.js";
 
 const PAGE_SIZE = 100;
 const TIMESTAMP_TOLERANCE = 60; // 1 minute

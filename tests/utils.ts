@@ -1,5 +1,6 @@
 import {generateSignature, signer, signerAddress, signerFid} from "../src/signature";
 import {createTransfer} from "../src/transfers";
+import {currentTimestamp} from "../src/util";
 import {Database} from "../src/db";
 import {Kysely} from "kysely";
 import {bytesToHex} from "../src/util";
@@ -28,8 +29,4 @@ export async function createTestTransfer(db: Kysely<Database>, opts: TestTransfe
         userSignature: bytesToHex(opts.userSignature),
         userFid: opts.userFid ?? signerFid,
     }, db);
-}
-
-export function currentTimestamp(): number {
-    return Math.floor(Date.now()/1000);
 }

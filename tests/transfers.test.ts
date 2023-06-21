@@ -22,7 +22,6 @@ describe('transfers', () => {
         test('should throw error if validation fails', async () => {
             await expect(createTestTransfer(db, {username: 'test123', to: 1})).rejects.toThrow('USERNAME_TAKEN');
         });
-
     });
 
     describe(('validateTransfer'), () => {
@@ -50,7 +49,7 @@ describe('transfers', () => {
                 username: 'differentname',
                 to: 5,
                 timestamp: now,
-                user_signature: await generateSignature('aname', now, owner, signer)
+                userSignature: await generateSignature('aname', now, owner, signer)
             })).rejects.toThrow('INVALID_SIGNATURE');
 
             // different timestamp than signed type
@@ -58,7 +57,7 @@ describe('transfers', () => {
                 username: 'aname',
                 to: 5,
                 timestamp: now + 1,
-                user_signature: await generateSignature('aname', now, owner, signer)
+                userSignature: await generateSignature('aname', now, owner, signer)
             })).rejects.toThrow('INVALID_SIGNATURE');
 
             // different owner than signed type
@@ -67,7 +66,7 @@ describe('transfers', () => {
                 to: 5,
                 timestamp: now,
                 owner: anotherSigner.address,
-                user_signature: await generateSignature('aname', now, owner, signer)
+                userSignature: await generateSignature('aname', now, owner, signer)
             })).rejects.toThrow('INVALID_SIGNATURE');
         });
 
@@ -79,7 +78,7 @@ describe('transfers', () => {
                 username: 'name',
                 to: 5,
                 owner: anotherSigner.address,
-                user_fid: 1,
+                userFid: 1,
             })).rejects.toThrow('UNAUTHORIZED');
 
             // Fid is an admin, but signature doesn't match known public key, rejected
@@ -87,8 +86,8 @@ describe('transfers', () => {
                 username: 'name',
                 to: 5,
                 owner: anotherSigner.address,
-                user_fid: signerFid,
-                user_signature: await generateSignature('name', now, owner, signer)
+                userFid: signerFid,
+                userSignature: await generateSignature('name', now, owner, signer)
             })).rejects.toThrow('INVALID_SIGNATURE');
         });
     });
@@ -100,6 +99,8 @@ describe('transfers', () => {
             expect(latest!.username).toBe('test123');
             expect(latest!.from).toBe(1);
             expect(latest!.to).toBe(2);
+            expect(latest!.userSignature).toBeDefined();
+            expect(latest!.serverSignature).toBeDefined();
         });
         test('returns undefined if no transfer', async () => {
             const latest = await getLatestTransfer('nonexistent', db);

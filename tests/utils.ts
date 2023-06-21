@@ -2,7 +2,7 @@ import {generateSignature, signer, signerAddress, signerFid} from "../src/signat
 import {createTransfer} from "../src/transfers";
 import {Database} from "../src/db";
 import {Kysely} from "kysely";
-import {bytesToHex} from "../src/bytes";
+import {bytesToHex} from "../src/util";
 
 type TestTransferParams = {
     username: string,
@@ -10,23 +10,23 @@ type TestTransferParams = {
     to: number,
     timestamp?: number,
     owner?: string,
-    user_signature?: Uint8Array,
-    user_fid?: number
+    userSignature?: Uint8Array,
+    userFid?: number
 };
 
 export async function createTestTransfer(db: Kysely<Database>, opts: TestTransferParams) {
     opts.timestamp = opts.timestamp ?? currentTimestamp();
     opts.from = opts.from ?? 0;
     opts.owner = opts.owner ?? signerAddress;
-    opts.user_signature = opts.user_signature ?? await generateSignature(opts.username, opts.timestamp, opts.owner, signer);
+    opts.userSignature = opts.userSignature ?? await generateSignature(opts.username, opts.timestamp, opts.owner, signer);
     return createTransfer({
         timestamp: opts.timestamp,
         username: opts.username,
         owner: opts.owner,
         from: opts.from,
         to: opts.to,
-        user_signature: bytesToHex(opts.user_signature),
-        user_fid: opts.user_fid ?? signerFid,
+        userSignature: bytesToHex(opts.userSignature),
+        userFid: opts.userFid ?? signerFid,
     }, db);
 }
 

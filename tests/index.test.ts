@@ -3,10 +3,10 @@ import { app } from '../src/app.js';
 import { sql } from 'kysely';
 import { getDbClient, migrateToLatest } from '../src/db.js'
 import { log } from '../src/log.js';
-import {generateSignature, signer, signerAddress, signerFid} from "../src/signature";
+import {generateSignature, signer, signerAddress, signerFid, verifySignature} from "../src/signature";
 import {createTestTransfer, currentTimestamp} from "./utils";
-import {bytesToHex} from "../src/bytes";
 import {ethers} from "ethers";
+import {bytesToHex} from "../src/util";
 
 const db = await getDbClient();
 // const owner = signerAddress;
@@ -64,8 +64,8 @@ describe('app', () => {
         timestamp: now,
         owner: anotherSigner.address.toLowerCase(),
       });
-      // expect(verifySignature('test4', now, anotherSigner.address, transferRes.user_signature, signer.address)).toBe(true);
-      // expect(verifySignature('test4', now, anotherSigner.address, transferRes.server_signature, signer.address)).toBe(true);
+      expect(verifySignature('test4', now, anotherSigner.address, transferRes.user_signature, signer.address)).toBe(true);
+      expect(verifySignature('test4', now, anotherSigner.address, transferRes.server_signature, signer.address)).toBe(true);
     });
 
     test('should throw error if validation fails', async () => {

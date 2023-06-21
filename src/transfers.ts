@@ -1,7 +1,7 @@
 import {Kysely, Selectable} from "kysely";
 import {Database, TransfersTable} from "./db.js";
 import {ADMIN_KEYS, generateSignature, signer, verifySignature} from "./signature.js";
-import {bytesToHex, hexToBytes} from "./bytes.js";
+import {bytesToHex, hexToBytes} from "./util.js";
 
 const PAGE_SIZE = 100;
 
@@ -11,8 +11,8 @@ type TransferRequest = {
     owner: string;
     from: number;
     to: number;
-    user_signature: string;
-    user_fid: number;
+    userSignature: string;
+    userFid: number;
 }
 
 type ErrorCode = 'USERNAME_TAKEN' | 'TOO_MANY_NAMES' | 'UNAUTHORIZED' | 'USERNAME_NOT_FOUND' | 'INVALID_SIGNATURE'
@@ -26,20 +26,20 @@ export class ValidationError extends Error {
 
 export async function createTransfer(req: TransferRequest, db: Kysely<Database>) {
     await validateTransfer(req, db);
-    const server_signature = await generateSignature(req.username, req.timestamp, req.owner, signer);
-    const transfer = {...req, server_signature, owner: hexToBytes(req.owner), user_signature: hexToBytes(req.user_signature)};
+    const serverSignature = await generateSignature(req.username, req.timestamp, req.owner, signer);
+    const transfer = {...req, serverSignature, owner: hexToBytes(req.owner), userSignature: hexToBytes(req.userSignature)};
     return await db.insertInto('transfers').values(transfer).returning('id').executeTakeFirst();
 }
 
 export async function validateTransfer(req: TransferRequest, db: Kysely<Database>) {
 
-    const verifierAddress = ADMIN_KEYS[req.user_fid];
+    const verifierAddress = ADMIN_KEYS[req.userFid];
     if (!verifierAddress) {
         // Only admin transfers are allowed until we finish migrating
         throw new ValidationError('UNAUTHORIZED');
     }
 
-    if (!verifySignature(req.username, req.timestamp, req.owner, req.user_signature, signer.address)) {
+    if (!verifySignature(req.username, req.timestamp, req.owner, req.userSignature, signer.address)) {
         throw new ValidationError('INVALID_SIGNATURE');
     }
 
@@ -83,8 +83,8 @@ function toTransferResponse(row: Selectable<TransfersTable> | undefined) {
         owner: bytesToHex(row.owner),
         from: row.from,
         to: row.to,
-        user_signature: row.user_signature ? bytesToHex(row.user_signature) : undefined,
-        server_signature: row.server_signature ? bytesToHex(row.server_signature) : undefined,
+        user_signature: bytesToHex(row.userSignature),
+        server_signature: bytesToHex(row.serverSignature),
     }
 }
 

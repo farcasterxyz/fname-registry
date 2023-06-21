@@ -28,8 +28,8 @@ app.post('/transfers', async (req, res) => {
       to: tr.to,
       timestamp: tr.timestamp,
       owner: tr.owner,
-      user_signature: tr.signature,
-      user_fid: tr.fid,
+      userSignature: tr.signature,
+      userFid: tr.fid,
     }, db);
     if (!result) {
       log.warn({name: tr.username}, `Unable to create transfer`);

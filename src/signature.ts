@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { WARPCAST_ADDRESS } from './env.js';
 import * as process from 'process';
 
 export const signer = ethers.Wallet.fromPhrase(
@@ -13,7 +14,7 @@ type KeyToFid = {
 
 export const ADMIN_KEYS: KeyToFid = {
   [signerFid]: signerAddress, // FName server
-  14046: '0xABba722926c8302c73e57A25AD8F63753904546f', // Warpcast backend
+  14046: WARPCAST_ADDRESS, // Warpcast backend
 };
 
 const domain = {

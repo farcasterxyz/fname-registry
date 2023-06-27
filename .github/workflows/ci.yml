@@ -89,4 +89,5 @@ jobs:
           INFURA_PROJECT_ID: 'dummy'
           INFURA_PROJECT_SECRET: 'dummy'
           ETHERSCAN_API_SECRET: 'dummy'
+          WARPCAST_ADDRESS: 'dummy'
         run: yarn test

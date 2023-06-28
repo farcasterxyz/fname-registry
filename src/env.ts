@@ -28,3 +28,8 @@ export const INFURA_PROJECT_SECRET = process.env['INFURA_PROJECT_SECRET'] || '';
 if (INFURA_PROJECT_SECRET === '') {
   throw new Error('INFURA_PROJECT_SECRET missing from .env');
 }
+
+export const WARPCAST_ADDRESS = process.env['WARPCAST_ADDRESS'] || '';
+if (WARPCAST_ADDRESS === '') {
+  throw new Error('WARPCAST_ADDRESS missing from .env');
+}

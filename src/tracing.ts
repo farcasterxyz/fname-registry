@@ -1,5 +1,7 @@
-import { tracer } from 'dd-trace';
+import pkg from 'dd-trace';
 import { ENVIRONMENT, SERVICE } from './env.js';
+
+const { tracer } = pkg;
 
 tracer.init({
   env: ENVIRONMENT,

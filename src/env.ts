@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const ENVIRONMENT = process.env['ENVIRONMENT'] || 'dev';
+export const SERVICE = process.env['DD_SERVICE'] || 'fname-registry';
 
 export const GOERLI_ALCHEMY_SECRET = process.env['GOERLI_ALCHEMY_SECRET'] || '';
 if (GOERLI_ALCHEMY_SECRET === '') {

@@ -33,8 +33,7 @@ describe('transfers', () => {
       await expect(createTestTransfer(db, { username: 'test3', to: 4 })).rejects.toThrow('USERNAME_TAKEN');
     });
 
-    xtest('same fid cannot register twice', async () => {
-      // TODO: fix
+    test('same fid cannot register twice', async () => {
       await expect(createTestTransfer(db, { username: 'test1234', to: 2 })).rejects.toThrow('TOO_MANY_NAMES');
     });
 
@@ -45,7 +44,7 @@ describe('transfers', () => {
     });
 
     test('cannot transfer a nonexistent name', async () => {
-      await expect(createTestTransfer(db, { username: 'nonexistent', from: 1, to: 2 })).rejects.toThrow(
+      await expect(createTestTransfer(db, { username: 'nonexistent', from: 1, to: 10 })).rejects.toThrow(
         'USERNAME_NOT_FOUND'
       );
     });
@@ -53,12 +52,12 @@ describe('transfers', () => {
     test('must have a valid timestamp', async () => {
       // Timestamp cannot be older than existing transfer
       await expect(
-        createTestTransfer(db, { username: 'test123', from: 1, to: 2, timestamp: currentTimestamp() - 100 })
+        createTestTransfer(db, { username: 'test123', from: 1, to: 10, timestamp: currentTimestamp() - 100 })
       ).rejects.toThrow('INVALID_TIMESTAMP');
 
       // Timestamp cannot be too far in the future
       await expect(
-        createTestTransfer(db, { username: 'test123', from: 2, to: 3, timestamp: currentTimestamp() + 100 })
+        createTestTransfer(db, { username: 'test123', from: 2, to: 10, timestamp: currentTimestamp() + 100 })
       ).rejects.toThrow('INVALID_TIMESTAMP');
     });
 
@@ -139,12 +138,18 @@ describe('transfers', () => {
   });
 
   describe('getCurrentUsernames', () => {
-    // TODO: Fix this test (no easy way to get current list of names)
-    xtest('should return the current usernames', async () => {
+    test('should return the current usernames', async () => {
       const username_for_1 = await getCurrentUsername(1, db);
       expect(username_for_1).toBeUndefined();
       const username_for_2 = await getCurrentUsername(2, db);
-      expect(username_for_2?.username).toBe('test123');
+      expect(username_for_2).toBe('test123');
+    });
+
+    test('returns undefined for fid 0', async () => {
+      await createTestTransfer(db, { username: 'test123', from: 2, to: 0, timestamp: currentTimestamp() + 20 });
+      await createTestTransfer(db, { username: 'test3', from: 3, to: 0 });
+      const username_for_0 = await getCurrentUsername(0, db);
+      expect(username_for_0).toBeUndefined();
     });
   });
 });

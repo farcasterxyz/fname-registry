@@ -62,6 +62,11 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('INVALID_SIGNATURE');
   }
 
+  const existingName = await getCurrentUsername(req.to, db);
+  if (existingName) {
+    throw new ValidationError('TOO_MANY_NAMES');
+  }
+
   const existingTransfer = await getLatestTransfer(req.username, db);
 
   if (req.timestamp > currentTimestamp() + TIMESTAMP_TOLERANCE) {
@@ -101,14 +106,28 @@ export async function getLatestTransfer(name: string, db: Kysely<Database>) {
 }
 
 export async function getCurrentUsername(fid: number, db: Kysely<Database>) {
-  // TODO: We need a table of fids to usernames for this to work correctly
-  return db
+  // fid 0 is the mint/burn address, so it can never have a username
+  if (fid === 0) {
+    return undefined;
+  }
+  // To get the current username, we need to get the most recent transfer and ensure the fid is the receiver
+  const transfer = await db
     .selectFrom('transfers')
-    .select(['username'])
-    .where('to', '=', fid)
+    .select(['username', 'from', 'to'])
+    .where(({ or, cmpr }) => {
+      return or([cmpr('from', '=', fid), cmpr('to', '=', fid)]);
+    })
     .orderBy('timestamp', 'desc')
     .limit(1)
     .executeTakeFirst();
+
+  // The most recent transfer to the fid is the current username. We have validations that ensure there can only be
+  // one name per fid
+  if (transfer && transfer.to === fid) {
+    return transfer.username;
+  } else {
+    return undefined;
+  }
 }
 
 function toTransferResponse(row: Selectable<TransfersTable> | undefined) {

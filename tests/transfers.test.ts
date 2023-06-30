@@ -49,6 +49,16 @@ describe('transfers', () => {
       );
     });
 
+    test('cannot register an invalid name', async () => {
+      await expect(
+        createTestTransfer(db, { username: 'namethatislongerthan16chars', from: 0, to: 10 })
+      ).rejects.toThrow('INVALID_USERNAME');
+      await expect(createTestTransfer(db, { username: 'invalidchars!', from: 0, to: 10 })).rejects.toThrow(
+        'INVALID_USERNAME'
+      );
+      await expect(createTestTransfer(db, { username: '', from: 0, to: 10 })).rejects.toThrow('INVALID_USERNAME');
+    });
+
     test('must have a valid timestamp', async () => {
       // Timestamp cannot be older than existing transfer
       await expect(
@@ -128,8 +138,8 @@ describe('transfers', () => {
       expect(latest!.username).toBe('test123');
       expect(latest!.from).toBe(1);
       expect(latest!.to).toBe(2);
-      expect(latest!.userSignature).toBeDefined();
-      expect(latest!.serverSignature).toBeDefined();
+      expect(latest!.user_signature).toBeDefined();
+      expect(latest!.server_signature).toBeDefined();
     });
     test('returns undefined if no transfer', async () => {
       const latest = await getLatestTransfer('nonexistent', db);

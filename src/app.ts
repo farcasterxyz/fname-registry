@@ -1,4 +1,6 @@
 import ccipread from '@chainlink/ccip-read-server';
+import { ZeroAddress } from 'ethers';
+
 import { getDbClient, migrateToLatest } from './db.js';
 import './env.js';
 import { log } from './log.js';
@@ -12,8 +14,10 @@ import {
   ValidationError,
 } from './transfers.js';
 
+import { decodeDnsName } from './util.js';
+
 const abi = [
-  'function resolve(bytes calldata name) external view returns(string name, uint64 timestamp, address owner, bytes memory sig)',
+  'function resolve(bytes calldata name, bytes calldata data) external view returns(string name, uint256 timestamp, address owner, bytes memory sig)',
 ];
 
 const db = getDbClient();
@@ -24,11 +28,12 @@ const server = new ccipread.Server();
 server.add(abi, [
   {
     type: 'resolve',
-    func: async ([name], _req) => {
-      const transfer = await getLatestTransfer(name, db);
+    func: async ([name, _data], _req) => {
+      const [fname, ..._rest] = decodeDnsName(name);
+      const transfer = await getLatestTransfer(fname, db);
       if (!transfer || transfer.to === 0) {
         // If no transfer or the name was unregistered, return empty values
-        return ['', 0, '', '0x'];
+        return ['', 0, ZeroAddress, '0x'];
       }
       const signature = await generateCCIPSignature(transfer.username, transfer.timestamp, transfer.owner, signer);
       return [transfer.username, transfer.timestamp, transfer.owner, signature];

@@ -16,7 +16,7 @@ import {
 
 import { decodeDnsName } from './util.js';
 
-const abi = [
+export const RESOLVE_ABI = [
   'function resolve(bytes calldata name, bytes calldata data) external view returns(string name, uint256 timestamp, address owner, bytes memory sig)',
 ];
 
@@ -25,11 +25,11 @@ await migrateToLatest(db, log);
 
 const server = new ccipread.Server();
 
-server.add(abi, [
+server.add(RESOLVE_ABI, [
   {
     type: 'resolve',
     func: async ([name, _data], _req) => {
-      const [fname, ..._rest] = decodeDnsName(name);
+      const fname = decodeDnsName(name)[0];
       const transfer = await getLatestTransfer(fname, db);
       if (!transfer || transfer.to === 0) {
         // If no transfer or the name was unregistered, return empty values
@@ -41,7 +41,7 @@ server.add(abi, [
   },
 ]);
 
-export const app = server.makeApp('/ccip');
+export const app = server.makeApp('/ccip/');
 
 app.get('/transfers', async (req, res) => {
   const filterOpts: TransferHistoryFilter = {};

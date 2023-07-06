@@ -3,6 +3,7 @@ import { Database, TransfersTable } from './db.js';
 import { ADMIN_KEYS, generateSignature, signer, verifySignature } from './signature.js';
 import { bytesToHex, hexToBytes } from './util.js';
 import { currentTimestamp } from './util.js';
+import { bytesCompare } from '@farcaster/hub-nodejs';
 
 const PAGE_SIZE = 100;
 const TIMESTAMP_TOLERANCE = 60; // 1 minute
@@ -40,7 +41,10 @@ export class ValidationError extends Error {
 }
 
 export async function createTransfer(req: TransferRequest, db: Kysely<Database>) {
-  await validateTransfer(req, db);
+  const existing_matching_transfer_id = await validateTransfer(req, db);
+  if (existing_matching_transfer_id) {
+    return { id: existing_matching_transfer_id };
+  }
   const serverSignature = await generateSignature(req.username, req.timestamp, req.owner, signer);
   const transfer = {
     ...req,
@@ -62,12 +66,19 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('INVALID_SIGNATURE');
   }
 
+  const existingTransfer = await getLatestTransfer(req.username, db);
+
   const existingName = await getCurrentUsername(req.to, db);
   if (existingName) {
+    if (
+      existingTransfer &&
+      existingName === req.username &&
+      bytesCompare(existingTransfer.owner, hexToBytes(req.owner)) === 0
+    ) {
+      return existingTransfer.id;
+    }
     throw new ValidationError('TOO_MANY_NAMES');
   }
-
-  const existingTransfer = await getLatestTransfer(req.username, db);
 
   if (req.timestamp > currentTimestamp() + TIMESTAMP_TOLERANCE) {
     throw new ValidationError('INVALID_TIMESTAMP');

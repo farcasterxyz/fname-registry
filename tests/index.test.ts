@@ -104,6 +104,36 @@ describe('app', () => {
       );
     });
 
+    test('registering the same name to the same owner and fid twice should not fail', async () => {
+      const user_signature = bytesToHex(await generateSignature('testreuse', now, signerAddress, signer));
+      const transfer_request = {
+        name: 'testreuse',
+        from: 0,
+        to: 5,
+        owner: signerAddress,
+        timestamp: now,
+        signature: user_signature,
+        fid: signerFid,
+      };
+      const response = await request(app).post('/transfers').send(transfer_request);
+      expect(response.status).toBe(200);
+
+      // Posting the same request again should not fail
+      const second_response = await request(app).post('/transfers').send(transfer_request);
+      expect(second_response.status).toBe(200);
+
+      // Posting the same request with a different owner address should fail
+      const bad_owner_response = await request(app)
+        .post('/transfers')
+        .send({
+          ...transfer_request,
+          owner: anotherSigner.address,
+          signature: bytesToHex(await generateSignature('testreuse', now, anotherSigner.address, signer)),
+        });
+      expect(bad_owner_response.status).toBe(400);
+      expect(bad_owner_response.body.code).toBe('TOO_MANY_NAMES');
+    });
+
     test('should throw error if validation fails', async () => {
       const response = await request(app)
         .post('/transfers')

@@ -90,5 +90,5 @@ jobs:
           INFURA_PROJECT_SECRET: 'dummy'
           ETHERSCAN_API_SECRET: 'dummy'
           WARPCAST_ADDRESS: 'dummy'
-          CCIP_ADDRESS: 'dummy'
+          CCIP_ADDRESS: '0x4ea0be853219be8c9ce27200bdeee36881612ff2'
         run: yarn test

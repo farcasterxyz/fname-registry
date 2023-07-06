@@ -71,3 +71,19 @@ export function verifySignature(
   const signer = ethers.verifyTypedData(hub_domain, types, userNameProof, signature);
   return signer.toLowerCase() === signerAddress.toLowerCase();
 }
+
+export function verifyCCIPSignature(
+  userName: string,
+  timestamp: number,
+  owner: string,
+  signature: string,
+  signerAddress: string
+) {
+  const userNameProof = {
+    name: userName,
+    timestamp,
+    owner: owner,
+  };
+  const signer = ethers.verifyTypedData(ccip_domain, types, userNameProof, signature);
+  return signer.toLowerCase() === signerAddress.toLowerCase();
+}

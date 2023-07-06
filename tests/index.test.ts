@@ -1,13 +1,20 @@
 import request from 'supertest';
-import { app } from '../src/app.js';
+import { app, RESOLVE_ABI } from '../src/app.js';
 import { sql } from 'kysely';
 import { getDbClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
-import { generateSignature, signer, signerAddress, signerFid, verifySignature } from '../src/signature.js';
-import { currentTimestamp } from '../src/util.js';
+import {
+  generateSignature,
+  signer,
+  signerAddress,
+  signerFid,
+  verifyCCIPSignature,
+  verifySignature,
+} from '../src/signature.js';
+import { bytesToHex, currentTimestamp } from '../src/util.js';
 import { createTestTransfer } from './utils.js';
-import { ethers } from 'ethers';
-import { bytesToHex } from '../src/util.js';
+import { AbiCoder, ethers, Interface, ZeroAddress } from 'ethers';
+import { CCIP_ADDRESS } from '../src/env.js';
 
 const db = getDbClient();
 const anotherSigner = ethers.Wallet.createRandom();
@@ -172,6 +179,42 @@ describe('app', () => {
       const response = await request(app).get('/signer');
       expect(response.status).toBe(200);
       expect(response.body.signer.toLowerCase()).toEqual(signerAddress.toLowerCase());
+    });
+  });
+
+  describe('ccip resolution', () => {
+    const resolveABI = new Interface(RESOLVE_ABI).getFunction('resolve')!;
+
+    it('should return a valid signature for a ccip lookup of a registered name', async () => {
+      // Calldata for test1.farcaster.xyz
+      const callData =
+        '0x9061b923000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000015057465737431096661726361737465720378797a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57deeea35aa5de7e8da11d1636463a57da877fa0c0c65b969f7fecb7eb6c93a20c1b00000000000000000000000000000000000000000000000000000000';
+      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${callData}.json`);
+      expect(response.status).toBe(200);
+      const [username, timestamp, owner, signature] = AbiCoder.defaultAbiCoder().decode(
+        resolveABI.outputs,
+        response.body.data
+      );
+      expect(username).toBe('test1');
+      expect(verifyCCIPSignature(username, timestamp, owner, signature, signer.address)).toBe(true);
+      // CCIP domain is different from hub domain
+      expect(verifySignature(username, timestamp, owner, signature, signer.address)).toBe(false);
+    });
+
+    it('should return an empty signature for a ccip lookup of an unregistered name', async () => {
+      // Calldata for alice.farcaster.xyz
+      const callData =
+        '0x9061b92300000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001505616c696365096661726361737465720378797a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57de00d4f449060ad2a07ff5ad355ae8da52281e95f6ad10fb923ae7cad9f2c43c2a00000000000000000000000000000000000000000000000000000000';
+      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${callData}.json`);
+      expect(response.status).toBe(200);
+      const [username, timestamp, owner, signature] = AbiCoder.defaultAbiCoder().decode(
+        resolveABI.outputs,
+        response.body.data
+      );
+      expect(username).toBe('');
+      expect(timestamp.toString()).toEqual('0');
+      expect(owner).toBe(ZeroAddress);
+      expect(signature).toBe('0x');
     });
   });
 });

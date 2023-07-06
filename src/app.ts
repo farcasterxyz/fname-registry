@@ -1,22 +1,47 @@
-import express, { Express } from 'express';
-import bodyParser from 'body-parser';
+import ccipread from '@chainlink/ccip-read-server';
+import { ZeroAddress } from 'ethers';
+
 import { getDbClient, migrateToLatest } from './db.js';
 import './env.js';
 import { log } from './log.js';
-import { signerAddress } from './signature.js';
+import { generateCCIPSignature, signer, signerAddress } from './signature.js';
 import {
   createTransfer,
+  getLatestTransfer,
   getTransferById,
   getTransferHistory,
   TransferHistoryFilter,
   ValidationError,
 } from './transfers.js';
 
+import { decodeDnsName } from './util.js';
+
+export const RESOLVE_ABI = [
+  'function resolve(bytes calldata name, bytes calldata data) external view returns(string name, uint256 timestamp, address owner, bytes memory sig)',
+];
+
 const db = getDbClient();
 await migrateToLatest(db, log);
 
-export const app: Express = express();
-app.use(bodyParser.json());
+const server = new ccipread.Server();
+
+server.add(RESOLVE_ABI, [
+  {
+    type: 'resolve',
+    func: async ([name, _data], _req) => {
+      const fname = decodeDnsName(name)[0];
+      const transfer = await getLatestTransfer(fname, db);
+      if (!transfer || transfer.to === 0) {
+        // If no transfer or the name was unregistered, return empty values
+        return ['', 0, ZeroAddress, '0x'];
+      }
+      const signature = await generateCCIPSignature(transfer.username, transfer.timestamp, transfer.owner, signer);
+      return [transfer.username, transfer.timestamp, transfer.owner, signature];
+    },
+  },
+]);
+
+export const app = server.makeApp('/ccip/');
 
 app.get('/transfers', async (req, res) => {
   const filterOpts: TransferHistoryFilter = {};

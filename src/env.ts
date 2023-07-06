@@ -34,3 +34,9 @@ export const WARPCAST_ADDRESS = process.env['WARPCAST_ADDRESS'] || '';
 if (WARPCAST_ADDRESS === '') {
   throw new Error('WARPCAST_ADDRESS missing from .env');
 }
+
+// Address of the ENS CCIP verifier contract
+export const CCIP_ADDRESS = process.env['CCIP_ADDRESS'] || '';
+if (WARPCAST_ADDRESS === '') {
+  throw new Error('CCIP_ADDRESS missing from .env');
+}

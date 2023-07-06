@@ -3,7 +3,7 @@ import { Database, TransfersTable } from './db.js';
 import { ADMIN_KEYS, generateSignature, signer, verifySignature } from './signature.js';
 import { bytesToHex, hexToBytes } from './util.js';
 import { currentTimestamp } from './util.js';
-import { bytesCompare } from '@farcaster/hub-nodejs';
+import { bytesCompare, validations } from '@farcaster/hub-nodejs';
 
 const PAGE_SIZE = 100;
 const TIMESTAMP_TOLERANCE = 60; // 1 minute
@@ -31,6 +31,7 @@ type ErrorCode =
   | 'UNAUTHORIZED'
   | 'USERNAME_NOT_FOUND'
   | 'INVALID_SIGNATURE'
+  | 'INVALID_USERNAME'
   | 'INVALID_TIMESTAMP';
 export class ValidationError extends Error {
   public readonly code: ErrorCode;
@@ -66,6 +67,11 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('INVALID_SIGNATURE');
   }
 
+  const validationResult = validations.validateFname(req.username);
+  if (validationResult.isErr()) {
+    throw new ValidationError('INVALID_USERNAME');
+  }
+
   const existingTransfer = await getLatestTransfer(req.username, db);
 
   const existingName = await getCurrentUsername(req.to, db);
@@ -73,7 +79,7 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     if (
       existingTransfer &&
       existingName === req.username &&
-      bytesCompare(existingTransfer.owner, hexToBytes(req.owner)) === 0
+      bytesCompare(hexToBytes(existingTransfer.owner), hexToBytes(req.owner)) === 0
     ) {
       return existingTransfer.id;
     }
@@ -107,13 +113,15 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
 }
 
 export async function getLatestTransfer(name: string, db: Kysely<Database>) {
-  return db
-    .selectFrom('transfers')
-    .selectAll()
-    .where('username', '=', name)
-    .orderBy('timestamp', 'desc')
-    .limit(1)
-    .executeTakeFirst();
+  return toTransferResponse(
+    await db
+      .selectFrom('transfers')
+      .selectAll()
+      .where('username', '=', name)
+      .orderBy('timestamp', 'desc')
+      .limit(1)
+      .executeTakeFirst()
+  );
 }
 
 export async function getCurrentUsername(fid: number, db: Kysely<Database>) {

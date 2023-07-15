@@ -11,7 +11,7 @@
     "build": "rm -rf ./build && tsc --project ./tsconfig.json",
     "test": "NODE_OPTIONS='--no-warnings --experimental-vm-modules' ENVIRONMENT=test jest --detectOpenHandles --forceExit",
     "lint": "eslint . --ext .ts",
-    "abi": "typechain --target ethers-v6 --out-dir src/abi src/abi/*.abi",
+    "abi": "typechain --node16-modules --target ethers-v6 --out-dir src/abi src/abi/*.abi",
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {

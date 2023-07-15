@@ -13,7 +13,7 @@ import type {
   ContractRunner,
   ContractMethod,
   Listener,
-} from "ethers";
+} from 'ethers';
 import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
@@ -21,156 +21,78 @@ import type {
   TypedLogDescription,
   TypedListener,
   TypedContractMethod,
-} from "./common";
+} from './common.js';
 
 export interface IdRegistryInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "cancelRecovery"
-      | "changeHome"
-      | "changeRecoveryAddress"
-      | "changeTrustedCaller"
-      | "completeRecovery"
-      | "completeTransferOwnership"
-      | "disableTrustedOnly"
-      | "idOf"
-      | "isTrustedForwarder"
-      | "owner"
-      | "register"
-      | "renounceOwnership"
-      | "requestRecovery"
-      | "requestTransferOwnership"
-      | "transfer"
-      | "transferOwnership"
-      | "trustedRegister"
+      | 'cancelRecovery'
+      | 'changeHome'
+      | 'changeRecoveryAddress'
+      | 'changeTrustedCaller'
+      | 'completeRecovery'
+      | 'completeTransferOwnership'
+      | 'disableTrustedOnly'
+      | 'idOf'
+      | 'isTrustedForwarder'
+      | 'owner'
+      | 'register'
+      | 'renounceOwnership'
+      | 'requestRecovery'
+      | 'requestTransferOwnership'
+      | 'transfer'
+      | 'transferOwnership'
+      | 'trustedRegister'
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
-      | "CancelRecovery"
-      | "ChangeHome"
-      | "ChangeRecoveryAddress"
-      | "ChangeTrustedCaller"
-      | "DisableTrustedOnly"
-      | "OwnershipTransferred"
-      | "Register"
-      | "RequestRecovery"
-      | "Transfer"
+      | 'CancelRecovery'
+      | 'ChangeHome'
+      | 'ChangeRecoveryAddress'
+      | 'ChangeTrustedCaller'
+      | 'DisableTrustedOnly'
+      | 'OwnershipTransferred'
+      | 'Register'
+      | 'RequestRecovery'
+      | 'Transfer'
   ): EventFragment;
 
-  encodeFunctionData(
-    functionFragment: "cancelRecovery",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(functionFragment: "changeHome", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "changeRecoveryAddress",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "changeTrustedCaller",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "completeRecovery",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "completeTransferOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "disableTrustedOnly",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "idOf", values: [AddressLike]): string;
-  encodeFunctionData(
-    functionFragment: "isTrustedForwarder",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "register",
-    values: [AddressLike, AddressLike, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "requestRecovery",
-    values: [AddressLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "requestTransferOwnership",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "trustedRegister",
-    values: [AddressLike, AddressLike, string]
-  ): string;
+  encodeFunctionData(functionFragment: 'cancelRecovery', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'changeHome', values: [string]): string;
+  encodeFunctionData(functionFragment: 'changeRecoveryAddress', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'changeTrustedCaller', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'completeRecovery', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'completeTransferOwnership', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'disableTrustedOnly', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'idOf', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'isTrustedForwarder', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'register', values: [AddressLike, AddressLike, string]): string;
+  encodeFunctionData(functionFragment: 'renounceOwnership', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'requestRecovery', values: [AddressLike, AddressLike]): string;
+  encodeFunctionData(functionFragment: 'requestTransferOwnership', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'transfer', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'transferOwnership', values: [AddressLike]): string;
+  encodeFunctionData(functionFragment: 'trustedRegister', values: [AddressLike, AddressLike, string]): string;
 
-  decodeFunctionResult(
-    functionFragment: "cancelRecovery",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "changeHome", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "changeRecoveryAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "changeTrustedCaller",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "completeRecovery",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "completeTransferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "disableTrustedOnly",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "idOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isTrustedForwarder",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "register", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "requestRecovery",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "requestTransferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "trustedRegister",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: 'cancelRecovery', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'changeHome', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'changeRecoveryAddress', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'changeTrustedCaller', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'completeRecovery', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'completeTransferOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'disableTrustedOnly', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'idOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isTrustedForwarder', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'register', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'renounceOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'requestRecovery', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'requestTransferOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'trustedRegister', data: BytesLike): Result;
 }
 
 export namespace CancelRecoveryEvent {
@@ -248,18 +170,8 @@ export namespace OwnershipTransferredEvent {
 }
 
 export namespace RegisterEvent {
-  export type InputTuple = [
-    to: AddressLike,
-    id: BigNumberish,
-    recovery: AddressLike,
-    url: string
-  ];
-  export type OutputTuple = [
-    to: string,
-    id: bigint,
-    recovery: string,
-    url: string
-  ];
+  export type InputTuple = [to: AddressLike, id: BigNumberish, recovery: AddressLike, url: string];
+  export type OutputTuple = [to: string, id: bigint, recovery: string, url: string];
   export interface OutputObject {
     to: string;
     id: bigint;
@@ -273,11 +185,7 @@ export namespace RegisterEvent {
 }
 
 export namespace RequestRecoveryEvent {
-  export type InputTuple = [
-    from: AddressLike,
-    to: AddressLike,
-    id: BigNumberish
-  ];
+  export type InputTuple = [from: AddressLike, to: AddressLike, id: BigNumberish];
   export type OutputTuple = [from: string, to: string, id: bigint];
   export interface OutputObject {
     from: string;
@@ -291,11 +199,7 @@ export namespace RequestRecoveryEvent {
 }
 
 export namespace TransferEvent {
-  export type InputTuple = [
-    from: AddressLike,
-    to: AddressLike,
-    id: BigNumberish
-  ];
+  export type InputTuple = [from: AddressLike, to: AddressLike, id: BigNumberish];
   export type OutputTuple = [from: string, to: string, id: bigint];
   export interface OutputObject {
     from: string;
@@ -325,236 +229,142 @@ export interface IdRegistry extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEventLog<TCEvent>>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  on<TCEvent extends TypedContractEvent>(event: TCEvent, listener: TypedListener<TCEvent>): Promise<this>;
   on<TCEvent extends TypedContractEvent>(
     filter: TypedDeferredTopicFilter<TCEvent>,
     listener: TypedListener<TCEvent>
   ): Promise<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  once<TCEvent extends TypedContractEvent>(event: TCEvent, listener: TypedListener<TCEvent>): Promise<this>;
   once<TCEvent extends TypedContractEvent>(
     filter: TypedDeferredTopicFilter<TCEvent>,
     listener: TypedListener<TCEvent>
   ): Promise<this>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
+  listeners<TCEvent extends TypedContractEvent>(event: TCEvent): Promise<Array<TypedListener<TCEvent>>>;
   listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+  removeAllListeners<TCEvent extends TypedContractEvent>(event?: TCEvent): Promise<this>;
 
-  cancelRecovery: TypedContractMethod<
-    [from: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  cancelRecovery: TypedContractMethod<[from: AddressLike], [void], 'nonpayable'>;
 
-  changeHome: TypedContractMethod<[url: string], [void], "nonpayable">;
+  changeHome: TypedContractMethod<[url: string], [void], 'nonpayable'>;
 
-  changeRecoveryAddress: TypedContractMethod<
-    [recovery: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  changeRecoveryAddress: TypedContractMethod<[recovery: AddressLike], [void], 'nonpayable'>;
 
-  changeTrustedCaller: TypedContractMethod<
-    [_trustedCaller: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  changeTrustedCaller: TypedContractMethod<[_trustedCaller: AddressLike], [void], 'nonpayable'>;
 
-  completeRecovery: TypedContractMethod<
-    [from: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  completeRecovery: TypedContractMethod<[from: AddressLike], [void], 'nonpayable'>;
 
-  completeTransferOwnership: TypedContractMethod<[], [void], "nonpayable">;
+  completeTransferOwnership: TypedContractMethod<[], [void], 'nonpayable'>;
 
-  disableTrustedOnly: TypedContractMethod<[], [void], "nonpayable">;
+  disableTrustedOnly: TypedContractMethod<[], [void], 'nonpayable'>;
 
-  idOf: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  idOf: TypedContractMethod<[arg0: AddressLike], [bigint], 'view'>;
 
-  isTrustedForwarder: TypedContractMethod<
-    [forwarder: AddressLike],
-    [boolean],
-    "view"
-  >;
+  isTrustedForwarder: TypedContractMethod<[forwarder: AddressLike], [boolean], 'view'>;
 
-  owner: TypedContractMethod<[], [string], "view">;
+  owner: TypedContractMethod<[], [string], 'view'>;
 
-  register: TypedContractMethod<
-    [to: AddressLike, recovery: AddressLike, url: string],
-    [void],
-    "nonpayable"
-  >;
+  register: TypedContractMethod<[to: AddressLike, recovery: AddressLike, url: string], [void], 'nonpayable'>;
 
-  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+  renounceOwnership: TypedContractMethod<[], [void], 'nonpayable'>;
 
-  requestRecovery: TypedContractMethod<
-    [from: AddressLike, to: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  requestRecovery: TypedContractMethod<[from: AddressLike, to: AddressLike], [void], 'nonpayable'>;
 
-  requestTransferOwnership: TypedContractMethod<
-    [newOwner: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  requestTransferOwnership: TypedContractMethod<[newOwner: AddressLike], [void], 'nonpayable'>;
 
-  transfer: TypedContractMethod<[to: AddressLike], [void], "nonpayable">;
+  transfer: TypedContractMethod<[to: AddressLike], [void], 'nonpayable'>;
 
-  transferOwnership: TypedContractMethod<[arg0: AddressLike], [void], "view">;
+  transferOwnership: TypedContractMethod<[arg0: AddressLike], [void], 'view'>;
 
-  trustedRegister: TypedContractMethod<
-    [to: AddressLike, recovery: AddressLike, url: string],
-    [void],
-    "nonpayable"
-  >;
+  trustedRegister: TypedContractMethod<[to: AddressLike, recovery: AddressLike, url: string], [void], 'nonpayable'>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  getFunction<T extends ContractMethod = ContractMethod>(key: string | FunctionFragment): T;
 
+  getFunction(nameOrSignature: 'cancelRecovery'): TypedContractMethod<[from: AddressLike], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'changeHome'): TypedContractMethod<[url: string], [void], 'nonpayable'>;
   getFunction(
-    nameOrSignature: "cancelRecovery"
-  ): TypedContractMethod<[from: AddressLike], [void], "nonpayable">;
+    nameOrSignature: 'changeRecoveryAddress'
+  ): TypedContractMethod<[recovery: AddressLike], [void], 'nonpayable'>;
   getFunction(
-    nameOrSignature: "changeHome"
-  ): TypedContractMethod<[url: string], [void], "nonpayable">;
+    nameOrSignature: 'changeTrustedCaller'
+  ): TypedContractMethod<[_trustedCaller: AddressLike], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'completeRecovery'): TypedContractMethod<[from: AddressLike], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'completeTransferOwnership'): TypedContractMethod<[], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'disableTrustedOnly'): TypedContractMethod<[], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'idOf'): TypedContractMethod<[arg0: AddressLike], [bigint], 'view'>;
+  getFunction(nameOrSignature: 'isTrustedForwarder'): TypedContractMethod<[forwarder: AddressLike], [boolean], 'view'>;
+  getFunction(nameOrSignature: 'owner'): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: "changeRecoveryAddress"
-  ): TypedContractMethod<[recovery: AddressLike], [void], "nonpayable">;
+    nameOrSignature: 'register'
+  ): TypedContractMethod<[to: AddressLike, recovery: AddressLike, url: string], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'renounceOwnership'): TypedContractMethod<[], [void], 'nonpayable'>;
   getFunction(
-    nameOrSignature: "changeTrustedCaller"
-  ): TypedContractMethod<[_trustedCaller: AddressLike], [void], "nonpayable">;
+    nameOrSignature: 'requestRecovery'
+  ): TypedContractMethod<[from: AddressLike, to: AddressLike], [void], 'nonpayable'>;
   getFunction(
-    nameOrSignature: "completeRecovery"
-  ): TypedContractMethod<[from: AddressLike], [void], "nonpayable">;
+    nameOrSignature: 'requestTransferOwnership'
+  ): TypedContractMethod<[newOwner: AddressLike], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'transfer'): TypedContractMethod<[to: AddressLike], [void], 'nonpayable'>;
+  getFunction(nameOrSignature: 'transferOwnership'): TypedContractMethod<[arg0: AddressLike], [void], 'view'>;
   getFunction(
-    nameOrSignature: "completeTransferOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "disableTrustedOnly"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "idOf"
-  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "isTrustedForwarder"
-  ): TypedContractMethod<[forwarder: AddressLike], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "owner"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "register"
-  ): TypedContractMethod<
-    [to: AddressLike, recovery: AddressLike, url: string],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "renounceOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "requestRecovery"
-  ): TypedContractMethod<
-    [from: AddressLike, to: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "requestTransferOwnership"
-  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "transfer"
-  ): TypedContractMethod<[to: AddressLike], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "transferOwnership"
-  ): TypedContractMethod<[arg0: AddressLike], [void], "view">;
-  getFunction(
-    nameOrSignature: "trustedRegister"
-  ): TypedContractMethod<
-    [to: AddressLike, recovery: AddressLike, url: string],
-    [void],
-    "nonpayable"
-  >;
+    nameOrSignature: 'trustedRegister'
+  ): TypedContractMethod<[to: AddressLike, recovery: AddressLike, url: string], [void], 'nonpayable'>;
 
   getEvent(
-    key: "CancelRecovery"
+    key: 'CancelRecovery'
   ): TypedContractEvent<
     CancelRecoveryEvent.InputTuple,
     CancelRecoveryEvent.OutputTuple,
     CancelRecoveryEvent.OutputObject
   >;
   getEvent(
-    key: "ChangeHome"
-  ): TypedContractEvent<
-    ChangeHomeEvent.InputTuple,
-    ChangeHomeEvent.OutputTuple,
-    ChangeHomeEvent.OutputObject
-  >;
+    key: 'ChangeHome'
+  ): TypedContractEvent<ChangeHomeEvent.InputTuple, ChangeHomeEvent.OutputTuple, ChangeHomeEvent.OutputObject>;
   getEvent(
-    key: "ChangeRecoveryAddress"
+    key: 'ChangeRecoveryAddress'
   ): TypedContractEvent<
     ChangeRecoveryAddressEvent.InputTuple,
     ChangeRecoveryAddressEvent.OutputTuple,
     ChangeRecoveryAddressEvent.OutputObject
   >;
   getEvent(
-    key: "ChangeTrustedCaller"
+    key: 'ChangeTrustedCaller'
   ): TypedContractEvent<
     ChangeTrustedCallerEvent.InputTuple,
     ChangeTrustedCallerEvent.OutputTuple,
     ChangeTrustedCallerEvent.OutputObject
   >;
   getEvent(
-    key: "DisableTrustedOnly"
+    key: 'DisableTrustedOnly'
   ): TypedContractEvent<
     DisableTrustedOnlyEvent.InputTuple,
     DisableTrustedOnlyEvent.OutputTuple,
     DisableTrustedOnlyEvent.OutputObject
   >;
   getEvent(
-    key: "OwnershipTransferred"
+    key: 'OwnershipTransferred'
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
-    key: "Register"
-  ): TypedContractEvent<
-    RegisterEvent.InputTuple,
-    RegisterEvent.OutputTuple,
-    RegisterEvent.OutputObject
-  >;
+    key: 'Register'
+  ): TypedContractEvent<RegisterEvent.InputTuple, RegisterEvent.OutputTuple, RegisterEvent.OutputObject>;
   getEvent(
-    key: "RequestRecovery"
+    key: 'RequestRecovery'
   ): TypedContractEvent<
     RequestRecoveryEvent.InputTuple,
     RequestRecoveryEvent.OutputTuple,
     RequestRecoveryEvent.OutputObject
   >;
   getEvent(
-    key: "Transfer"
-  ): TypedContractEvent<
-    TransferEvent.InputTuple,
-    TransferEvent.OutputTuple,
-    TransferEvent.OutputObject
-  >;
+    key: 'Transfer'
+  ): TypedContractEvent<TransferEvent.InputTuple, TransferEvent.OutputTuple, TransferEvent.OutputObject>;
 
   filters: {
-    "CancelRecovery(address,uint256)": TypedContractEvent<
+    'CancelRecovery(address,uint256)': TypedContractEvent<
       CancelRecoveryEvent.InputTuple,
       CancelRecoveryEvent.OutputTuple,
       CancelRecoveryEvent.OutputObject
@@ -565,7 +375,7 @@ export interface IdRegistry extends BaseContract {
       CancelRecoveryEvent.OutputObject
     >;
 
-    "ChangeHome(uint256,string)": TypedContractEvent<
+    'ChangeHome(uint256,string)': TypedContractEvent<
       ChangeHomeEvent.InputTuple,
       ChangeHomeEvent.OutputTuple,
       ChangeHomeEvent.OutputObject
@@ -576,7 +386,7 @@ export interface IdRegistry extends BaseContract {
       ChangeHomeEvent.OutputObject
     >;
 
-    "ChangeRecoveryAddress(uint256,address)": TypedContractEvent<
+    'ChangeRecoveryAddress(uint256,address)': TypedContractEvent<
       ChangeRecoveryAddressEvent.InputTuple,
       ChangeRecoveryAddressEvent.OutputTuple,
       ChangeRecoveryAddressEvent.OutputObject
@@ -587,7 +397,7 @@ export interface IdRegistry extends BaseContract {
       ChangeRecoveryAddressEvent.OutputObject
     >;
 
-    "ChangeTrustedCaller(address)": TypedContractEvent<
+    'ChangeTrustedCaller(address)': TypedContractEvent<
       ChangeTrustedCallerEvent.InputTuple,
       ChangeTrustedCallerEvent.OutputTuple,
       ChangeTrustedCallerEvent.OutputObject
@@ -598,7 +408,7 @@ export interface IdRegistry extends BaseContract {
       ChangeTrustedCallerEvent.OutputObject
     >;
 
-    "DisableTrustedOnly()": TypedContractEvent<
+    'DisableTrustedOnly()': TypedContractEvent<
       DisableTrustedOnlyEvent.InputTuple,
       DisableTrustedOnlyEvent.OutputTuple,
       DisableTrustedOnlyEvent.OutputObject
@@ -609,7 +419,7 @@ export interface IdRegistry extends BaseContract {
       DisableTrustedOnlyEvent.OutputObject
     >;
 
-    "OwnershipTransferred(address,address)": TypedContractEvent<
+    'OwnershipTransferred(address,address)': TypedContractEvent<
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
@@ -620,18 +430,14 @@ export interface IdRegistry extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
-    "Register(address,uint256,address,string)": TypedContractEvent<
+    'Register(address,uint256,address,string)': TypedContractEvent<
       RegisterEvent.InputTuple,
       RegisterEvent.OutputTuple,
       RegisterEvent.OutputObject
     >;
-    Register: TypedContractEvent<
-      RegisterEvent.InputTuple,
-      RegisterEvent.OutputTuple,
-      RegisterEvent.OutputObject
-    >;
+    Register: TypedContractEvent<RegisterEvent.InputTuple, RegisterEvent.OutputTuple, RegisterEvent.OutputObject>;
 
-    "RequestRecovery(address,address,uint256)": TypedContractEvent<
+    'RequestRecovery(address,address,uint256)': TypedContractEvent<
       RequestRecoveryEvent.InputTuple,
       RequestRecoveryEvent.OutputTuple,
       RequestRecoveryEvent.OutputObject
@@ -642,15 +448,11 @@ export interface IdRegistry extends BaseContract {
       RequestRecoveryEvent.OutputObject
     >;
 
-    "Transfer(address,address,uint256)": TypedContractEvent<
+    'Transfer(address,address,uint256)': TypedContractEvent<
       TransferEvent.InputTuple,
       TransferEvent.OutputTuple,
       TransferEvent.OutputObject
     >;
-    Transfer: TypedContractEvent<
-      TransferEvent.InputTuple,
-      TransferEvent.OutputTuple,
-      TransferEvent.OutputObject
-    >;
+    Transfer: TypedContractEvent<TransferEvent.InputTuple, TransferEvent.OutputTuple, TransferEvent.OutputObject>;
   };
 }

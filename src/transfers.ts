@@ -1,9 +1,11 @@
 import { Kysely, Selectable } from 'kysely';
 import { Database, TransfersTable } from './db.js';
 import { ADMIN_KEYS, generateSignature, signer, verifySignature } from './signature.js';
-import { bytesToHex, hexToBytes } from './util.js';
-import { currentTimestamp } from './util.js';
+import { bytesToHex, currentTimestamp, hexToBytes } from './util.js';
 import { bytesCompare, validations } from '@farcaster/hub-nodejs';
+import { log } from './log.js';
+import { IdRegistry } from './abi/index.js';
+import { toNumber } from 'ethers';
 
 const PAGE_SIZE = 100;
 const TIMESTAMP_TOLERANCE = 60; // 1 minute
@@ -32,6 +34,7 @@ type ErrorCode =
   | 'USERNAME_NOT_FOUND'
   | 'INVALID_SIGNATURE'
   | 'INVALID_USERNAME'
+  | 'INVALID_FID_OWNER'
   | 'INVALID_TIMESTAMP';
 export class ValidationError extends Error {
   public readonly code: ErrorCode;
@@ -41,8 +44,8 @@ export class ValidationError extends Error {
   }
 }
 
-export async function createTransfer(req: TransferRequest, db: Kysely<Database>) {
-  const existing_matching_transfer_id = await validateTransfer(req, db);
+export async function createTransfer(req: TransferRequest, db: Kysely<Database>, idContract: IdRegistry) {
+  const existing_matching_transfer_id = await validateTransfer(req, db, idContract);
   if (existing_matching_transfer_id) {
     return { id: existing_matching_transfer_id };
   }
@@ -56,8 +59,45 @@ export async function createTransfer(req: TransferRequest, db: Kysely<Database>)
   return await db.insertInto('transfers').values(transfer).returning('id').executeTakeFirst();
 }
 
-export async function validateTransfer(req: TransferRequest, db: Kysely<Database>) {
-  const verifierAddress = ADMIN_KEYS[req.userFid];
+async function getAndValidateVerifierAddress(req: TransferRequest, idContract: IdRegistry) {
+  // Admin transfer
+  if (ADMIN_KEYS[req.userFid]) {
+    return ADMIN_KEYS[req.userFid];
+  }
+
+  // For user transfers, make sure the userFid matches the transfer request if it's present and that the
+  // owner address actually owns the fid
+  let userFid = -1;
+  if (req.from === 0) {
+    userFid = req.to;
+  } else if (req.to === 0) {
+    userFid = req.from;
+  }
+  if (req.userFid && userFid !== req.userFid) {
+    log.warn(`User FID ${req.userFid} does not match FID ${userFid} in transfer request`);
+    throw new ValidationError('UNAUTHORIZED');
+  }
+
+  let ownerFid: bigint;
+
+  try {
+    ownerFid = await idContract.idOf(req.owner);
+  } catch (e) {
+    log.error(e, `Unable to get fid for owner: ${req.owner}`);
+    throw new ValidationError('INVALID_FID_OWNER');
+  }
+
+  if (toNumber(ownerFid) !== userFid) {
+    log.warn(`Owner for FID ${ownerFid.toString()} does not match owner ${req.owner} in transfer request`);
+    throw new ValidationError('INVALID_FID_OWNER');
+  }
+
+  return req.owner;
+}
+
+export async function validateTransfer(req: TransferRequest, db: Kysely<Database>, idContract: IdRegistry) {
+  const verifierAddress = await getAndValidateVerifierAddress(req, idContract);
+
   if (!verifierAddress) {
     // Only admin transfers are allowed until we finish migrating
     throw new ValidationError('UNAUTHORIZED');

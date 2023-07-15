@@ -105,7 +105,7 @@ describe('transfers', () => {
       ).rejects.toThrow('INVALID_SIGNATURE');
     });
 
-    test('only allows admin fids to transfer', async () => {
+    test('only admins can transfer names owned by other fids', async () => {
       const now = currentTimestamp();
 
       // FID is not an admin, rejected
@@ -128,6 +128,57 @@ describe('transfers', () => {
           userSignature: await generateSignature('name', now, owner, signer),
         })
       ).rejects.toThrow('INVALID_SIGNATURE');
+    });
+
+    test('user can transfer name if they own the fid', async () => {
+      await expect(
+        createTestTransfer(
+          db,
+          {
+            username: 'anewname',
+            to: 5,
+            owner: anotherSigner.address,
+            userSignature: await generateSignature(
+              'anewname',
+              currentTimestamp(),
+              anotherSigner.address,
+              anotherSigner
+            ),
+            userFid: 5,
+          },
+          5
+        )
+      ).resolves.toBeDefined();
+    });
+    test('user cannot transfer name if they do not own the fid', async () => {
+      await expect(
+        createTestTransfer(
+          db,
+          {
+            username: 'anewname',
+            to: 5,
+            owner: anotherSigner.address,
+            userSignature: await generateSignature(
+              'anewname',
+              currentTimestamp(),
+              anotherSigner.address,
+              anotherSigner
+            ),
+            userFid: 5,
+          },
+          1
+        )
+      ).rejects.toThrow('INVALID_FID_OWNER');
+    });
+    test('fails if userFid does not match transfer fid', async () => {
+      await expect(
+        createTestTransfer(db, {
+          username: 'anewname',
+          to: 5,
+          owner: anotherSigner.address,
+          userFid: 1,
+        })
+      ).rejects.toThrow('UNAUTHORIZED');
     });
   });
 

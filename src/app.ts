@@ -15,6 +15,7 @@ import {
 } from './transfers.js';
 
 import { decodeDnsName } from './util.js';
+import { getIdRegistryContract } from './ethereum.js';
 
 export const RESOLVE_ABI = [
   'function resolve(bytes calldata name, bytes calldata data) external view returns(string name, uint256 timestamp, address owner, bytes memory sig)',
@@ -22,6 +23,7 @@ export const RESOLVE_ABI = [
 
 const db = getDbClient();
 await migrateToLatest(db, log);
+const idContract = getIdRegistryContract();
 
 const server = new ccipread.Server();
 
@@ -75,7 +77,8 @@ app.post('/transfers', async (req, res) => {
         userSignature: tr.signature,
         userFid: tr.fid,
       },
-      db
+      db,
+      idContract
     );
     if (!result) {
       log.warn({ name: tr.username }, `Unable to create transfer`);

@@ -751,22 +751,22 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@farcaster/core@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@farcaster/core/-/core-0.11.0.tgz#31d36214f8d5e6406f4aedb44d37027b5dc736c9"
-  integrity sha512-Vk78+9x5OjpRUcNOhp4P5q9odWR5xxU6oERTBz3xTP0ddF4FLINAlrfglEdYFu7+7J7yobvw/IHHfMH3XLqvCw==
+"@farcaster/core@0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@farcaster/core/-/core-0.11.1.tgz#76da41c8f6c6eff617e453df83a55f85257b4947"
+  integrity sha512-yLilXQrz8vP6RNNUl0G+Z/5q0lR1j7pxfe5mR0N2XB0UtNyUSpXLTP4Bccj4vgWVeZfPzJGDbZLCl4A7Zdso2Q==
   dependencies:
     "@noble/curves" "^1.0.0"
     "@noble/hashes" "^1.3.0"
     neverthrow "^6.0.0"
     viem "^1.1.4"
 
-"@farcaster/hub-nodejs@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@farcaster/hub-nodejs/-/hub-nodejs-0.9.0.tgz#a34370b7afd2a3b97756f867f52bd8ba27291b0d"
-  integrity sha512-WVgQJA3vmn6LI7KMvANtcLx8RSQ7kVD+zd7Ag5dddLt9N/oLGD8to5y/Emq/vitk5miZKlDqzuSlfydtCW9Daw==
+"@farcaster/hub-nodejs@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@farcaster/hub-nodejs/-/hub-nodejs-0.9.1.tgz#a6ffc3966300c4572239d7d77d2f4fa955e1c27c"
+  integrity sha512-UrhHQfY86roX3Pj3UtB8KETrdEITAs7IOoyKwIhKE++/H7BmFQAIQGv2UShNUU2iw8JFf6JzjrgYGPW8skfLnw==
   dependencies:
-    "@farcaster/core" "0.11.0"
+    "@farcaster/core" "0.11.1"
     "@grpc/grpc-js" "^1.8.8"
     "@noble/hashes" "^1.3.0"
     neverthrow "^6.0.0"

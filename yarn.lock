@@ -344,7 +344,7 @@
   dependencies:
     node-gyp-build "^4.5.0"
 
-"@datadog/native-iast-taint-tracking@^1.5.0":
+"@datadog/native-iast-taint-tracking@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@datadog/native-iast-taint-tracking/-/native-iast-taint-tracking-1.5.0.tgz#1a55eca6692079ac6167696682acb972aa0b0181"
   integrity sha512-SOWIk1M6PZH0osNB191Voz2rKBPoF5hISWVSK9GiJPrD40+xjib1Z/bFDV7EkDn3kjOyordSBdNPG5zOqZJdyg==
@@ -359,18 +359,16 @@
     node-addon-api "^6.1.0"
     node-gyp-build "^3.9.0"
 
-"@datadog/pprof@2.2.3":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-2.2.3.tgz#a22ca30e386f5aa8559f4b2e297b76c80551c26d"
-  integrity sha512-cZXvNBBzvTMUx2xOxp49cZJ7/HOF7geVxqeRbveeJUVKwi8ZxmU1rQGcWPFX4iEEtfQu1M3NqbhmNtYsMJdEsQ==
+"@datadog/pprof@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-3.1.0.tgz#d58aac33985dbb71f77d85a41023a35f1ad55290"
+  integrity sha512-Bg8O8yrHeL2KKHXhLoAAT33ZfzLnZ6rWfOjy8PkcNhUJy3UwNVLbUoApf+99EyLjqpzpk/kZXrIAMBzMMB8ilg==
   dependencies:
     delay "^5.0.0"
-    node-gyp-build "^3.9.0"
+    node-gyp-build "<4.0"
     p-limit "^3.1.0"
-    pify "^5.0.0"
     pprof-format "^2.0.7"
-    source-map "^0.7.3"
-    split "^1.0.1"
+    source-map "^0.7.4"
 
 "@datadog/sketches-js@^2.1.0":
   version "2.1.0"
@@ -2130,16 +2128,16 @@ dateformat@^4.6.3:
   resolved "https://registry.npmjs.org/dateformat/-/dateformat-4.6.3.tgz#556fa6497e5217fedb78821424f8a1c22fa3f4b5"
   integrity sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==
 
-dd-trace@^4.4.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-4.5.0.tgz#7695499d59be9c56e51aa88ea224259c6d041877"
-  integrity sha512-qTcbRtXh5ShBZ17oTBBAqUjfmPTe9QD+/t9Hok+NOypPrb0tRmjDljEWIqyvhqtbSJEaVEUDso5DT2bY4qvtbQ==
+dd-trace@^4.8.1:
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-4.8.1.tgz#e019cfd0401373b935560b145b3281f1aadf5cfe"
+  integrity sha512-F0cLSdqgyfXjgauA0pkce95bHsOBPrn4No1wO4YMRlwqiQn/5PhaMz2iFcMoDKTTUMLvxG4MDLaQhLZt+hjl2Q==
   dependencies:
     "@datadog/native-appsec" "^3.2.0"
     "@datadog/native-iast-rewriter" "2.0.1"
-    "@datadog/native-iast-taint-tracking" "^1.5.0"
+    "@datadog/native-iast-taint-tracking" "1.5.0"
     "@datadog/native-metrics" "^2.0.0"
-    "@datadog/pprof" "2.2.3"
+    "@datadog/pprof" "3.1.0"
     "@datadog/sketches-js" "^2.1.0"
     "@opentelemetry/api" "^1.0.0"
     "@opentelemetry/core" "^1.14.0"
@@ -2163,7 +2161,7 @@ dd-trace@^4.4.0:
     node-abort-controller "^3.0.1"
     opentracing ">=0.12.1"
     path-to-regexp "^0.1.2"
-    protobufjs "^7.1.2"
+    protobufjs "^7.2.4"
     retry "^0.10.1"
     semver "^7.3.8"
 
@@ -3883,7 +3881,7 @@ node-addon-api@^6.1.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-6.1.0.tgz#ac8470034e58e67d0c6f1204a18ae6995d9c0d76"
   integrity sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA==
 
-node-gyp-build@^3.9.0:
+node-gyp-build@<4.0, node-gyp-build@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-3.9.0.tgz#53a350187dd4d5276750da21605d1cb681d09e25"
   integrity sha512-zLcTg6P4AbcHPq465ZMFNXx7XpKKJh+7kkN699NiQWisR2uWYOWNWqRHAmbnmKiL4e9aLSlmy5U7rEMUXV59+A==
@@ -4063,11 +4061,6 @@ picomatch@^2.0.4, picomatch@^2.2.3, picomatch@^2.3.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
-pify@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/pify/-/pify-5.0.0.tgz#1f5eca3f5e87ebec28cc6d54a0e4aaf00acc127f"
-  integrity sha512-eW/gHNMlxdSP6dmG6uJip6FXN0EQBwm2clYYd8Wul42Cwu/DK8HEftzsapcNdYe2MfLiIwZqsDk2RDEsTE79hA==
-
 pino-abstract-transport@^1.0.0, pino-abstract-transport@v1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/pino-abstract-transport/-/pino-abstract-transport-1.0.0.tgz#cc0d6955fffcadb91b7b49ef220a6cc111d48bb3"
@@ -4184,7 +4177,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-protobufjs@^7.0.0, protobufjs@^7.1.2:
+protobufjs@^7.0.0, protobufjs@^7.2.4:
   version "7.2.4"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.4.tgz#3fc1ec0cdc89dd91aef9ba6037ba07408485c3ae"
   integrity sha512-AT+RJgD2sH8phPmCf7OUZR8xGdcJRga4+1cOaXJ64hvcSkVhNcRHOwIxUatPH15+nj59WAGTDv3LSGZPEQbJaQ==
@@ -4498,7 +4491,7 @@ source-map@^0.6.0, source-map@^0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-source-map@^0.7.3:
+source-map@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.4.tgz#a9bbe705c9d8846f4e08ff6765acf0f1b0898656"
   integrity sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==
@@ -4507,13 +4500,6 @@ split2@^4.0.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/split2/-/split2-4.2.0.tgz#c9c5920904d148bab0b9f67145f245a86aadbfa4"
   integrity sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==
-
-split@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/split/-/split-1.0.1.tgz#605bd9be303aa59fb35f9229fbea0ddec9ea07d9"
-  integrity sha512-mTyOoPbrivtXnwnIxZRFYRrPNtEFKlpB2fvjSnCQUiAA6qAZzqwna5envK4uk6OIeP17CsdF3rSBGYVBsU0Tkg==
-  dependencies:
-    through "2"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
@@ -4663,11 +4649,6 @@ thread-stream@^2.0.0:
   integrity sha512-kaDqm1DET9pp3NXwR8382WHbnpXnRkN9xGN9dQt3B2+dmXiW8X1SOwmFOxAErEQ47ObhZ96J6yhZNXuyCOL7KA==
   dependencies:
     real-require "^0.2.0"
-
-through@2:
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
-  integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
 
 tmpl@1.0.5:
   version "1.0.5"

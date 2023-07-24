@@ -80,6 +80,41 @@ describe('app', () => {
     });
   });
 
+  describe('get current transfer', () => {
+    test('returns error for unknown name', async () => {
+      let response = await request(app).get('/transfers/current?name=nonexistent');
+      expect(response.status).toBe(404);
+
+      // Name was burned
+      response = await request(app).get('/transfers/current?name=test3');
+      expect(response.status).toBe(404);
+    });
+    test('returns error for unknown fid', async () => {
+      let response = await request(app).get('/transfers/current?fid=129837123');
+      expect(response.status).toBe(404);
+
+      // Name was burned
+      response = await request(app).get('/transfers/current?fid=3');
+      expect(response.status).toBe(404);
+    });
+    test('returns error if no name or fid provided', async () => {
+      const response = await request(app).get('/transfers/current');
+      expect(response.status).toBe(404);
+    });
+    test('returns latest transfer for fid', async () => {
+      await createTestTransfer(db, { username: 'test-current', from: 0, to: 3, timestamp: now + 3 });
+      const response = await request(app).get('/transfers/current?fid=3');
+      expect(response.status).toBe(200);
+      expect(response.body.transfer).toMatchObject({ username: 'test-current', from: 0, to: 3, timestamp: now + 3 });
+    });
+    test('returns latest transfer for name', async () => {
+      await createTestTransfer(db, { username: 'test3', from: 0, to: 10, timestamp: now + 3 });
+      const response = await request(app).get('/transfers/current?name=test3');
+      expect(response.status).toBe(200);
+      expect(response.body.transfer).toMatchObject({ username: 'test3', from: 0, to: 10, timestamp: now + 3 });
+    });
+  });
+
   describe('create transfer', () => {
     const now = currentTimestamp();
 

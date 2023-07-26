@@ -9,6 +9,7 @@ import { toNumber } from 'ethers';
 
 const PAGE_SIZE = 100;
 const TIMESTAMP_TOLERANCE = 60; // 1 minute
+const NAME_CHANGE_DELAY = 28 * 24 * 60 * 60; // 28 days in seconds
 
 type TransferRequest = {
   timestamp: number;
@@ -35,6 +36,7 @@ type ErrorCode =
   | 'INVALID_SIGNATURE'
   | 'INVALID_USERNAME'
   | 'INVALID_FID_OWNER'
+  | 'THROTTLED'
   | 'INVALID_TIMESTAMP';
 export class ValidationError extends Error {
   public readonly code: ErrorCode;
@@ -132,6 +134,11 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
 
   if (existingTransfer && existingTransfer.timestamp > req.timestamp) {
     throw new ValidationError('INVALID_TIMESTAMP');
+  }
+
+  // Non-admin users can only change their name once every 28 days
+  if (existingTransfer && !ADMIN_KEYS[req.userFid] && req.timestamp < existingTransfer.timestamp + NAME_CHANGE_DELAY) {
+    throw new ValidationError('THROTTLED');
   }
 
   if (req.from === 0) {

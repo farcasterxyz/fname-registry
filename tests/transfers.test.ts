@@ -150,6 +150,48 @@ describe('transfers', () => {
         )
       ).resolves.toBeDefined();
     });
+
+    test('user can only transfer name once in 28 days', async () => {
+      await expect(
+        createTestTransfer(
+          db,
+          {
+            username: 'anewname',
+            to: 5,
+            owner: anotherSigner.address,
+            userSignature: await generateSignature(
+              'anewname',
+              currentTimestamp(),
+              anotherSigner.address,
+              anotherSigner
+            ),
+            userFid: 5,
+          },
+          5
+        )
+      ).resolves.toBeDefined();
+      await expect(
+        createTestTransfer(
+          db,
+          {
+            username: 'anewname',
+            from: 5,
+            to: 0,
+            owner: anotherSigner.address,
+            timestamp: currentTimestamp() + 1,
+            userSignature: await generateSignature(
+              'anewname',
+              currentTimestamp() + 1,
+              anotherSigner.address,
+              anotherSigner
+            ),
+            userFid: 5,
+          },
+          5
+        )
+      ).rejects.toThrow('THROTTLED');
+    });
+
     test('user cannot transfer name if they do not own the fid', async () => {
       await expect(
         createTestTransfer(

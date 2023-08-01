@@ -2510,10 +2510,10 @@ ethers@^5.3.1:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-ethers@^6.6.5:
-  version "6.6.5"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.6.5.tgz#b6c29fb45dec93b339a9c984fc62de93c3db8efe"
-  integrity sha512-Tc3HXzI0UJ9EhPp6E0fntkgMIA2//rhcB0UsmiRMCR+Bii5iu0RjtwJV55IhlLJ4K39pd0ku+eE4WRgqrLLW2Q==
+ethers@^6.6.7:
+  version "6.6.7"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.6.7.tgz#9cf773bcbc0ca56d783d4774e9b73b4d1aff9962"
+  integrity sha512-1SdT3W5/IPAcx9l5/+9qKRYR/iqVIdNQIct18yeh+XvN+I4RK44mvOsAerMwJYCAwdQfsOgf3OkfozeuMInbtQ==
   dependencies:
     "@adraffy/ens-normalize" "1.9.2"
     "@noble/hashes" "1.1.2"

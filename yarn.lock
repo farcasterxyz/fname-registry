@@ -1261,10 +1261,10 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.4.tgz#0b92dcc0cc1c81f6f306a381f28e31b1a56536e9"
   integrity sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==
 
-"@typechain/ethers-v6@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@typechain/ethers-v6/-/ethers-v6-0.4.0.tgz#fb9e9b8eeadc455fd1fc9048b2340309860deaca"
-  integrity sha512-vD3Agzz63Gf2XlU3ed2/y+8dLWQj+wf+4Eq+0JXsyOio/plyV5F6r0yYe+s3XdGI858U3Sr263pl8mliDrUqbw==
+"@typechain/ethers-v6@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@typechain/ethers-v6/-/ethers-v6-0.4.3.tgz#badd99f88d5a1f1a2f42590f298e20cc62618e59"
+  integrity sha512-TrxBsyb4ryhaY9keP6RzhFCviWYApcLCIRMPyWaKp2cZZrfaM3QBoxXTnw/eO4+DAY3l+8O0brNW0WgeQeOiDA==
   dependencies:
     lodash "^4.17.15"
     ts-essentials "^7.0.1"

@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
-    "@farcaster/hub-nodejs": "^0.9.1",
+    "@farcaster/hub-nodejs": "^0.10.4",
     "body-parser": "^1.20.2",
     "dd-trace": "^4.11.1",
     "dotenv": "^16.3.1",

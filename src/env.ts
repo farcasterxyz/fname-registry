@@ -5,9 +5,9 @@ dotenv.config();
 export const ENVIRONMENT = process.env['ENVIRONMENT'] || 'dev';
 export const SERVICE = process.env['DD_SERVICE'] || 'fname-registry';
 
-export const GOERLI_ALCHEMY_SECRET = process.env['GOERLI_ALCHEMY_SECRET'] || '';
-if (GOERLI_ALCHEMY_SECRET === '') {
-  throw new Error('GOERLI_ALCHEMY_SECRET missing from .env');
+export const OP_ALCHEMY_SECRET = process.env['OP_ALCHEMY_SECRET'] || '';
+if (OP_ALCHEMY_SECRET === '') {
+  throw new Error('OP_ALCHEMY_SECRET missing from .env');
 }
 
 export const WARPCAST_ADDRESS = process.env['WARPCAST_ADDRESS'] || '';

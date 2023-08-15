@@ -10,17 +10,12 @@ const _abi = [
     inputs: [
       {
         internalType: 'address',
-        name: '_forwarder',
+        name: '_owner',
         type: 'address',
       },
     ],
     stateMutability: 'nonpayable',
     type: 'constructor',
-  },
-  {
-    inputs: [],
-    name: 'Escrow',
-    type: 'error',
   },
   {
     inputs: [],
@@ -33,13 +28,39 @@ const _abi = [
     type: 'error',
   },
   {
-    inputs: [],
-    name: 'Invitable',
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'currentNonce',
+        type: 'uint256',
+      },
+    ],
+    name: 'InvalidAccountNonce',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'NoRecovery',
+    name: 'InvalidAddress',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidShortString',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidSignature',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'OnlyTrustedCaller',
     type: 'error',
   },
   {
@@ -49,46 +70,29 @@ const _abi = [
   },
   {
     inputs: [],
-    name: 'Unauthorized',
+    name: 'Seedable',
     type: 'error',
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'by',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'id',
-        type: 'uint256',
-      },
-    ],
-    name: 'CancelRecovery',
-    type: 'event',
+    inputs: [],
+    name: 'SignatureExpired',
+    type: 'error',
   },
   {
-    anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'id',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
         internalType: 'string',
-        name: 'url',
+        name: 'str',
         type: 'string',
       },
     ],
-    name: 'ChangeHome',
-    type: 'event',
+    name: 'StringTooLong',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'Unauthorized',
+    type: 'error',
   },
   {
     anonymous: false,
@@ -111,21 +115,33 @@ const _abi = [
   },
   {
     anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'trustedCaller',
-        type: 'address',
-      },
-    ],
-    name: 'ChangeTrustedCaller',
+    inputs: [],
+    name: 'DisableTrustedOnly',
     type: 'event',
   },
   {
     anonymous: false,
     inputs: [],
-    name: 'DisableTrustedOnly',
+    name: 'EIP712DomainChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipTransferStarted',
     type: 'event',
   },
   {
@@ -151,6 +167,19 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'Paused',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: true,
         internalType: 'address',
         name: 'to',
@@ -168,12 +197,6 @@ const _abi = [
         name: 'recovery',
         type: 'address',
       },
-      {
-        indexed: false,
-        internalType: 'string',
-        name: 'url',
-        type: 'string',
-      },
     ],
     name: 'Register',
     type: 'event',
@@ -184,23 +207,23 @@ const _abi = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'from',
+        name: 'oldCaller',
         type: 'address',
       },
       {
         indexed: true,
         internalType: 'address',
-        name: 'to',
+        name: 'newCaller',
         type: 'address',
       },
       {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'id',
-        type: 'uint256',
+        indexed: false,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
       },
     ],
-    name: 'RequestRecovery',
+    name: 'SetTrustedCaller',
     type: 'event',
   },
   {
@@ -229,27 +252,21 @@ const _abi = [
     type: 'event',
   },
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: false,
         internalType: 'address',
-        name: 'from',
+        name: 'account',
         type: 'address',
       },
     ],
-    name: 'cancelRecovery',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    name: 'Unpaused',
+    type: 'event',
   },
   {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'url',
-        type: 'string',
-      },
-    ],
-    name: 'changeHome',
+    inputs: [],
+    name: 'acceptOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -268,39 +285,6 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_trustedCaller',
-        type: 'address',
-      },
-    ],
-    name: 'changeTrustedCaller',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'from',
-        type: 'address',
-      },
-    ],
-    name: 'completeRecovery',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'completeTransferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'disableTrustedOnly',
     outputs: [],
@@ -308,10 +292,53 @@ const _abi = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'eip712Domain',
+    outputs: [
+      {
+        internalType: 'bytes1',
+        name: 'fields',
+        type: 'bytes1',
+      },
+      {
+        internalType: 'string',
+        name: 'name',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'version',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'chainId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'verifyingContract',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'salt',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'extensions',
+        type: 'uint256[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'address',
-        name: '',
+        name: 'owner',
         type: 'address',
       },
     ],
@@ -319,7 +346,7 @@ const _abi = [
     outputs: [
       {
         internalType: 'uint256',
-        name: '',
+        name: 'fid',
         type: 'uint256',
       },
     ],
@@ -330,16 +357,16 @@ const _abi = [
     inputs: [
       {
         internalType: 'address',
-        name: 'forwarder',
+        name: 'owner',
         type: 'address',
       },
     ],
-    name: 'isTrustedForwarder',
+    name: 'nonces',
     outputs: [
       {
-        internalType: 'bool',
+        internalType: 'uint256',
         name: '',
-        type: 'bool',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -359,33 +386,36 @@ const _abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'recovery',
-        type: 'address',
-      },
-      {
-        internalType: 'string',
-        name: 'url',
-        type: 'string',
-      },
-    ],
-    name: 'register',
+    inputs: [],
+    name: 'pauseRegistration',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [],
-    name: 'renounceOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'paused',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'pendingOwner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -400,8 +430,114 @@ const _abi = [
         name: 'to',
         type: 'address',
       },
+      {
+        internalType: 'uint256',
+        name: 'deadline',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes',
+        name: 'sig',
+        type: 'bytes',
+      },
     ],
-    name: 'requestRecovery',
+    name: 'recover',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'recovery',
+        type: 'address',
+      },
+    ],
+    name: 'register',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'fid',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'recovery',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'deadline',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes',
+        name: 'sig',
+        type: 'bytes',
+      },
+    ],
+    name: 'registerFor',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'fid',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_trustedCaller',
+        type: 'address',
+      },
+    ],
+    name: 'setTrustedCaller',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'deadline',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes',
+        name: 'sig',
+        type: 'bytes',
+      },
+    ],
+    name: 'transfer',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -414,34 +550,21 @@ const _abi = [
         type: 'address',
       },
     ],
-    name: 'requestTransferOwnership',
+    name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
-      },
-    ],
-    name: 'transfer',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
+    inputs: [],
+    name: 'trustedCaller',
+    outputs: [
       {
         internalType: 'address',
         name: '',
         type: 'address',
       },
     ],
-    name: 'transferOwnership',
-    outputs: [],
     stateMutability: 'view',
     type: 'function',
   },
@@ -457,13 +580,21 @@ const _abi = [
         name: 'recovery',
         type: 'address',
       },
-      {
-        internalType: 'string',
-        name: 'url',
-        type: 'string',
-      },
     ],
     name: 'trustedRegister',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'fid',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'unpauseRegistration',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

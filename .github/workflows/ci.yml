@@ -84,7 +84,7 @@ jobs:
 
       - name: Run tests
         env:
-          GOERLI_ALCHEMY_SECRET: 'dummy'
+          OP_ALCHEMY_SECRET: 'dummy'
           MAINNET_ALCHEMY_SECRET: 'dummy'
           INFURA_PROJECT_ID: 'dummy'
           INFURA_PROJECT_SECRET: 'dummy'

@@ -1,9 +1,10 @@
 import './tracing.js';
 import { app } from './app.js';
+import { log } from './log.js';
 
 const port = process.env.PORT || '3000';
 const server = app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  log.info(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
 
 // Ensure this is larger than the ALB's keep-alive timeout (default 60s).
@@ -17,7 +18,7 @@ const gracefulShutdown = async () => {
 
 for (const signal of ['SIGTERM', 'SIGINT']) {
   process.once(signal, async (signalName: string) => {
-    console.log(`Process received signal ${signalName}`);
+    log.info(`Process received signal ${signalName}`);
     process.exitCode =
       {
         SIGINT: 130,
@@ -28,5 +29,5 @@ for (const signal of ['SIGTERM', 'SIGINT']) {
 }
 
 process.on('exit', (code) => {
-  console.log(`Exiting process with code ${code}`);
+  log.info(`Exiting process with code ${code}`);
 });

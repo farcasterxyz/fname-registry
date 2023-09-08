@@ -99,13 +99,13 @@ async function getAndValidateVerifierAddress(req: TransferRequest, idContract: I
 
 export async function validateTransfer(req: TransferRequest, db: Kysely<Database>, idContract: IdRegistry) {
   const verifierAddress = await getAndValidateVerifierAddress(req, idContract);
-
   if (!verifierAddress) {
     // Only admin transfers are allowed until we finish migrating
     throw new ValidationError('UNAUTHORIZED');
   }
 
   if (!verifySignature(req.username, req.timestamp, req.owner, req.userSignature, verifierAddress)) {
+    log.error(`Invalid signature for req ${JSON.stringify(req)}`);
     throw new ValidationError('INVALID_SIGNATURE');
   }
 
@@ -129,10 +129,12 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
   }
 
   if (req.timestamp > currentTimestamp() + TIMESTAMP_TOLERANCE) {
+    log.error(`Timestamp ${req.timestamp} was > ${TIMESTAMP_TOLERANCE}`);
     throw new ValidationError('INVALID_TIMESTAMP');
   }
 
   if (existingTransfer && existingTransfer.timestamp > req.timestamp) {
+    log.error(`Timestamp ${req.timestamp} < previous transfer timestamp of ${existingTransfer.timestamp}`);
     throw new ValidationError('INVALID_TIMESTAMP');
   }
 

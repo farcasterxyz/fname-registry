@@ -2162,10 +2162,10 @@ dateformat@^4.6.3:
   resolved "https://registry.npmjs.org/dateformat/-/dateformat-4.6.3.tgz#556fa6497e5217fedb78821424f8a1c22fa3f4b5"
   integrity sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==
 
-dd-trace@^4.14.0:
-  version "4.14.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-4.14.0.tgz#006b646211632d73a244f17cccaa826c3639c529"
-  integrity sha512-hxYWynK44VWz5FjQTG9QmQwpb9WkgBQ1QMfan9VfXt04N1H9slvFBteh3rKOUwZk61mHmqorWC0uYz4ipcQUig==
+dd-trace@^4.15.0:
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-4.15.0.tgz#8a0c099ca82dac898ec77f568ea56966dbe70c79"
+  integrity sha512-LesEnL2X1qqvwSCCxkSm/qRkuFUpmamf/BloGcz3B72og2qdNel8W8uviwNO9b7OGC3Fm+QzdfqwfTkoIMUZwQ==
   dependencies:
     "@datadog/native-appsec" "^3.2.0"
     "@datadog/native-iast-rewriter" "2.1.3"

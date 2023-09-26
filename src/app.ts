@@ -51,6 +51,10 @@ app.get('/transfers', async (req, res) => {
   if (req.query.from_id) {
     filterOpts.fromId = parseInt(req.query.from_id.toString());
   }
+  // TODO: Remove once hub is fixed
+  if (req.query.fromId) {
+    filterOpts.fromId = parseInt(req.query.fromId.toString());
+  }
   if (req.query.name) {
     filterOpts.name = req.query.name.toString();
   }

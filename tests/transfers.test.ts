@@ -33,6 +33,26 @@ describe('transfers', () => {
       await expect(createTestTransfer(db, { username: 'test3', to: 4 })).rejects.toThrow('USERNAME_TAKEN');
     });
 
+    test('cannot register a reserved name with a non-admin account', async () => {
+      await expect(
+        createTestTransfer(
+          db,
+          {
+            username: 'apple',
+            owner: '0xd469E0504c20185941E73029C6A400bD2dD28A1A',
+            from: 0,
+            to: 123,
+            userFid: 123,
+          },
+          123
+        )
+      ).rejects.toThrow('USERNAME_RESERVED');
+    });
+
+    test('can register a reserved name with an admin account', async () => {
+      expect(await createTestTransfer(db, { username: 'apple', to: 123 }));
+    });
+
     test('same fid cannot register twice', async () => {
       await expect(createTestTransfer(db, { username: 'test1234', to: 2 })).rejects.toThrow('TOO_MANY_NAMES');
     });

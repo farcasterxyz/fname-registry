@@ -1,6 +1,7 @@
 import { Kysely, Selectable } from 'kysely';
 import { Database, TransfersTable } from './db.js';
 import { ADMIN_KEYS, generateSignature, signer, verifySignature } from './signature.js';
+import { reservedUsername } from './reserved.js';
 import { bytesToHex, currentTimestamp, hexToBytes } from './util.js';
 import { bytesCompare, validations } from '@farcaster/hub-nodejs';
 import { log } from './log.js';
@@ -30,6 +31,7 @@ export type TransferHistoryFilter = {
 
 type ErrorCode =
   | 'USERNAME_TAKEN'
+  | 'USERNAME_RESERVED'
   | 'TOO_MANY_NAMES'
   | 'UNAUTHORIZED'
   | 'USERNAME_NOT_FOUND'
@@ -100,8 +102,11 @@ async function getAndValidateVerifierAddress(req: TransferRequest, idContract: I
 export async function validateTransfer(req: TransferRequest, db: Kysely<Database>, idContract: IdRegistry) {
   const verifierAddress = await getAndValidateVerifierAddress(req, idContract);
   if (!verifierAddress) {
-    // Only admin transfers are allowed until we finish migrating
     throw new ValidationError('UNAUTHORIZED');
+  }
+
+  if (reservedUsername(req.username) && !ADMIN_KEYS[req.userFid]) {
+    throw new ValidationError('USERNAME_RESERVED');
   }
 
   if (!verifySignature(req.username, req.timestamp, req.owner, req.userSignature, verifierAddress)) {

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.5
 
-FROM node:20.2.0-alpine3.17 as builder
+FROM node:20.8.0-alpine3.17 as builder
 
 # Create app directory
 WORKDIR /app
@@ -11,6 +11,7 @@ RUN <<EOF
   apk add git             # Fetch some packages
   apk add python3         # Some node gyp bindings requires Python
   apk add make g++        # Standard tools for building native extensions
+  npm install -g node-gyp # Compile native extensions
 EOF
 
 # Re-install packages if there were any changes
@@ -41,7 +42,7 @@ COPY . .
 RUN yarn build
 
 # When updating image version, make sure to update above layer as well
-FROM node:20.2.0-alpine3.17 as app
+FROM node:20.8.0-alpine3.17 as app
 
 WORKDIR /app
 

@@ -41,16 +41,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v3
-
-      - name: Restore cached dependencies for Node modules.
-        id: module-cache
-        uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}--node--${{ matrix.node_version}}--${{ hashFiles('**/yarn.lock') }}
+          node-version-file: '.node-version'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: |
+          npm install -g node-gyp
+          yarn install
 
       - name: Lint
         run: yarn lint
@@ -67,16 +65,14 @@ jobs:
         shell: bash
 
       - uses: actions/setup-node@v3
-
-      - name: Restore cached dependencies for Node modules.
-        id: module-cache
-        uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}--node--${{ matrix.node_version}}--${{ hashFiles('**/yarn.lock') }}
+          node-version-file: '.node-version'
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn install
+        run: |
+          npm install -g node-gyp
+          yarn install
 
       - name: Create test DB
         run: echo 'create database registry_test' | PGPASSWORD=password psql -h localhost -p 6543 -U app registry_dev

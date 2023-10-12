@@ -75,17 +75,17 @@ app.get('/transfers', async (req, res) => {
 });
 
 app.get('/transfers/current', async (req, res) => {
-  let name: string | undefined;
-  if (req.query.fid) {
-    name = await getCurrentUsername(parseInt(req.query.fid.toString()), db);
-  } else if (req.query.name) {
-    name = req.query.name.toString();
-  }
-  if (!name || name === '') {
-    res.status(404).send({ error: 'Could not resolve current name' }).end();
-    return;
-  }
   try {
+    let name: string | undefined;
+    if (req.query.fid) {
+      name = await getCurrentUsername(parseInt(req.query.fid.toString()), db);
+    } else if (req.query.name) {
+      name = req.query.name.toString();
+    }
+    if (!name || name === '') {
+      res.status(404).send({ error: 'Could not resolve current name' }).end();
+      return;
+    }
     const transfer = await getLatestTransfer(name, db);
     if (!transfer || transfer.to === 0) {
       res.status(404).send({ error: 'No transfer found' }).end();

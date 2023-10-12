@@ -69,7 +69,7 @@ app.get('/transfers', async (req, res) => {
     res.send({ transfers });
   } catch (e) {
     res.status(400).send({ error: 'Unable to get transfers' }).end();
-    log.error(e, 'Unable to get transfers for filter', filterOpts);
+    log.error(e, `Unable to get transfers for request: ${JSON.stringify(req.query)}`);
     return;
   }
 });
@@ -94,7 +94,7 @@ app.get('/transfers/current', async (req, res) => {
     res.send({ transfer });
   } catch (e) {
     res.status(400).send({ error: 'Unable to get transfer' }).end();
-    log.error(e, 'Unable to get transfers for query', req.query);
+    log.error(e, `Unable to get transfers for query: ${JSON.stringify(req.query)}`);
     return;
   }
 });
@@ -127,7 +127,7 @@ app.post('/transfers', async (req, res) => {
     if (e instanceof ValidationError) {
       res.status(400).send({ error: 'Validation failure', code: e.code }).end();
     } else {
-      log.error(e, 'Unable to create transfer', tr);
+      log.error(e, `Unable to create transfer: ${JSON.stringify(tr)}`);
       res
         .status(500)
         .send({ error: `Unable to validate : ${e}` })

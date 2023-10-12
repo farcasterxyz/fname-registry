@@ -64,8 +64,14 @@ app.get('/transfers', async (req, res) => {
   if (req.query.fid) {
     filterOpts.fid = parseInt(req.query.fid.toString());
   }
-  const transfers = await getTransferHistory(filterOpts, db);
-  res.send({ transfers });
+  try {
+    const transfers = await getTransferHistory(filterOpts, db);
+    res.send({ transfers });
+  } catch (e) {
+    res.status(400).send({ error: 'Unable to get transfers' }).end();
+    log.error(e, 'Unable to get transfers for filter', filterOpts);
+    return;
+  }
 });
 
 app.get('/transfers/current', async (req, res) => {
@@ -79,12 +85,18 @@ app.get('/transfers/current', async (req, res) => {
     res.status(404).send({ error: 'Could not resolve current name' }).end();
     return;
   }
-  const transfer = await getLatestTransfer(name, db);
-  if (!transfer || transfer.to === 0) {
-    res.status(404).send({ error: 'No transfer found' }).end();
+  try {
+    const transfer = await getLatestTransfer(name, db);
+    if (!transfer || transfer.to === 0) {
+      res.status(404).send({ error: 'No transfer found' }).end();
+      return;
+    }
+    res.send({ transfer });
+  } catch (e) {
+    res.status(400).send({ error: 'Unable to get transfer' }).end();
+    log.error(e, 'Unable to get transfers for query', req.query);
     return;
   }
-  res.send({ transfer });
 });
 
 app.post('/transfers', async (req, res) => {

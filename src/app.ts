@@ -78,6 +78,10 @@ app.get('/transfers/current', async (req, res) => {
   try {
     let name: string | undefined;
     if (req.query.fid) {
+      if (Number.isNaN(Number(req.query.fid))) {
+        res.status(400).send({ error: 'FID is not a number' }).end();
+        return;
+      }
       name = await getCurrentUsername(parseInt(req.query.fid.toString()), db);
     } else if (req.query.name) {
       name = req.query.name.toString();

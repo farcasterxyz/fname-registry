@@ -138,6 +138,11 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('INVALID_TIMESTAMP');
   }
 
+  if (req.timestamp < currentTimestamp() - TIMESTAMP_TOLERANCE) {
+    log.error(`Timestamp ${req.timestamp} was < ${TIMESTAMP_TOLERANCE}`);
+    throw new ValidationError('INVALID_TIMESTAMP');
+  }
+
   if (existingTransfer && existingTransfer.timestamp > req.timestamp) {
     log.error(`Timestamp ${req.timestamp} < previous transfer timestamp of ${existingTransfer.timestamp}`);
     throw new ValidationError('INVALID_TIMESTAMP');

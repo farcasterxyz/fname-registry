@@ -89,6 +89,15 @@ describe('transfers', () => {
       await expect(
         createTestTransfer(db, { username: 'test123', from: 2, to: 10, timestamp: currentTimestamp() + 100 })
       ).rejects.toThrow('INVALID_TIMESTAMP');
+
+      // Timestamp cannot be too far in the past
+      await expect(
+        createTestTransfer(db, { username: 'newusername', from: 0, to: 15, timestamp: currentTimestamp() - 100 })
+      ).rejects.toThrow('INVALID_TIMESTAMP');
+
+      await expect(createTestTransfer(db, { username: 'newusername', from: 0, to: 15, timestamp: 0 })).rejects.toThrow(
+        'INVALID_TIMESTAMP'
+      );
     });
 
     test('fails for an invalid signature', async () => {

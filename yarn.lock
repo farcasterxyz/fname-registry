@@ -409,18 +409,18 @@
   dependencies:
     node-gyp-build "^3.9.0"
 
-"@datadog/native-iast-rewriter@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@datadog/native-iast-rewriter/-/native-iast-rewriter-2.1.3.tgz#1964cd856655b9c4d0e144048af59a2e90910901"
-  integrity sha512-4oxMFz5ZEpOK3pRc9KjquMgkRP6D+oPQVIzOk4dgG8fl2iepHtCa3gna/fQBfdWIiX5a2j65O3R1zNp2ckk8JA==
+"@datadog/native-iast-rewriter@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@datadog/native-iast-rewriter/-/native-iast-rewriter-2.2.1.tgz#3c74c5a8caa0b876e091e9c5a95256add0d73e1c"
+  integrity sha512-DyZlE8gNa5AoOFNKGRJU4RYF/Y/tJzv4bIAMuVBbEnMA0xhiIYqpYQG8T3OKkALl3VSEeBMjYwuOR2fCrJ6gzA==
   dependencies:
     lru-cache "^7.14.0"
     node-gyp-build "^4.5.0"
 
-"@datadog/native-iast-taint-tracking@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@datadog/native-iast-taint-tracking/-/native-iast-taint-tracking-1.5.0.tgz#1a55eca6692079ac6167696682acb972aa0b0181"
-  integrity sha512-SOWIk1M6PZH0osNB191Voz2rKBPoF5hISWVSK9GiJPrD40+xjib1Z/bFDV7EkDn3kjOyordSBdNPG5zOqZJdyg==
+"@datadog/native-iast-taint-tracking@1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@datadog/native-iast-taint-tracking/-/native-iast-taint-tracking-1.6.3.tgz#cb2125f7bf18806da6f326c3a6b7210da3e05d8b"
+  integrity sha512-u/bBPNx0w8Bq+I+30enI99Ua2WPbVLkANGNyQNjW4tz2PHyeGI++HyzZV+fGm0YSy41FuHZq9EWP3SSDz/eSVw==
   dependencies:
     node-gyp-build "^3.9.0"
 
@@ -432,10 +432,10 @@
     node-addon-api "^6.1.0"
     node-gyp-build "^3.9.0"
 
-"@datadog/pprof@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-3.2.0.tgz#ab822caf18999a84f144dd4e0261d6e9274f4c5f"
-  integrity sha512-kOhWHCWB80djnMCr5KNKBAy1Ih/jK/PIj6yqnZwL1Wqni/h6IBPRUMhtIxcYJMRgsZVYrFXUV20AVXTZCzFokw==
+"@datadog/pprof@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-4.0.1.tgz#f8629ecb62646d90ed49b6252dd0583d8d5001d3"
+  integrity sha512-TavqyiyQZOaUM9eQB07r8+K/T1CqKyOdsUGxpN79+BF+eOQBpTj/Cte6KdlhcUSKL3h5hSjC+vlgA7uW2qtVhA==
   dependencies:
     delay "^5.0.0"
     node-gyp-build "<4.0"
@@ -2225,16 +2225,16 @@ dateformat@^4.6.3:
   resolved "https://registry.npmjs.org/dateformat/-/dateformat-4.6.3.tgz#556fa6497e5217fedb78821424f8a1c22fa3f4b5"
   integrity sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==
 
-dd-trace@^4.16.0:
-  version "4.16.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-4.16.0.tgz#1ada5f5640de7975807bbae6743cee766c56ecd7"
-  integrity sha512-pDAZgJ9hYrRHztpSM7hcO6bAXj/Jrf1EMW/O6BiDsQS6GMzXho3rqOHIGMBeB7+pzM6/chncio1KkwOKP+d4bQ==
+dd-trace@^4.18.0:
+  version "4.18.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-4.18.0.tgz#0c469c9d8df4b79cdfd1ef31db698532ee5e5815"
+  integrity sha512-rycfmSIshWcphYavFE4iozpu0QbnLpXiUuan+Ft3mvPFe+wYgqY8agu+goRNGAXZYFXNLk7jVN5OTXYO2AMJtQ==
   dependencies:
     "@datadog/native-appsec" "^4.0.0"
-    "@datadog/native-iast-rewriter" "2.1.3"
-    "@datadog/native-iast-taint-tracking" "1.5.0"
+    "@datadog/native-iast-rewriter" "2.2.1"
+    "@datadog/native-iast-taint-tracking" "1.6.3"
     "@datadog/native-metrics" "^2.0.0"
-    "@datadog/pprof" "3.2.0"
+    "@datadog/pprof" "4.0.1"
     "@datadog/sketches-js" "^2.1.0"
     "@opentelemetry/api" "^1.0.0"
     "@opentelemetry/core" "^1.14.0"
@@ -2245,6 +2245,7 @@ dd-trace@^4.16.0:
     int64-buffer "^0.1.9"
     ipaddr.js "^2.1.0"
     istanbul-lib-coverage "3.2.0"
+    jest-docblock "^29.7.0"
     koalas "^1.0.2"
     limiter "^1.1.4"
     lodash.kebabcase "^4.1.1"

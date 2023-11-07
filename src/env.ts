@@ -21,4 +21,4 @@ if (WARPCAST_ADDRESS === '') {
   throw new Error('CCIP_ADDRESS missing from .env');
 }
 
-export const ID_REGISTRY_ADDRESS = process.env['ID_REGISTRY_ADDRESS'] || '0x00000000fcaf86937e41ba038b4fa40baa4b780a';
+export const ID_REGISTRY_ADDRESS = process.env['ID_REGISTRY_ADDRESS'] || '0x00000000fc6c5f01fc30151999387bb99a9f489b';

@@ -78,6 +78,14 @@ describe('app', () => {
       expect(response.body.transfers).toHaveLength(1);
       expect(response.body.transfers[0]).toMatchObject({ username: 'test3', from: 3, to: 0, timestamp: now + 2 });
     });
+
+    test('does not fail for zero padded names', async () => {
+      const zeroPaddedName = Buffer.concat([Buffer.from('test2'), Buffer.alloc(3)]).toString('utf-8');
+      const response = await request(app).get(`/transfers?name=${zeroPaddedName}`);
+      expect(response.status).toBe(200);
+      expect(response.body.transfers).toHaveLength(1);
+      expect(response.body.transfers[0]).toMatchObject({ username: 'test2' });
+    });
   });
 
   describe('get current transfer', () => {

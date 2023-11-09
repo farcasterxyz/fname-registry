@@ -56,7 +56,7 @@ app.get('/transfers', async (req, res) => {
     filterOpts.fromId = parseInt(req.query.fromId.toString());
   }
   if (req.query.name) {
-    filterOpts.name = req.query.name.toString();
+    filterOpts.name = req.query.name.toString().replace(/\0/g, '');
   }
   if (req.query.from_ts) {
     filterOpts.fromTs = parseInt(req.query.from_ts.toString());

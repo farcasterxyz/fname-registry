@@ -3815,10 +3815,10 @@ koalas@^1.0.2:
   resolved "https://registry.yarnpkg.com/koalas/-/koalas-1.0.2.tgz#318433f074235db78fae5661a02a8ca53ee295cd"
   integrity sha512-RYhBbYaTTTHId3l6fnMZc3eGQNW6FVCqMG6AMwA5I1Mafr6AflaXeoi6x3xQuATRotGYRLk6+1ELZH4dstFNOA==
 
-kysely-postgres-js@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/kysely-postgres-js/-/kysely-postgres-js-1.1.1.tgz#d53a738403632f03d3a00c115af01b62a5f8c9c1"
-  integrity sha512-4liHLEA1TfdGVixiW2wM4UFqv0r+F06pxpFng7xSdyl4p6lUp0099W+jotq4inovneTbVDBaFKwn+uOiORXKGQ==
+kysely-postgres-js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/kysely-postgres-js/-/kysely-postgres-js-2.0.0.tgz#f2e79f2e14c2c3065052722bdc89014691080ceb"
+  integrity sha512-R1tWx6/x3tSatWvsmbHJxpBZYhNNxcnMw52QzZaHKg7ZOWtHib4iZyEaw4gb2hNKVctWQ3jfMxZT/ZaEMK6kBQ==
 
 kysely@^0.26.3:
   version "0.26.3"

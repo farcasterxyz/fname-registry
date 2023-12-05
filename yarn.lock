@@ -4385,10 +4385,10 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-postgres@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/postgres/-/postgres-3.4.1.tgz#f1446241cd6d6ce158b5104e62b39eea02b2b9ad"
-  integrity sha512-Wasjv6WEzrZXbwKByR2RGD7MBfj7VBqco3hYWz8ifzSAp6tb2L6MlmcKFzkmgV1jT7/vKlcSa+lxXZeTdeVMzQ==
+postgres@^3.4.3:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/postgres/-/postgres-3.4.3.tgz#52a0712cd6c2dae5e9f8c35b5c7b33434caa66ed"
+  integrity sha512-iHJn4+M9vbTdHSdDzNkC0crHq+1CUdFhx+YqCE+SqWxPjm+Zu63jq7yZborOBF64c8pc58O5uMudyL1FQcHacA==
 
 pprof-format@^2.0.7:
   version "2.0.7"

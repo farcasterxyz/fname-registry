@@ -30,7 +30,7 @@
     "neverthrow": "^6.1.0",
     "pino": "^8.16.1",
     "pino-pretty": "^10.2.3",
-    "postgres": "^3.4.1"
+    "postgres": "^3.4.3"
   },
   "devDependencies": {
     "@typechain/ethers-v6": "^0.5.1",

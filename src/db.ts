@@ -33,21 +33,19 @@ export interface TransfersTable {
 export const getDbClient = () => {
   return new Kysely<Database>({
     dialect: new PostgresJSDialect({
-      connectionString: POSTGRES_URL,
-      options: {
+      postgres: postgres(POSTGRES_URL, {
         max: 10,
         types: {
           // BigInts will not exceed Number.MAX_SAFE_INTEGER for our use case.
           // Return as JavaScript's `number` type so it's easier to work with.
           bigint: {
             to: 20,
-            from: 20,
+            from: [20],
             parse: (x: any) => Number(x),
             serialize: (x: any) => x.toString(),
           },
         },
-      },
-      postgres,
+      }),
     }),
     plugins: [new CamelCasePlugin()],
   });

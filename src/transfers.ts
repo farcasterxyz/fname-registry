@@ -192,8 +192,8 @@ export async function getCurrentUsername(fid: number, db: Kysely<Database>) {
   const transfer = await db
     .selectFrom('transfers')
     .select(['username', 'from', 'to'])
-    .where(({ or, cmpr }) => {
-      return or([cmpr('from', '=', fid), cmpr('to', '=', fid)]);
+    .where(({ or, eb }) => {
+      return or([eb('from', '=', fid), eb('to', '=', fid)]);
     })
     .orderBy('timestamp', 'desc')
     .limit(1)

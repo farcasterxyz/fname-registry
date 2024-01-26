@@ -242,8 +242,8 @@ export async function getTransferHistory(filterOpts: TransferHistoryFilter, db: 
   }
   if (filterOpts.fid) {
     const _fid = filterOpts.fid;
-    query = query.where(({ or, cmpr }) => {
-      return or([cmpr('from', '=', _fid), cmpr('to', '=', _fid)]);
+    query = query.where(({ or, eb }) => {
+      return or([eb('from', '=', _fid), eb('to', '=', _fid)]);
     });
   }
 

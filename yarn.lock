@@ -402,17 +402,17 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@datadog/native-appsec@5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@datadog/native-appsec/-/native-appsec-5.0.0.tgz#e42e77f42062532ad7defa3a79090dc8b020c22b"
-  integrity sha512-Ks8a4L49N40w+TJjj2e9ncGssUIEjo4wnmUFjPBRvlLGuVj1VJLxCx7ztpd8eTycM5QQlzggCDOP6CMEVmeZbA==
+"@datadog/native-appsec@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@datadog/native-appsec/-/native-appsec-7.0.0.tgz#a380174dd49aef2d9bb613a0ec8ead6dc7822095"
+  integrity sha512-bywstWFW2hWxzPuS0+mFMVHHL0geulx5yQFtsjfszaH2LTAgk2D+Rt40MKbAoZ8q3tRw2dy6aYQ7svO3ca8jpA==
   dependencies:
     node-gyp-build "^3.9.0"
 
-"@datadog/native-iast-rewriter@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@datadog/native-iast-rewriter/-/native-iast-rewriter-2.2.1.tgz#3c74c5a8caa0b876e091e9c5a95256add0d73e1c"
-  integrity sha512-DyZlE8gNa5AoOFNKGRJU4RYF/Y/tJzv4bIAMuVBbEnMA0xhiIYqpYQG8T3OKkALl3VSEeBMjYwuOR2fCrJ6gzA==
+"@datadog/native-iast-rewriter@2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@datadog/native-iast-rewriter/-/native-iast-rewriter-2.2.2.tgz#3f7feaf6be1af4c83ad063065b8ed509bbaf11cb"
+  integrity sha512-13ZBhJpjZ/tiV6rYfyAf/ITye9cyd3x12M/2NKhD4Ivev4N4uKBREAjpArOtzKtPXZ5b6oXwVV4ofT1SHoYyzA==
   dependencies:
     lru-cache "^7.14.0"
     node-gyp-build "^4.5.0"
@@ -432,10 +432,10 @@
     node-addon-api "^6.1.0"
     node-gyp-build "^3.9.0"
 
-"@datadog/pprof@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-4.1.0.tgz#db86a720f1dfecbcab8838bc1f148eb0a402af55"
-  integrity sha512-g7EWI185nwSuFwlmnAGDPxbPsqe+ipOoDB2oP841WMNRaJBPRdg5J90c+6ucmyltuC9VpTrmzzqcachkOTzZEQ==
+"@datadog/pprof@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-5.0.0.tgz#0c0aaf06def6d2bc4b2d353ec7b264dadbfbefab"
+  integrity sha512-vhNan4SBuNWLpexunDJQ+hNbRAgWdk2qy5Iyh7Nn94uSSHXigAJMAvu4jwMKKQKFfchtobOkWT8GQUWW3tgpFg==
   dependencies:
     delay "^5.0.0"
     node-gyp-build "<4.0"
@@ -2225,33 +2225,30 @@ dc-polyfill@^0.1.2:
   resolved "https://registry.yarnpkg.com/dc-polyfill/-/dc-polyfill-0.1.3.tgz#fe9eefc86813439dd46d6f9ad9582ec079c39720"
   integrity sha512-Wyk5n/5KUj3GfVKV2jtDbtChC/Ff9fjKsBcg4ZtYW1yQe3DXNHcGURvmoxhqQdfOQ9TwyMjnfyv1lyYcOkFkFA==
 
-dd-trace@^4.21.0:
-  version "4.21.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-4.21.0.tgz#1a6969838edba7258eeefefed5e24136f95a199d"
-  integrity sha512-nuFHfDJNy039Qns1sbJdIbXeP1ZmUioctwzXfw60k4Dif8dC3RmrHebvW48EbYCKrJj3Awri/vmwcBNf6xNpHw==
+dd-trace@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.2.0.tgz#6ca2d76ece95f08d98468d7782c22f24192afa53"
+  integrity sha512-Z5ql3ZKzVW3DPstHPkTPcIPvKljHNtzTYY/WuZRlgT4XK7rMaN0j5nA8LlUh7m+tOPWs05IiKngbYVZjsqhRgA==
   dependencies:
-    "@datadog/native-appsec" "5.0.0"
-    "@datadog/native-iast-rewriter" "2.2.1"
+    "@datadog/native-appsec" "7.0.0"
+    "@datadog/native-iast-rewriter" "2.2.2"
     "@datadog/native-iast-taint-tracking" "1.6.4"
     "@datadog/native-metrics" "^2.0.0"
-    "@datadog/pprof" "4.1.0"
+    "@datadog/pprof" "5.0.0"
     "@datadog/sketches-js" "^2.1.0"
     "@opentelemetry/api" "^1.0.0"
     "@opentelemetry/core" "^1.14.0"
     crypto-randomuuid "^1.0.0"
     dc-polyfill "^0.1.2"
     ignore "^5.2.4"
-    import-in-the-middle "^1.4.2"
+    import-in-the-middle "^1.7.3"
     int64-buffer "^0.1.9"
     ipaddr.js "^2.1.0"
     istanbul-lib-coverage "3.2.0"
     jest-docblock "^29.7.0"
     koalas "^1.0.2"
-    limiter "^1.1.4"
-    lodash.kebabcase "^4.1.1"
-    lodash.pick "^4.4.0"
+    limiter "1.1.5"
     lodash.sortby "^4.7.0"
-    lodash.uniq "^4.5.0"
     lru-cache "^7.14.0"
     methods "^1.1.2"
     module-details-from-path "^1.0.3"
@@ -3159,10 +3156,10 @@ import-fresh@^3.2.1:
     parent-module "^1.0.0"
     resolve-from "^4.0.0"
 
-import-in-the-middle@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-1.4.2.tgz#2a266676e3495e72c04bbaa5ec14756ba168391b"
-  integrity sha512-9WOz1Yh/cvO/p69sxRmhyQwrIGGSp7EIdcb+fFNVi7CzQGQB8U1/1XrKVSbEd/GNOAeM0peJtmi7+qphe7NvAw==
+import-in-the-middle@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-1.7.3.tgz#ffa784cdd57a47d2b68d2e7dd33070ff06baee43"
+  integrity sha512-R2I11NRi0lI3jD2+qjqyVlVEahsejw7LDnYEbGb47QEFjczE3bZYsmWheCTQA+LFs2DzOQxR7Pms7naHW1V4bQ==
   dependencies:
     acorn "^8.8.2"
     acorn-import-assertions "^1.9.0"
@@ -3821,7 +3818,7 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-limiter@^1.1.4:
+limiter@1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/limiter/-/limiter-1.1.5.tgz#8f92a25b3b16c6131293a0cc834b4a838a2aa7c2"
   integrity sha512-FWWMIEOxz3GwUI4Ts/IvgVy6LPvoMPgjMdQ185nN6psJyBJ4yOpzqm695/h5umdLJg2vW3GR5iG11MAkR2AzJA==
@@ -3850,11 +3847,6 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==
 
-lodash.kebabcase@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/lodash.kebabcase/-/lodash.kebabcase-4.1.1.tgz#8489b1cb0d29ff88195cceca448ff6d6cc295c36"
-  integrity sha512-N8XRTIMMqqDgSy4VLKPnJ/+hpGZN+PHQiJnSenYqPaVV/NCqEogTnAdZLQiGKhxX+JCs8waWq2t1XHWKOmlY8g==
-
 lodash.memoize@4.x:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -3865,20 +3857,10 @@ lodash.merge@^4.6.2:
   resolved "https://registry.npmjs.org/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-lodash.pick@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
-  integrity sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==
-
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==
-
-lodash.uniq@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
-  integrity sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==
 
 lodash@^4.17.15:
   version "4.17.21"

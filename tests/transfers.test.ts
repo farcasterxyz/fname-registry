@@ -3,7 +3,7 @@
 import { getDbClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
 import { sql } from 'kysely';
-import { getCurrentUsername, getLatestTransfer } from '../src/transfers.js';
+import { getCurrentUsername, getLatestTransfer, TIMESTAMP_TOLERANCE } from '../src/transfers.js';
 import { currentTimestamp } from '../src/util.js';
 import { createTestTransfer } from './utils.js';
 import { generateSignature, signer, signerAddress, signerFid } from '../src/signature.js';
@@ -87,12 +87,22 @@ describe('transfers', () => {
 
       // Timestamp cannot be too far in the future
       await expect(
-        createTestTransfer(db, { username: 'test123', from: 2, to: 10, timestamp: currentTimestamp() + 100 })
+        createTestTransfer(db, {
+          username: 'test123',
+          from: 2,
+          to: 10,
+          timestamp: currentTimestamp() + (TIMESTAMP_TOLERANCE + 10),
+        })
       ).rejects.toThrow('INVALID_TIMESTAMP');
 
       // Timestamp cannot be too far in the past
       await expect(
-        createTestTransfer(db, { username: 'newusername', from: 0, to: 15, timestamp: currentTimestamp() - 100 })
+        createTestTransfer(db, {
+          username: 'newusername',
+          from: 0,
+          to: 15,
+          timestamp: currentTimestamp() - (TIMESTAMP_TOLERANCE + 10),
+        })
       ).rejects.toThrow('INVALID_TIMESTAMP');
 
       await expect(createTestTransfer(db, { username: 'newusername', from: 0, to: 15, timestamp: 0 })).rejects.toThrow(

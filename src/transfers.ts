@@ -9,7 +9,7 @@ import { IdRegistry } from './abi/index.js';
 import { toNumber } from 'ethers';
 
 const PAGE_SIZE = 100;
-export const TIMESTAMP_TOLERANCE = 5 * 60; // 5 minute
+export const TIMESTAMP_TOLERANCE = 10 * 60; // 5 minute
 export const NAME_CHANGE_DELAY = 28 * 24 * 60 * 60; // 28 days in seconds
 
 type TransferRequest = {

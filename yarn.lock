@@ -402,10 +402,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@datadog/native-appsec@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@datadog/native-appsec/-/native-appsec-7.0.0.tgz#a380174dd49aef2d9bb613a0ec8ead6dc7822095"
-  integrity sha512-bywstWFW2hWxzPuS0+mFMVHHL0geulx5yQFtsjfszaH2LTAgk2D+Rt40MKbAoZ8q3tRw2dy6aYQ7svO3ca8jpA==
+"@datadog/native-appsec@7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@datadog/native-appsec/-/native-appsec-7.1.0.tgz#e8e6254236ac6fd7d4fb8b1156b34de64ec3e174"
+  integrity sha512-5FATunIxmvuSGDwPmbXfOi21wC7rjfbdLX4QiT5LR+iRLjRLT5iETqwdTsqy0WOQIHmxdWuddRvuakAg3921aA==
   dependencies:
     node-gyp-build "^3.9.0"
 
@@ -432,10 +432,10 @@
     node-addon-api "^6.1.0"
     node-gyp-build "^3.9.0"
 
-"@datadog/pprof@5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-5.0.0.tgz#0c0aaf06def6d2bc4b2d353ec7b264dadbfbefab"
-  integrity sha512-vhNan4SBuNWLpexunDJQ+hNbRAgWdk2qy5Iyh7Nn94uSSHXigAJMAvu4jwMKKQKFfchtobOkWT8GQUWW3tgpFg==
+"@datadog/pprof@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-5.1.0.tgz#8ceec2569db9c62428ff073efc122ce038d9fb4d"
+  integrity sha512-2fDNHG9eMSiCMlnTodDdnEgZueQyXwQTR2IxhJx43x9CQz0zSjvzZH6W++N1CRwikmd6wPdqBv5KlzsWuEsOPg==
   dependencies:
     delay "^5.0.0"
     node-gyp-build "<4.0"
@@ -2192,16 +2192,16 @@ dc-polyfill@^0.1.4:
   resolved "https://registry.yarnpkg.com/dc-polyfill/-/dc-polyfill-0.1.4.tgz#4118cec81a8fab9a5729c41c285c715ffa42495a"
   integrity sha512-8iwEduR2jR9wWYggeaYtYZWRiUe3XZPyAQtMTL1otv8X3kfR8xUIVb4l5awHEeyDrH6Je7N324lKzMKlMMN6Yw==
 
-dd-trace@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.5.0.tgz#d0e4e04950e30ab7a326ec41414e492fe153ad33"
-  integrity sha512-u5IpVOHNIinaHf5fl4M3ck5iicLZah3PYH5DYK+Sv4GtBXwr+zeYKQoQnCs3JBoGIivTY4E6fJDFIFA/oaZybQ==
+dd-trace@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.6.0.tgz#2463819d06052e9302ed1102058233e3646154e4"
+  integrity sha512-FoD1bxnRgGMOg4bDZ/BwO+NiJkGkJj/GoXy2BxsQPIGk10lR9vQaekUsza9g7wE2NYMknyLPObZx5/ah2jvYZQ==
   dependencies:
-    "@datadog/native-appsec" "7.0.0"
+    "@datadog/native-appsec" "7.1.0"
     "@datadog/native-iast-rewriter" "2.2.3"
     "@datadog/native-iast-taint-tracking" "1.7.0"
     "@datadog/native-metrics" "^2.0.0"
-    "@datadog/pprof" "5.0.0"
+    "@datadog/pprof" "5.1.0"
     "@datadog/sketches-js" "^2.1.0"
     "@opentelemetry/api" "^1.0.0"
     "@opentelemetry/core" "^1.14.0"

@@ -3889,10 +3889,10 @@ negotiator@0.6.3:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz#58e323a72fedc0d6f9cd4d31fe49f51479590ccd"
   integrity sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==
 
-neverthrow@^6.0.0, neverthrow@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-6.1.0.tgz#51a6e9ce2e06600045b3c1b37aecc536d267bf95"
-  integrity sha512-xNbNjp/6M5vUV+mststgneJN9eJeJCDSYSBTaf3vxgvcKooP+8L0ATFpM8DGfmH7UWKJeoa24Qi33tBP9Ya3zA==
+neverthrow@^6.0.0, neverthrow@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-6.2.1.tgz#1c64e10d7ac4751d32cb87bffcde5467bbb4a760"
+  integrity sha512-amlnNvPXmiUOmNsDfUngNWPdZYOmCUGExQy/kuPCmLbhrXVXIYhY4bnE4D3dWl7OMhSEr9NndUrl4aKGFhFIQg==
 
 node-abort-controller@^3.1.1:
   version "3.1.1"

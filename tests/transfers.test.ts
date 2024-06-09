@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import { getDbClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
 import { sql } from 'kysely';

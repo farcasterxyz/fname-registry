@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["esnext"],
-    "module": "esnext",
+    "module": "nodenext",
     "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,

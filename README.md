@@ -12,7 +12,7 @@ A centralized registry for Farcaster usernames (fnames). Exposes an HTTP API for
 
 ## Deploying
 
-Once a change is merged it is deployed automatically. Check the GitHub Actions workflow result to confirm whether the deploy was successful.
+Once a change is merged it is deployed automatically. Check the GitHub Actions workflow result to confirm whether the deployment was successful.
 
 ## Updating Node.js version
 

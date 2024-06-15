@@ -36,13 +36,13 @@ RUN <<EOF
   mv node_modules-development node_modules
 EOF
 
-# Copy application code after installing so we benefit from the layer cache
+# Copy the application code after installing so we benefit from the layer cache
 COPY . .
 
 # Build the application so we can distribute
 RUN yarn build
 
-# When updating image version, make sure to update above layer as well
+# When updating image version, make sure to update the above layer as well
 FROM node:22.2.0-alpine3.20 as app
 
 WORKDIR /app

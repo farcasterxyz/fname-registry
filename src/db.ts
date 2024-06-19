@@ -34,7 +34,7 @@ export const getDbClient = () => {
   return new Kysely<Database>({
     dialect: new PostgresJSDialect({
       postgres: postgres(POSTGRES_URL, {
-        max: 10,
+        max: 32,
         types: {
           // BigInts will not exceed Number.MAX_SAFE_INTEGER for our use case.
           // Return as JavaScript's `number` type so it's easier to work with.

@@ -7,10 +7,15 @@ import { fileURLToPath } from 'url';
 import { Logger } from './log.js';
 import { err, ok, Result } from 'neverthrow';
 
-const POSTGRES_URL =
+const POSTGRES_URL_WRITE =
   process.env['ENVIRONMENT'] === 'test'
     ? 'postgres://app:password@localhost:6543/registry_test'
     : process.env['POSTGRES_URL'] || 'postgres://app:password@localhost:6543/registry_dev';
+
+const POSTGRES_URL_READ =
+  process.env['ENVIRONMENT'] === 'test'
+    ? 'postgres://app:password@localhost:6543/registry_test'
+    : process.env['POSTGRES_URL_READ'] || 'postgres://app:password@localhost:6543/registry_dev';
 
 export interface Database {
   transfers: TransfersTable;
@@ -30,10 +35,10 @@ export interface TransfersTable {
   userFid: number;
 }
 
-export const getDbClient = () => {
+const getDbClient = (connectionUrl: string) => {
   return new Kysely<Database>({
     dialect: new PostgresJSDialect({
-      postgres: postgres(POSTGRES_URL, {
+      postgres: postgres(connectionUrl, {
         max: 10,
         types: {
           // BigInts will not exceed Number.MAX_SAFE_INTEGER for our use case.
@@ -49,6 +54,14 @@ export const getDbClient = () => {
     }),
     plugins: [new CamelCasePlugin()],
   });
+};
+
+export const getReadClient = () => {
+  return getDbClient(POSTGRES_URL_READ);
+};
+
+export const getWriteClient = () => {
+  return getDbClient(POSTGRES_URL_WRITE);
 };
 
 export const migrateToLatest = async (db: Kysely<any>, log: Logger): Promise<Result<void, unknown>> => {

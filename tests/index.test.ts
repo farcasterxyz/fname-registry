@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { app, RESOLVE_ABI } from '../src/app.js';
 import { sql } from 'kysely';
-import { getDbClient, migrateToLatest } from '../src/db.js';
+import { getWriteClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
 import {
   generateSignature,
@@ -16,7 +16,7 @@ import { createTestTransfer } from './utils.js';
 import { AbiCoder, ethers, Interface, ZeroAddress } from 'ethers';
 import { CCIP_ADDRESS } from '../src/env.js';
 
-const db = getDbClient();
+const db = getWriteClient();
 const anotherSigner = ethers.Wallet.createRandom();
 
 beforeAll(async () => {

@@ -1,7 +1,7 @@
 import ccipread from '@chainlink/ccip-read-server';
 import { ZeroAddress } from 'ethers';
 
-import { getDbClient, migrateToLatest } from './db.js';
+import { getReadClient, getWriteClient, migrateToLatest } from './db.js';
 import './env.js';
 import { log } from './log.js';
 import { generateCCIPSignature, signer, signerAddress } from './signature.js';
@@ -22,8 +22,9 @@ export const RESOLVE_ABI = [
   'function resolve(bytes calldata name, bytes calldata data) external view returns(string name, uint256 timestamp, address owner, bytes memory sig)',
 ];
 
-const db = getDbClient();
-await migrateToLatest(db, log);
+const write = getWriteClient();
+const read = getReadClient();
+await migrateToLatest(write, log);
 const idContract = getIdRegistryContract();
 
 const server = new ccipread.Server();
@@ -33,7 +34,7 @@ server.add(RESOLVE_ABI, [
     type: 'resolve',
     func: async ([name, _data], _req) => {
       const fname = decodeDnsName(name)[0];
-      const transfer = await getLatestTransfer(fname, db);
+      const transfer = await getLatestTransfer(fname, read);
       if (!transfer || transfer.to === 0) {
         // If no transfer or the name was unregistered, return empty values
         return ['', 0, ZeroAddress, '0x'];
@@ -65,7 +66,7 @@ app.get('/transfers', async (req, res) => {
     filterOpts.fid = parseInt(req.query.fid.toString());
   }
   try {
-    const transfers = await getTransferHistory(filterOpts, db);
+    const transfers = await getTransferHistory(filterOpts, read);
     res.send({ transfers });
   } catch (e) {
     res.status(400).send({ error: 'Unable to get transfers' }).end();
@@ -82,7 +83,7 @@ app.get('/transfers/current', async (req, res) => {
         res.status(400).send({ error: 'FID is not a number' }).end();
         return;
       }
-      name = await getCurrentUsername(parseInt(req.query.fid.toString()), db);
+      name = await getCurrentUsername(parseInt(req.query.fid.toString()), read);
     } else if (req.query.name) {
       name = req.query.name.toString();
     }
@@ -90,7 +91,7 @@ app.get('/transfers/current', async (req, res) => {
       res.status(404).send({ error: 'Could not resolve current name' }).end();
       return;
     }
-    const transfer = await getLatestTransfer(name, db);
+    const transfer = await getLatestTransfer(name, read);
     if (!transfer || transfer.to === 0) {
       res.status(404).send({ error: 'No transfer found' }).end();
       return;
@@ -117,7 +118,7 @@ app.post('/transfers', async (req, res) => {
         userSignature: tr.signature,
         userFid: tr.fid,
       },
-      db,
+      write,
       idContract
     );
     if (!result) {
@@ -125,7 +126,7 @@ app.post('/transfers', async (req, res) => {
       res.status(500).send({ error: 'Unable to create transfer' }).end();
       return;
     }
-    const transfer = await getTransferById(result.id, db);
+    const transfer = await getTransferById(result.id, write);
     res.send({ transfer });
   } catch (e: unknown) {
     if (e instanceof ValidationError) {

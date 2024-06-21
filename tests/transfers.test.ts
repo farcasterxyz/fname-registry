@@ -1,4 +1,4 @@
-import { getDbClient, migrateToLatest } from '../src/db.js';
+import { getWriteClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
 import { sql } from 'kysely';
 import { getCurrentUsername, getLatestTransfer, TIMESTAMP_TOLERANCE } from '../src/transfers.js';
@@ -7,7 +7,7 @@ import { createTestTransfer } from './utils.js';
 import { generateSignature, signer, signerAddress, signerFid } from '../src/signature.js';
 import { ethers } from 'ethers';
 
-const db = getDbClient();
+const db = getWriteClient();
 const owner = signerAddress;
 const anotherSigner = ethers.Wallet.createRandom();
 

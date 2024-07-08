@@ -109,7 +109,15 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('USERNAME_RESERVED');
   }
 
-  if (!verifySignature(req.username, req.timestamp, req.owner, req.userSignature, verifierAddress)) {
+  const verifySignatureResult = await verifySignature(
+    req.username,
+    req.timestamp,
+    req.owner,
+    req.userSignature,
+    verifierAddress
+  );
+
+  if (!verifySignatureResult) {
     log.error(`Invalid signature for req ${JSON.stringify(req)}`);
     throw new ValidationError('INVALID_SIGNATURE');
   }

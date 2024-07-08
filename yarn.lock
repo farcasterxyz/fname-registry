@@ -3649,10 +3649,10 @@ kysely-postgres-js@^2.0.0:
   resolved "https://registry.npmjs.org/kysely-postgres-js/-/kysely-postgres-js-2.0.0.tgz#f2e79f2e14c2c3065052722bdc89014691080ceb"
   integrity sha512-R1tWx6/x3tSatWvsmbHJxpBZYhNNxcnMw52QzZaHKg7ZOWtHib4iZyEaw4gb2hNKVctWQ3jfMxZT/ZaEMK6kBQ==
 
-kysely@^0.27.3:
-  version "0.27.3"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.27.3.tgz#6cc6c757040500b43c4ac596cdbb12be400ee276"
-  integrity sha512-lG03Ru+XyOJFsjH3OMY6R/9U38IjDPfnOfDgO3ynhbDr+Dz8fak+X6L62vqu3iybQnj+lG84OttBuU9KY3L9kA==
+kysely@^0.27.4:
+  version "0.27.4"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.27.4.tgz#96a0285467b380948b4de03b20d87e82d797449b"
+  integrity sha512-dyNKv2KRvYOQPLCAOCjjQuCk4YFd33BvGdf/o5bC7FiW+BB6snA81Zt+2wT9QDFzKqxKa5rrOmvlK/anehCcgA==
 
 leven@^3.1.0:
   version "3.1.0"

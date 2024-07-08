@@ -17,7 +17,7 @@ if (WARPCAST_ADDRESS === '') {
 
 // Address of the ENS CCIP verifier contract
 export const CCIP_ADDRESS = process.env['CCIP_ADDRESS'] || '';
-if (WARPCAST_ADDRESS === '') {
+if (CCIP_ADDRESS === '') {
   throw new Error('CCIP_ADDRESS missing from .env');
 }
 

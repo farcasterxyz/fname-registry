@@ -1,8 +1,8 @@
 import { ethers } from 'ethers';
-import { CCIP_ADDRESS, WARPCAST_ADDRESS } from './env.js';
 import * as process from 'process';
-import { createPublicClient, http } from 'viem';
-import { mainnet } from 'viem/chains';
+import { createPublicClient, fallback, http } from 'viem';
+import { optimism } from 'viem/chains';
+import { CCIP_ADDRESS, OP_ALCHEMY_SECRET, WARPCAST_ADDRESS } from './env.js';
 
 export const signer = ethers.Wallet.fromPhrase(
   process.env.MNEMONIC || 'test test test test test test test test test test test junk'
@@ -71,9 +71,10 @@ export async function verifySignature(
     owner: owner,
   };
 
+  const rpcUrl = `https://opt-mainnet.g.alchemy.com/v2/${OP_ALCHEMY_SECRET}`;
   const client = createPublicClient({
-    chain: mainnet,
-    transport: http(),
+    chain: optimism,
+    transport: fallback([http(rpcUrl), http()]),
   });
 
   const verifyResult = await client.verifyTypedData({

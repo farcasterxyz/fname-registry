@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.5
 
 # When updating image version, make sure to update below layer as well
-FROM node:22.3.0-alpine3.20 as builder
+FROM node:22.5.1-alpine3.20 as builder
 
 # Create app directory
 WORKDIR /app
@@ -43,7 +43,7 @@ COPY . .
 RUN yarn build
 
 # When updating image version, make sure to update the above layer as well
-FROM node:22.3.0-alpine3.20 as app
+FROM node:22.5.1-alpine3.20 as app
 
 WORKDIR /app
 

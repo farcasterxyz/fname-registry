@@ -28,7 +28,7 @@
     "kysely": "^0.27.4",
     "kysely-postgres-js": "^2.0.0",
     "neverthrow": "^7.0.0",
-    "pino": "^9.3.1",
+    "pino": "^9.3.2",
     "pino-pretty": "^11.2.1",
     "postgres": "^3.4.4"
   },

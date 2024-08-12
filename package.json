@@ -29,7 +29,7 @@
     "kysely-postgres-js": "^2.0.0",
     "neverthrow": "^7.0.0",
     "pino": "^9.3.2",
-    "pino-pretty": "^11.2.1",
+    "pino-pretty": "^11.2.2",
     "postgres": "^3.4.4"
   },
   "devDependencies": {

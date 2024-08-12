@@ -68,7 +68,7 @@ jobs:
           image: ${{ steps.image-tag.outputs.image-tag }}
 
       - name: Push task-definition to Amazon ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: fname-registry-api

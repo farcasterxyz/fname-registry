@@ -1,6 +1,8 @@
 import { ethers } from 'ethers';
-import { CCIP_ADDRESS, WARPCAST_ADDRESS } from './env.js';
 import * as process from 'process';
+import { createPublicClient, fallback, http } from 'viem';
+import { optimism } from 'viem/chains';
+import { CCIP_ADDRESS, OP_ALCHEMY_SECRET, WARPCAST_ADDRESS } from './env.js';
 
 export const signer = ethers.Wallet.fromPhrase(
   process.env.MNEMONIC || 'test test test test test test test test test test test junk'
@@ -23,7 +25,7 @@ const hub_domain = {
   chainId: 1,
   // TODO: When changing, remember to also update on the backend!
   verifyingContract: '0xe3be01d99baa8db9905b33a3ca391238234b79d1', // name registry contract, will be the farcaster ENS CCIP contract later
-};
+} as const;
 const ccip_domain = {
   name: 'Farcaster name verification',
   version: '1',
@@ -56,7 +58,7 @@ export async function generateCCIPSignature(userName: string, timestamp: number,
   return Buffer.from((await signer.signTypedData(ccip_domain, types, userNameProof)).replace(/^0x/, ''), 'hex');
 }
 
-export function verifySignature(
+export async function verifySignature(
   userName: string,
   timestamp: number,
   owner: string,
@@ -68,8 +70,23 @@ export function verifySignature(
     timestamp,
     owner: owner,
   };
-  const signer = ethers.verifyTypedData(hub_domain, types, userNameProof, signature);
-  return signer.toLowerCase() === signerAddress.toLowerCase();
+
+  const rpcUrl = `https://opt-mainnet.g.alchemy.com/v2/${OP_ALCHEMY_SECRET}`;
+  const client = createPublicClient({
+    chain: optimism,
+    transport: fallback([http(rpcUrl), http()]),
+  });
+
+  const verifyResult = await client.verifyTypedData({
+    domain: hub_domain,
+    types: types,
+    message: userNameProof,
+    primaryType: 'UserNameProof',
+    signature: signature as `0x${string}`,
+    address: signerAddress as `0x${string}`,
+  });
+
+  return verifyResult;
 }
 
 export function verifyCCIPSignature(

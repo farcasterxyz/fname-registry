@@ -3905,10 +3905,10 @@ neverthrow@^6.0.0:
   resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-6.2.2.tgz#1d905abe20ef8882e4b195c7851787aa4553cf0e"
   integrity sha512-POR1FACqdK9jH0S2kRPzaZEvzT11wsOxLW520PQV/+vKi9dQe+hXq19EiOvYx7lSRaF5VB9lYGsPInynrnN05w==
 
-neverthrow@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-7.0.1.tgz#b67f37c3f853d42cec0d48a10e840895b6caa9af"
-  integrity sha512-NY1sD1wZn6dwwzV9/5KZ4wRIpH4xC7ARy3fGmnEi2Pi8CHDTWlp+WSF+if8cudrwuCWGrk2y2BE/dnGh070iuA==
+neverthrow@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-7.1.0.tgz#db845bc2f263e68670eba4074f67cd0f85fbc1a6"
+  integrity sha512-TQ+ucrkixq0lUL+KYcGBjiuyHKvJ/Vb7i6QsaPdTLjlqmHq8WuoWGg17VQnmcx23hKi5w0OTQuHP4HD9cyO0Vg==
 
 node-addon-api@^6.1.0:
   version "6.1.0"

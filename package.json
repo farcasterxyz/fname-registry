@@ -31,7 +31,7 @@
     "pino": "^9.4.0",
     "pino-pretty": "^11.2.2",
     "postgres": "^3.4.4",
-    "viem": "^2.21.3"
+    "viem": "^2.21.12"
   },
   "devDependencies": {
     "@typechain/ethers-v6": "^0.5.1",

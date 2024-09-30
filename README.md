@@ -4,7 +4,7 @@ A centralized registry for Farcaster usernames (fnames). Exposes an HTTP API for
 
 ## Getting started
 
-1. Start Postgres: `docker compose up --detach`.
+1. Start Postgres: `docker compose up --detach`
 2. Create test DB: `echo 'create database registry_test' | PGPASSWORD=password psql -h localhost -p 6543 -U app registry_dev`
 3. Install packages: `yarn install`
 4. Run tests: `yarn test`

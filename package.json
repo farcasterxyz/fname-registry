@@ -15,7 +15,7 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "engines": {
-    "node": "22.7.0"
+    "node": "22.9.0"
   },
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",

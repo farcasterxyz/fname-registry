@@ -1,0 +1,92 @@
+# Name of the project.
+# DON'T change this -- it will rename + recreate all resources (downtime)
+project: fname-registry
+region: us-east-1
+
+network:
+  id: vpc-0f6f9a87c6da89cc3 # VPC to deploy the service within
+  subnets:
+    public:
+      - subnet-0c692bcb8e0b04af0 # public-1b
+      - subnet-07ac4939a1d7db9c1 # public-1d
+      - subnet-0305c0d827e803272 # public-1f
+    private:
+      - subnet-09d8bb56d08618935 # private-1b
+      - subnet-0fdd713886476d21c # private-1d
+      - subnet-0d4f99e3a3569ec11 # private-1f
+
+x-shared-pod-options: &shared-pod-options
+  image: ami-0430baeab16c9655e # 64-bit ARM Amazon Linux 2023 with Docker Compose already installed
+  sshUser: ec2-user
+  bastionUser: ec2-user
+  bastionHost: 3.234.215.16
+  compose: deploy-docker-compose.yml
+  initScript: ec2-first-boot.sh
+  deploy:
+    replaceWith: new-instances
+    shutdownTimeout: 10
+    instanceRefreshTimeout: 600 # 10 minutes
+
+pods:
+  api:
+    <<: *shared-pod-options
+    instanceType: c7g.large # 2 vCPU, 4GiB, ARM, up to 12.5 Gbit
+    environment:
+      FNAME_REGISTRY_DOCKER_IMAGE: # Provided by deployment process after image is built
+      TASK_TYPE: server
+      HEALTHCHECK_CMD: "curl --connect-timeout 5 http://127.0.0.1:3000/_health"
+      NODE_OPTIONS: "--enable-source-maps"
+    loadBalancers:
+      api:
+        type: application
+        public: true
+        # Only for ALBs. Ensure this is smaller than the application server's keep-alive timeout.
+        # See: https://adamcrowder.net/posts/node-express-api-and-aws-alb-502/
+        idleTimeout: 25
+    endpoints:
+      api:
+        loadBalancer:
+          name: api
+          protocol: HTTPS
+          port: 443
+          cert: warpcast.com
+        public: false # Only load balancer is public
+        target:
+          port: 3000
+          protocol: HTTP
+          deregistration:
+            delay: 30 # Must be larger than our client timeout
+          healthCheck:
+            path: "/_health"
+            healthyThreshold: 2
+            unhealthyThreshold: 2
+            timeout: 2
+            interval: 5
+    autoscaling:
+      healthCheckGracePeriod: 60 # Sometimes EC2 instances take a while to start
+      minHealthyPercentage: 100
+      maxHealthyPercentage: 200
+      minHealthyInstances: 1
+      onDemandBaseCapacity: 2
+      onDemandPercentageAboveBaseCapacity: 50
+
+# Defines the _names_ of secrets (not values!) and which pods have access to them
+# Values for each secret must be set manually in AWS Secrets Manager.
+secrets:
+  DD_API_KEY:
+  FNAME_REGISTRY_MNEMONIC:
+    as: MNEMONIC
+  FNAME_REGISTRY_OP_ALCHEMY_SECRET:
+    as: OP_ALCHEMY_SECRET
+  FNAME_REGISTRY_MAINNET_ALCHEMY_SECRET:
+    as: MAINNET_ALCHEMY_SECRET
+  FNAME_REGISTRY_ETHERSCAN_API_SECRET:
+    as: ETHERSCAN_API_SECRET
+  FNAME_REGISTRY_INFURA_PROJECT_ID:
+    as: INFURA_PROJECT_ID
+  FNAME_REGISTRY_INFURA_PROJECT_SECRET:
+    as: INFURA_PROJECT_SECRET
+  FNAME_REGISTRY_POSTGRES_URL:
+    as: POSTGRES_URL
+  FNAME_REGISTRY_POSTGRES_URL_READ:
+    as: POSTGRES_URL_READ

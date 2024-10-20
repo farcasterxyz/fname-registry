@@ -31,7 +31,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: farcasterxyz/fname-registry
           IMAGE_TAG: ${{ github.sha }}
-        run: echo "::set-output name=image-tag::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        run: echo "image-tag=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
         shell: bash
 
       - uses: depot/setup-action@v1
@@ -56,7 +56,7 @@ jobs:
       # Deploy the image to ECS one hub at a time to minimize overall downtime
       - name: Generate release ID
         id: release
-        run: echo "::set-output name=release::$(date +'%Y-%m-%d-%H-%M')-$(git rev-parse --short HEAD)"
+        run: echo "release=$(date +'%Y-%m-%d-%H-%M')-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
         shell: bash
 
       - name: Update task-definition

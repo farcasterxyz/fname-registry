@@ -33,7 +33,7 @@ on:
 
 jobs:
   action:
-    runs-on: [earthly-satellite#backend-runner]
+    runs-on: [earthly-satellite#runner1]
     name: ${{ inputs.action }}
     steps:
       - name: Clone repo

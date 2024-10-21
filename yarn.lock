@@ -409,10 +409,10 @@
   dependencies:
     node-gyp-build "^3.9.0"
 
-"@datadog/native-iast-rewriter@2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@datadog/native-iast-rewriter/-/native-iast-rewriter-2.4.1.tgz#e8211f78c818906513fb96a549374da0382c7623"
-  integrity sha512-j3auTmyyn63e2y+SL28CGNy/l+jXQyh+pxqoGTacWaY5FW/dvo5nGQepAismgJ3qJ8VhQfVWRdxBSiT7wu9clw==
+"@datadog/native-iast-rewriter@2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@datadog/native-iast-rewriter/-/native-iast-rewriter-2.5.0.tgz#b613defe86e78168f750d1f1662d4ffb3cf002e6"
+  integrity sha512-WRu34A3Wwp6oafX8KWNAbedtDaaJO+nzfYQht7pcJKjyC2ggfPeF7SoP+eDo9wTn4/nQwEOscSR4hkJqTRlpXQ==
   dependencies:
     lru-cache "^7.14.0"
     node-gyp-build "^4.5.0"
@@ -1148,16 +1148,6 @@
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/@js-sdsl/ordered-map/-/ordered-map-4.4.2.tgz#9299f82874bab9e4c7f9c48d865becbfe8d6907c"
   integrity sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==
-
-"@jsep-plugin/assignment@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@jsep-plugin/assignment/-/assignment-1.2.1.tgz#07277bdd7862451a865d391e2142efba33f46c9b"
-  integrity sha512-gaHqbubTi29aZpVbBlECRpmdia+L5/lh2BwtIJTmtxdbecEyyX/ejAOg7eQDGNvGOUmPY7Z2Yxdy9ioyH/VJeA==
-
-"@jsep-plugin/regex@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@jsep-plugin/regex/-/regex-1.0.3.tgz#3aeaa2e5fa45d89de116aeafbfa41c95935b7f6d"
-  integrity sha512-XfZgry4DwEZvSFtS/6Y+R48D7qJYJK6R9/yJFyUFHCIUMEEHuJ4X95TDgJp5QkmzfLYvapMPzskV5HpIDrREug==
 
 "@noble/curves@1.2.0":
   version "1.2.0"
@@ -2216,13 +2206,13 @@ dc-polyfill@^0.1.4:
   resolved "https://registry.yarnpkg.com/dc-polyfill/-/dc-polyfill-0.1.4.tgz#4118cec81a8fab9a5729c41c285c715ffa42495a"
   integrity sha512-8iwEduR2jR9wWYggeaYtYZWRiUe3XZPyAQtMTL1otv8X3kfR8xUIVb4l5awHEeyDrH6Je7N324lKzMKlMMN6Yw==
 
-dd-trace@^5.23.1:
-  version "5.23.1"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.23.1.tgz#62418c3a7d5292e58bcd459785fa60bdf5b30f45"
-  integrity sha512-cdpJuiP1sYVgyagTt+BBjN3Wfa24a/fZw2L1oXg885uUy3bK9GYTiX0U6njlXY4krDiCZt+hii1sGEQPLYK6TQ==
+dd-trace@^5.24.0:
+  version "5.24.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.24.0.tgz#971fcb53edec4023619642a1716e063987bf0c00"
+  integrity sha512-KJX/2ZRShuNafNaUkcWPwbIdq4bU1HQ0FrhPJWgKvljwAtNETeRhjac9nEe1fH2A9fTCGg5XCXifvK9Wr5g4xQ==
   dependencies:
     "@datadog/native-appsec" "8.1.1"
-    "@datadog/native-iast-rewriter" "2.4.1"
+    "@datadog/native-iast-rewriter" "2.5.0"
     "@datadog/native-iast-taint-tracking" "3.1.0"
     "@datadog/native-metrics" "^2.0.0"
     "@datadog/pprof" "5.3.0"
@@ -2236,7 +2226,6 @@ dd-trace@^5.23.1:
     int64-buffer "^0.1.9"
     istanbul-lib-coverage "3.2.0"
     jest-docblock "^29.7.0"
-    jsonpath-plus "^9.0.0"
     koalas "^1.0.2"
     limiter "1.1.5"
     lodash.sortby "^4.7.0"
@@ -3676,11 +3665,6 @@ js-yaml@^4.1.0:
   dependencies:
     argparse "^2.0.1"
 
-jsep@^1.3.8:
-  version "1.3.9"
-  resolved "https://registry.yarnpkg.com/jsep/-/jsep-1.3.9.tgz#8ce42df80ee9c1b39e52d0dd062a465342f35440"
-  integrity sha512-i1rBX5N7VPl0eYb6+mHNp52sEuaS2Wi8CDYx1X5sn9naevL78+265XJqy1qENEk7mRKwS06NHpUqiBwR7qeodw==
-
 jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
@@ -3712,15 +3696,6 @@ jsonfile@^4.0.0:
   integrity sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==
   optionalDependencies:
     graceful-fs "^4.1.6"
-
-jsonpath-plus@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/jsonpath-plus/-/jsonpath-plus-9.0.0.tgz#bb8703ee481531142bca8dee9a42fe72b8358a7f"
-  integrity sha512-bqE77VIDStrOTV/czspZhTn+o27Xx9ZJRGVkdVShEtPoqsIx5yALv3lWVU6y+PqYvWPJNWE7ORCQheQkEe0DDA==
-  dependencies:
-    "@jsep-plugin/assignment" "^1.2.1"
-    "@jsep-plugin/regex" "^1.0.3"
-    jsep "^1.3.8"
 
 kleur@^3.0.3:
   version "3.0.3"

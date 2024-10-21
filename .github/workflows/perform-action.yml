@@ -10,9 +10,9 @@ on:
         required: false # Not needed for image builds
       STACK_DEPLOY_SSH_PRIVATE_KEY:
         required: true
-      DOCKERHUB_USER:
+      FARCASTERXYZ_DOCKER_HUB_USER:
         required: true
-      DOCKERHUB_PASSWORD:
+      FARCASTERXYZ_DOCKER_HUB_TOKEN:
         required: true
     inputs:
       action:
@@ -59,7 +59,7 @@ jobs:
           aws-access-key-id: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
           ssh-private-key: ${{ secrets.STACK_DEPLOY_SSH_PRIVATE_KEY }}
-          dockerhub-username: ${{ secrets.DOCKERHUB_USER }}
-          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          dockerhub-username: ${{ secrets.FARCASTERXYZ_DOCKER_HUB_USER }}
+          dockerhub-password: ${{ secrets.FARCASTERXYZ_DOCKER_HUB_TOKEN }}
           command: make ${{ inputs.action }} ref=${{ steps.set-commit-hash.outputs.commit_hash }} release=${{ steps.set-release.outputs.release }}
           healthcheck: curl --fail https://fnames.farcaster.xyz/_health

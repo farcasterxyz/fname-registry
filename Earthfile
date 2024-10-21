@@ -4,8 +4,7 @@ FROM alpine:3.20.3
 WORKDIR /workspace
 
 ARG --global --required fname_registry_commit_ref
-ARG --global
-docker_registry=526236635984.dkr.ecr.us-east-1.amazonaws.com/farcasterxyz/fname-registry
+ARG --global docker_registry=526236635984.dkr.ecr.us-east-1.amazonaws.com/farcasterxyz/fname-registry
 ARG --global FNAME_REGISTRY_DOCKER_IMAGE=$docker_registry:$fname_registry_commit_ref
 
 fname-registry-repo:

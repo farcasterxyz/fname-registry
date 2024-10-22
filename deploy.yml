@@ -30,7 +30,7 @@ x-shared-pod-options: &shared-pod-options
 pods:
   api:
     <<: *shared-pod-options
-    instanceType: c7g.large # 2 vCPU, 4GiB, ARM, up to 12.5 Gbit
+    instanceType: c7g.2xlarge # 8 vCPU, 16GiB, ARM, up to 15 Gbit
     environment:
       FNAME_REGISTRY_DOCKER_IMAGE: # Provided by deployment process after image is built
       HEALTHCHECK_CMD: "curl --connect-timeout 5 http://127.0.0.1:3000/_health"

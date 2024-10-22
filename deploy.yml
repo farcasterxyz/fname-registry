@@ -62,7 +62,7 @@ pods:
             timeout: 2
             interval: 5
     autoscaling:
-      healthCheckGracePeriod: 90 # Sometimes EC2 instances take a while to start
+      healthCheckGracePeriod: 120 # Sometimes EC2 instances take a while to start
       minHealthyPercentage: 100
       maxHealthyPercentage: 200
       minHealthyInstances: 1

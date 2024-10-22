@@ -50,6 +50,7 @@ WORKDIR /app
 RUN <<EOF
   # Requirement for Datadog runtime metrics integration
   apk add libc6-compat
+  apk add curl
 EOF
 
 # Copy all packages including compiled extensions

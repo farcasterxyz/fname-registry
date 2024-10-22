@@ -8,7 +8,7 @@ jobs:
     uses: ./.github/workflows/perform-action.yml
     with:
       action: deploy
-      secrets: inherit
+    secrets: inherit
     concurrency:
       group: deploy
       cancel-in-progress: false

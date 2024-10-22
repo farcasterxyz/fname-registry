@@ -1,1 +1,13 @@
-.dockerignore
+/build
+/.db
+README*
+jest.config.*
+node_modules
+tests
+tmp
+.git
+.github
+.gitignore
+.tool-versions
+.node-version
+.vscode

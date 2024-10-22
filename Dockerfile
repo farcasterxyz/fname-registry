@@ -56,6 +56,7 @@ EOF
 COPY --from=builder /node_modules-production node_modules
 # Copy essential source code
 COPY --from=builder /app/build .
+COPY ./pm2.config.js /app/pm2.config.cjs
 
 # Dummy value to get ESM detection to work
 RUN echo '{"type":"module"}' > package.json
@@ -67,4 +68,4 @@ COPY --from=app / /
 
 WORKDIR /app
 
-CMD ["node", "index.js"]
+CMD ["npx", "pm2-runtime", "pm2.config.cjs"]

@@ -13,6 +13,8 @@ endif
 ifeq ($(release),)
 	release=
 	RELEASE_ARGS := --release=$(shell node -e "console.log(new Date().toISOString().replace(/\:/g,'-').replace(/\./g,'-'))")
+else
+	RELEASE_ARGS :=
 endif
 
 REF_ARGS := --fname_registry_commit_ref=$(shell git rev-parse HEAD)
@@ -38,32 +40,32 @@ publish:
 # Shows what infrastructure changes will be applied on the next deploy, if any.
 .PHONY: plan
 plan:
-	$(CMD_PREFIX) --ci --no-output +cmd $(RELEASE_ARGS) $(REF_ARGS) --CI=true --args="plan $(POD_ARGS)"
+	$(CMD_PREFIX) --ci --no-output +cmd $(REF_ARGS) --CI=true --args="plan $(RELEASE_ARGS) $(POD_ARGS)"
 
 # Applies any infrastructure changes without carrying out the rest of the deploy
 # process (note: this could still result in a "deploy" if updating ASGs).
 .PHONY: apply
 apply: publish
-	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(RELEASE_ARGS) $(REF_ARGS) $(CI_ARGS) --args="deploy --apply-only --yes $(POD_ARGS)"
+	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(REF_ARGS) $(CI_ARGS) --args="deploy --apply-only --yes $(RELEASE_ARGS) $(POD_ARGS)"
 
 # Applies any infrastructure changes (if any) and carries out a deploy.
 .PHONY: deploy
 deploy: publish
-	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(RELEASE_ARGS) $(REF_ARGS) $(CI_ARGS) --args="deploy --yes $(POD_ARGS)"
+	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(REF_ARGS) $(CI_ARGS) --args="deploy --yes $(RELEASE_ARGS) $(POD_ARGS)"
 
 # DANGEROUS. Deletes infrastructure.
 .PHONY: destroy
 destroy:
-	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(RELEASE_ARGS) $(REF_ARGS) $(CI_ARGS) --args="destroy --yes $(POD_ARGS)"
+	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(REF_ARGS) $(CI_ARGS) --args="destroy --yes $(POD_ARGS)"
 
 # Validates configuration files, reporting any issues.
 .PHONY: lint
 lintit:
-	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(RELEASE_ARGS) $(REF_ARGS) $(CI_ARGS) --args="lint"
+	$(CMD_PREFIX) $(EARTHLY_INTERACTIVE_ARGS) --no-output +$(CMD_TYPE) $(REF_ARGS) $(CI_ARGS) --args="lint"
 
 # Open an SSH console to the specified pod.
 #
 # e.g. `make ssh pod=mypod`
 .PHONY: ssh
 ssh:
-	$(CMD_PREFIX) --no-output +$(CMD_TYPE) $(RELEASE_ARGS) $(REF_ARGS) --args="console $(POD_ARGS)"
+	$(CMD_PREFIX) --no-output +$(CMD_TYPE) $(REF_ARGS) --args="console $(POD_ARGS)"

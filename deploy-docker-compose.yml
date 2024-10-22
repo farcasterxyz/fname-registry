@@ -42,9 +42,7 @@ services:
     command: ["npx", "pm2-runtime", "pm2.config.cjs"]
     environment:
       <<: *shared-env-vars
-      TASK_TYPE: ${TASK_TYPE}
       DD_SERVICE: fname-registry-${POD_NAME}
-      POSTGRES_CONNECTION_POOL_MAX_SIZE: "20"
     labels:
       <<: *shared-labels
     network_mode: host

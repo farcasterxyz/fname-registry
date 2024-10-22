@@ -39,7 +39,7 @@ services:
       - datadog # Make sure agent is running so all stats+logs are collected
     image: ${FNAME_REGISTRY_DOCKER_IMAGE:-dummy-value-for-linting}
     init: true
-    command: ["node", "src/index.js"]
+    command: ["node", "index.js"]
     environment:
       <<: *shared-env-vars
       TASK_TYPE: ${TASK_TYPE}

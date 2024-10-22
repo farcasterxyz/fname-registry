@@ -49,7 +49,7 @@ pods:
           name: api
           protocol: HTTPS
           port: 443
-          cert: warpcast.com
+          cert: farcaster.xyz
         public: false # Only load balancer is public
         target:
           port: 3000

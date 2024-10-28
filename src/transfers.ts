@@ -141,13 +141,15 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('TOO_MANY_NAMES');
   }
 
-  if (req.timestamp > currentTimestamp() + TIMESTAMP_TOLERANCE) {
-    log.error(`Timestamp ${req.timestamp} was > ${TIMESTAMP_TOLERANCE}`);
+  const maxAcceptableTimestamp = currentTimestamp() + TIMESTAMP_TOLERANCE;
+  if (req.timestamp > maxAcceptableTimestamp) {
+    log.error(`Timestamp ${req.timestamp} was > ${maxAcceptableTimestamp}`);
     throw new ValidationError('INVALID_TIMESTAMP');
   }
 
-  if (req.timestamp < currentTimestamp() - TIMESTAMP_TOLERANCE) {
-    log.error(`Timestamp ${req.timestamp} was < ${TIMESTAMP_TOLERANCE}`);
+  const minAcceptableTimestamp = currentTimestamp() - TIMESTAMP_TOLERANCE;
+  if (req.timestamp < minAcceptableTimestamp) {
+    log.error(`Timestamp ${req.timestamp} was < ${minAcceptableTimestamp}`);
     throw new ValidationError('INVALID_TIMESTAMP');
   }
 

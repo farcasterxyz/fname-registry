@@ -15,6 +15,7 @@ import { bytesToHex, currentTimestamp } from '../src/util.js';
 import { createTestTransfer } from './utils.js';
 import { AbiCoder, ethers, Interface, ZeroAddress } from 'ethers';
 import { CCIP_ADDRESS } from '../src/env.js';
+import { jest } from '@jest/globals';
 
 const db = getWriteClient();
 const anotherSigner = ethers.Wallet.createRandom();
@@ -222,6 +223,17 @@ describe('app', () => {
       const response = await request(app).get('/signer');
       expect(response.status).toBe(200);
       expect(response.body.signer.toLowerCase()).toEqual(signerAddress.toLowerCase());
+    });
+  });
+
+  describe('current time', () => {
+    test('returns current time in seconds', async () => {
+      const mockTime = new Date('2020-01-01').getTime();
+      jest.spyOn(Date, 'now').mockImplementationOnce(() => mockTime);
+      const response = await request(app).get('/current-time');
+      expect(response.status).toBe(200);
+      expect(response.body.currentTime).toBe(Math.floor(mockTime / 1000));
+      jest.restoreAllMocks();
     });
   });
 

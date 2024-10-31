@@ -15,7 +15,7 @@ import {
   ValidationError,
 } from './transfers.js';
 
-import { decodeDnsName } from './util.js';
+import { currentTimestamp, decodeDnsName } from './util.js';
 import { getIdRegistryContract } from './ethereum.js';
 
 export const RESOLVE_ABI = [
@@ -147,4 +147,8 @@ app.get('/signer', async (_req, res) => {
 
 app.get('/_health', async (_req, res) => {
   res.send({ status: 'ok' });
+});
+
+app.get('/current-time', async (_req, res) => {
+  res.send({ currentTime: currentTimestamp() });
 });

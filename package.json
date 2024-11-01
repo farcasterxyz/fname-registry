@@ -14,9 +14,6 @@
     "abi": "typechain --node16-modules --target ethers-v6 --out-dir src/abi src/abi/*.abi",
     "lint:fix": "npm run lint -- --fix"
   },
-  "engines": {
-    "node": "22.9.0"
-  },
   "dependencies": {
     "@chainlink/ccip-read-server": "^0.2.1",
     "@farcaster/hub-nodejs": "^0.12.7",

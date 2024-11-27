@@ -4,7 +4,7 @@ import { createPublicClient, fallback, http } from 'viem';
 import { optimism } from 'viem/chains';
 import { CCIP_ADDRESS, OP_ALCHEMY_SECRET, WARPCAST_ADDRESS } from './env.js';
 
-export const signer = ethers.Wallet.fromPhrase(
+export const signer = ethers.Wallet.fromMnemonic(
   process.env.MNEMONIC || 'test test test test test test test test test test test junk'
 );
 export const signerAddress = signer.address;

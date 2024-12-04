@@ -9,7 +9,7 @@ concurrency:
 
 jobs:
   deploy:
-    uses: warpcast/remote-exec
+    uses: warpcast/remote-exec@1.0.0
     with:
       git-repo: ${{ github.repository }}
       git-ref: ${{ github.sha }}

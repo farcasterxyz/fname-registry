@@ -3,12 +3,16 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: fname-registry-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
-    uses: ./.github/workflows/perform-action.yml
+    uses: warpcast/remote-exec
     with:
-      action: deploy
-    secrets: inherit
-    concurrency:
-      group: deploy
-      cancel-in-progress: false
+      git-repo: ${{ github.repository }}
+      git-ref: ${{ github.sha }}
+      command: make deploy
+      project: fname-registry
+      ssh-key: ${{ secrets.STACK_DEPLOY_SSH_PRIVATE_KEY }}

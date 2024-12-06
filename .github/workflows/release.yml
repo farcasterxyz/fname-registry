@@ -8,11 +8,38 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  build:
+    timeout-minutes: 10
+    runs-on: depot-ubuntu-latest-arm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::526236635984:role/github-actions-warpcast-backend
+          aws-region: us-east-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - uses: ./.github/actions/build
+        with:
+          dockerhub-user: ${{ secrets.DOCKERHUB_USER }}
+          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          dockerfile: ./Dockerfile
+          depot: true
+          image-tag: 526236635984.dkr.ecr.us-east-1.amazonaws.com/warpcast/backend:${{ github.sha }}
+          context: .
+          platforms: 'linux/arm64'
+          push: true
+
   deploy:
-    uses: warpcast/remote-exec@1.0.0
-    with:
-      git-repo: ${{ github.repository }}
-      git-ref: ${{ github.sha }}
-      command: make deploy
-      project: fname-registry
-      ssh-key: ${{ secrets.STACK_DEPLOY_SSH_PRIVATE_KEY }}
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: warpcast/remote-exec@1.0.0
+        with:
+          git-repo: ${{ github.repository }}
+          git-ref: ${{ github.sha }}
+          command: make deploy
+          project: fname-registry
+          ssh-key: ${{ secrets.STACK_DEPLOY_SSH_PRIVATE_KEY }}

@@ -8,7 +8,7 @@ x-shared-labels: &shared-labels
   com.datadoghq.tags.pod: ${POD_NAME}
   com.datadoghq.tags.service: fname-registry-${POD_NAME}
 
-# Blank values implies values are inherited from the environment
+# Blank values imply values are inherited from the environment
 x-shared-env-vars: &shared-env-vars
   TINI_VERBOSITY: 3
   ENVIRONMENT: prod

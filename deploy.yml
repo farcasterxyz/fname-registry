@@ -32,7 +32,7 @@ pods:
     <<: *shared-pod-options
     instanceType: c7g.xlarge # 4 vCPU, 8GiB, ARM, up to 12.5 Gbit
     environment:
-      FNAME_REGISTRY_DOCKER_IMAGE: # Provided by deployment process after image is built
+      STACK_DOCKER_IMAGE: # Provided by deployment process after image is built
       HEALTHCHECK_CMD: "curl --connect-timeout 5 http://127.0.0.1:3000/_health"
       NODE_OPTIONS: "--enable-source-maps"
     loadBalancers:

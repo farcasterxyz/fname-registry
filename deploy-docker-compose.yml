@@ -37,7 +37,7 @@ services:
   app:
     depends_on:
       - datadog # Make sure agent is running so all stats+logs are collected
-    image: ${FNAME_REGISTRY_DOCKER_IMAGE:-dummy-value-for-linting}
+    image: ${STACK_DOCKER_IMAGE:-dummy-value-for-linting}
     init: true
     command: ["npx", "pm2-runtime", "pm2.config.cjs"]
     environment:

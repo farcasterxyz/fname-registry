@@ -9,8 +9,10 @@ concurrency:
 
 jobs:
   build:
-    timeout-minutes: 10
-    runs-on: depot-ubuntu-latest-arm
+    env:
+      DOCKER_IMAGE: "526236635984.dkr.ecr.us-east-1.amazonaws.com/warpcast/backend:${{ github.sha }}"
+    timeout-minutes: 15
+    runs-on: ['runs-on=${{ github.run_id }}', 'runner=2cpu-linux-arm64']
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
@@ -21,25 +23,32 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-      - uses: ./.github/actions/build
+      - id: docker-image
+        uses: ./.github/actions/build
         with:
           dockerhub-user: ${{ secrets.DOCKERHUB_USER }}
           dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
           dockerfile: ./Dockerfile
-          depot: true
-          image-tag: 526236635984.dkr.ecr.us-east-1.amazonaws.com/warpcast/backend:${{ github.sha }}
+          depot: false # TODO: Enable once OIDC connection is fixed
+          image-tag: ${{ env.DOCKER_IMAGE }}
           context: .
           platforms: 'linux/arm64'
           push: true
+      - name: Output Docker image tag
+        id: image-tag
+        run: echo "image-tag=$DOCKER_IMAGE" >> $GITHUB_OUTPUT
+        shell: bash
 
   deploy:
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 15
+    runs-on: ['runs-on=${{ github.run_id }}', 'runner=1cpu-linux-arm64']
     steps:
       - uses: warpcast/remote-exec@v1.0.0
         with:
           git-repo: ${{ github.repository }}
           git-ref: ${{ github.sha }}
+          docker-image: ${{ needs.build.outputs.image-tag }}
           command: make deploy
           project: fname-registry
           ssh-key: ${{ secrets.STACK_DEPLOY_SSH_PRIVATE_KEY }}

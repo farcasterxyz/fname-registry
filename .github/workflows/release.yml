@@ -33,7 +33,7 @@ jobs:
       - id: docker-image
         uses: ./.github/actions/build
         with:
-          dockerhub-user: ${{ secrets.FARCASTERXYZ_DOCKER_HUB_USER }}
+          dockerhub-user: ${{ vars.FARCASTERXYZ_DOCKER_HUB_USER }}
           dockerhub-password: ${{ secrets.FARCASTERXYZ_DOCKER_HUB_TOKEN }}
           dockerfile: ./Dockerfile
           depot: false # TODO: Enable once OIDC connection is fixed

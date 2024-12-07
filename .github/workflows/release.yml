@@ -48,11 +48,11 @@ jobs:
     timeout-minutes: 15
     runs-on: ['runs-on=${{ github.run_id }}', 'runner=1cpu-linux-arm64']
     steps:
-      - uses: warpcast/remote-exec@v1.1.1
+      - uses: warpcast/remote-exec@v1.2.0
         with:
           git-repo: ${{ github.repository }}
           git-ref: ${{ github.sha }}
           docker-image: ${{ needs.build.outputs.image-tag }}
-          command: make deploy
+          command: deploy
           project: fname-registry
           ssh-key: ${{ secrets.STACK_DEPLOY_SSH_PRIVATE_KEY }}

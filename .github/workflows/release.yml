@@ -17,6 +17,9 @@ jobs:
       DOCKER_IMAGE: "526236635984.dkr.ecr.us-east-1.amazonaws.com/farcasterxyz/fname-registry:${{ github.sha }}"
     timeout-minutes: 15
     runs-on: ['runs-on=${{ github.run_id }}', 'runner=2cpu-linux-arm64']
+    outputs:
+      docker-image: ${{ env.DOCKER_IMAGE }}
+
     steps:
       - uses: actions/checkout@v4
       - name: Configure AWS credentials
@@ -38,10 +41,6 @@ jobs:
           context: .
           platforms: 'linux/arm64'
           push: true
-      - name: Output Docker image tag
-        id: image-tag
-        run: echo "image-tag=$DOCKER_IMAGE" >> $GITHUB_OUTPUT
-        shell: bash
 
   deploy:
     needs: build

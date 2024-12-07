@@ -10,7 +10,7 @@ WORKDIR /app
 RUN <<EOF
   apk update --no-cache
   apk add git             # Fetch some packages
-  apk add python3         # Some node gyp bindings requires Python
+  apk add python3         # Some node gyp bindings require Python
   apk add make g++        # Standard tools for building native extensions
   npm install -g node-gyp # Compile native extensions
 EOF

@@ -51,7 +51,7 @@ jobs:
         with:
           git-repo: ${{ github.repository }}
           git-ref: ${{ github.sha }}
-          docker-image: ${{ needs.build.outputs.image-tag }}
+          docker-image: ${{ needs.build.outputs.docker-image }}
           command: deploy
           project: fname-registry
           ssh-key: ${{ secrets.STACK_DEPLOY_SSH_PRIVATE_KEY }}

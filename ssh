@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# SSH into a fname-registry instance.
+
+set -euo pipefail
+
+project=fname-registry
+ssh_user=ec2-user
+
+echo "Finding relevant instances..."
+instances=$(aws ec2 describe-instances --filters Name=tag:project,Values=$project Name=instance-state-name,Values=running --output json | jq -r '.Reservations[].Instances[] | .InstanceId + " " + (.Tags[]? | select(.Key == "pod") | .Value // "(No pod tag)")')
+
+selection=$(echo "$instances" | sort -rk2 | fzf)
+if [ $? -ne 0 ]; then
+  echo "No selection"
+  exit 1
+fi
+
+shopt -s nullglob
+pub_keys=$(cat /dev/null ~/.ssh/id*.pub)
+if [ -n "$pub_keys" ]; then
+  pub_key="$(echo "$pub_keys" | head -n1)"
+else
+  pub_key="$(ssh-add -L | head -n1)"
+fi
+if [ -z "$pub_key" ]; then
+  echo "You don't have a local SSH agent or public key in your ~/.ssh directory"
+  echo "Add your key to your agent or create a local SSH key to proceed."
+  echo
+  echo "You can generate a new key by running:"
+  echo
+  echo "  ssh-keygen -t ed25519"
+  exit 1
+fi
+instance_id=$(echo $selection | awk '{ print $1 }')
+echo "Connecting to instance ID $instance_id..."
+aws ec2-instance-connect send-ssh-public-key \
+  --instance-id "$instance_id" \
+  --instance-os-user "$ssh_user" \
+  --ssh-public-key "$pub_key" \
+  --no-cli-pager > /dev/null
+
+ssh \
+  -o ProxyCommand="aws ec2-instance-connect open-tunnel --instance-id $instance_id" \
+  -o StrictHostKeyChecking=no \
+  -o UserKnownHostsFile=/dev/null \
+  "$ssh_user@$instance_id.ec2.internal"

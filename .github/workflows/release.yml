@@ -30,8 +30,8 @@ jobs:
       - id: docker-image
         uses: ./.github/actions/build
         with:
-          dockerhub-user: ${{ secrets.DOCKERHUB_USER }}
-          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          dockerhub-user: ${{ secrets.FARCASTERXYZ_DOCKER_HUB_TOKEN }}
+          dockerhub-password: ${{ secrets.FARCASTERXYZ_DOCKER_HUB_USER }}
           dockerfile: ./Dockerfile
           depot: false # TODO: Enable once OIDC connection is fixed
           image-tag: ${{ env.DOCKER_IMAGE }}

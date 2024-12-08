@@ -16,7 +16,7 @@ network:
       - subnet-0d4f99e3a3569ec11 # private-1f
 
 x-shared-pod-options: &shared-pod-options
-  image: ami-0430baeab16c9655e # 64-bit ARM Amazon Linux 2023 with Docker Compose already installed
+  image: ami-056c76de488ba5820 # 64-bit ARM Amazon Linux 2023 with Docker Compose already installed
   sshUser: ec2-user
   bastionUser: ec2-user
   bastionHost: 3.234.215.16

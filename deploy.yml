@@ -18,8 +18,6 @@ network:
 x-shared-pod-options: &shared-pod-options
   image: ami-056c76de488ba5820 # 64-bit ARM Amazon Linux 2023 with Docker Compose already installed
   sshUser: ec2-user
-  bastionUser: ec2-user
-  bastionHost: 3.234.215.16
   compose: deploy-docker-compose.yml
   initScript: ec2-first-boot.sh
   deploy:

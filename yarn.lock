@@ -4067,10 +4067,10 @@ kysely-postgres-js@^2.0.0:
   resolved "https://registry.npmjs.org/kysely-postgres-js/-/kysely-postgres-js-2.0.0.tgz#f2e79f2e14c2c3065052722bdc89014691080ceb"
   integrity sha512-R1tWx6/x3tSatWvsmbHJxpBZYhNNxcnMw52QzZaHKg7ZOWtHib4iZyEaw4gb2hNKVctWQ3jfMxZT/ZaEMK6kBQ==
 
-kysely@^0.27.4:
-  version "0.27.4"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.27.4.tgz#96a0285467b380948b4de03b20d87e82d797449b"
-  integrity sha512-dyNKv2KRvYOQPLCAOCjjQuCk4YFd33BvGdf/o5bC7FiW+BB6snA81Zt+2wT9QDFzKqxKa5rrOmvlK/anehCcgA==
+kysely@^0.27.5:
+  version "0.27.5"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.27.5.tgz#e4662be051dd023eda2f68ee3d7e2647c94b0ef7"
+  integrity sha512-s7hZHcQeSNKpzCkHRm8yA+0JPLjncSWnjb+2TIElwS2JAqYr+Kv3Ess+9KFfJS0C1xcQ1i9NkNHpWwCYpHMWsA==
 
 lazy@~1.0.11:
   version "1.0.11"

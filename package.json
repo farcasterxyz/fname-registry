@@ -21,7 +21,7 @@
     "dd-trace": "^5.28.0",
     "dotenv": "^16.4.7",
     "ethers": "^6.13.4",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "kysely": "^0.27.4",
     "kysely-postgres-js": "^2.0.0",
     "neverthrow": "^8.1.1",

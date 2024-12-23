@@ -5307,9 +5307,9 @@ synckit@^0.9.1:
     tslib "^2.6.2"
 
 systeminformation@^5.7:
-  version "5.23.5"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.23.5.tgz#bf7544be42c42f7d14a81b02aa0365e9ca1f5266"
-  integrity sha512-PEpJwhRYxZgBCAlWZhWIgfMTjXLqfcaZ1pJsJn9snWNfBW/Z1YQg1mbIUSWrEV3ErAHF7l/OoVLQeaZDlPzkpA==
+  version "5.23.17"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.23.17.tgz#1ef40238a6594169532fb45acc7517d82ce5e092"
+  integrity sha512-jjcPB23YcoNN43Q+A0rPFsGMMSAW/Zeok8rMGko1DvO8b1SO7zizgAEVQ4lyJdlAuc6vTmqnkyMCDD3N9Uwksw==
 
 table-layout@^1.0.2:
   version "1.0.2"

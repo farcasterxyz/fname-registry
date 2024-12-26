@@ -1,7 +1,6 @@
 # fname Registry
 
-A centralized registry for Farcaster usernames (fnames).
-Exposes an HTTP API for getting information about recent registrations, etc.
+A centralized registry for Farcaster usernames (fnames). Exposes an HTTP API for getting information about recent registrations, etc.
 
 ## Getting started
 

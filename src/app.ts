@@ -122,7 +122,7 @@ app.post('/transfers', async (req, res) => {
       idContract
     );
     if (!result) {
-      log.warn({ name: tr.username }, `Unable to create transfer`);
+      log.warn({ name: tr.name }, `Unable to create transfer`);
       res.status(500).send({ error: 'Unable to create transfer' }).end();
       return;
     }

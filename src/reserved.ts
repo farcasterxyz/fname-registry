@@ -93,7 +93,7 @@ const RESERVED_USERNAMES = new Set([
   'tesla',
   'tezos',
   'travel',
-  'twitter',
+  'x',
   'uber',
   'un',
   'uniswap',

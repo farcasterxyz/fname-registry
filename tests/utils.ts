@@ -23,7 +23,7 @@ export async function createTestTransfer(db: Kysely<Database>, opts: TestTransfe
   opts.userSignature =
     opts.userSignature ?? (await generateSignature(opts.username, opts.timestamp, opts.owner, signer));
   const userFid = opts.userFid ?? signerFid;
-  const idRegistry = { idOfOwner: jest.fn().mockReturnValue(Promise.resolve(idOfOwner || 0)) } as any;
+  const idRegistry = { idOf: jest.fn().mockReturnValue(Promise.resolve(idOfOwner || 0)) } as any;
   return createTransfer(
     {
       timestamp: opts.timestamp,

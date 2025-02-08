@@ -4,7 +4,8 @@ import { ZeroAddress } from 'ethers';
 import { getReadClient, getWriteClient, migrateToLatest } from './db.js';
 import './env.js';
 import { log } from './log.js';
-import { generateCCIPSignature, signer, signerAddress } from './signature.js';
+import { signer, signerAddress } from './signature.js';
+import { generateCCIPSignature } from './ccip-signature.js';
 import {
   createTransfer,
   getCurrentUsername,
@@ -15,8 +16,9 @@ import {
   ValidationError,
 } from './transfers.js';
 
-import { currentTimestamp, decodeDnsName } from './util.js';
+import { currentTimestamp, decodeDnsName, decodeEnsRequest } from './util.js';
 import { getIdRegistryContract } from './ethereum.js';
+import { getRecordFromHub } from './hub.js';
 
 export const RESOLVE_ABI = [
   'function resolve(bytes calldata name, bytes calldata data) external view returns(string name, uint256 timestamp, address owner, bytes memory sig)',
@@ -32,15 +34,21 @@ const server = new ccipread.Server();
 server.add(RESOLVE_ABI, [
   {
     type: 'resolve',
-    func: async ([name, _data], _req) => {
+    func: async ([name, data], _req) => {
       const fname = decodeDnsName(name)[0];
       const transfer = await getLatestTransfer(fname, read);
-      if (!transfer || transfer.to === 0) {
-        // If no transfer or the name was unregistered, return empty values
+      const ensRequest = decodeEnsRequest(data);
+
+      if (!transfer || transfer.to === 0 || !ensRequest) {
+        // If no transfer or the name was unregistered, or the ENS request is not supported, return empty values
         return ['', 0, ZeroAddress, '0x'];
       }
-      const signature = await generateCCIPSignature(transfer.username, transfer.timestamp, transfer.owner, signer);
-      return [transfer.username, transfer.timestamp, transfer.owner, signature];
+
+      const { plain, encoded } = await getRecordFromHub(transfer.user_fid, ensRequest);
+      log.info({ fname, ...ensRequest, res: plain }, 'getRecordFromHub');
+
+      const signature = await generateCCIPSignature(encoded, transfer.timestamp, transfer.owner, signer);
+      return [encoded, transfer.timestamp, transfer.owner, signature];
     },
   },
 ]);

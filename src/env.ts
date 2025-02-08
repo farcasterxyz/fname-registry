@@ -23,3 +23,5 @@ if (ENVIRONMENT === 'prod' && CCIP_ADDRESS === '') {
 }
 
 export const ID_REGISTRY_ADDRESS = process.env['ID_REGISTRY_ADDRESS'] || '0x00000000fc6c5f01fc30151999387bb99a9f489b';
+
+export const HUB_GRPC_URL = new URL(process.env['HUB_GRPC_URL'] || 'http://localhost:2281');

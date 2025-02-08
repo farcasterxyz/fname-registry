@@ -254,7 +254,6 @@ describe('app', () => {
             args: [dnsEncodedName, encodedResolveCall],
         })
       */
-      const encodedResolveCall = '0x3b3b57def92c9492f04f951f8a3b5f9bc1b8504c7950352e3641270b54ab9de19b7e3ad7';
       const encodedWildcardResolveCalldata =
         '0x9061b923000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000015057465737431096661726361737465720365746800000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57def92c9492f04f951f8a3b5f9bc1b8504c7950352e3641270b54ab9de19b7e3ad700000000000000000000000000000000000000000000000000000000';
 
@@ -275,13 +274,12 @@ describe('app', () => {
       expect(validUntil).toBeGreaterThan(now);
       // The signature is really only valid for 60 seconds, but `now` is from the start of the test running so we need some buffer
       expect(validUntil).toBeLessThan(now + 90);
-      expect(hashedRequest).toBe(keccak256(encodedResolveCall));
-      expect(verifyCCIPSignature(hashedRequest, result, validUntil, signature, signer.address)).toBe(true);
+      expect(hashedRequest).toBe(keccak256(encodedWildcardResolveCalldata));
+      expect(verifyCCIPSignature(hashedRequest, keccak256(result), validUntil, signature, signer.address)).toBe(true);
     });
 
     it('should return an empty signature for a ccip lookup of an unregistered name', async () => {
       // Calldata for alice.farcaster.eth
-      const encodedResolveCall = '0x3b3b57dee224cf2d7e9641e5b9cde025d9e3db25df5d8789bb7a5c9f4bb28b3e18c2717e';
       const encodedWildcardResolveCall =
         '0x9061b92300000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001505616c696365096661726361737465720365746800000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57dee224cf2d7e9641e5b9cde025d9e3db25df5d8789bb7a5c9f4bb28b3e18c2717e00000000000000000000000000000000000000000000000000000000';
       const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${encodedWildcardResolveCall}.json`);
@@ -290,7 +288,7 @@ describe('app', () => {
         resolveABI.outputs,
         response.body.data
       );
-      expect(hashedRequest).toBe(keccak256(encodedResolveCall));
+      expect(hashedRequest).toBe(keccak256(encodedWildcardResolveCall));
       expect(result).toBe('0x');
       expect(validUntil).toBeGreaterThan(now);
       expect(validUntil).toBeLessThan(now + 90);

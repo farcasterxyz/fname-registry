@@ -1,5 +1,5 @@
 import ccipread from '@chainlink/ccip-read-server';
-import { keccak256 } from 'viem';
+import { encodeFunctionData, keccak256, parseAbi } from 'viem';
 
 import { getReadClient, getWriteClient, migrateToLatest } from './db.js';
 import './env.js';
@@ -50,10 +50,16 @@ server.add(RESOLVE_ABI, [
       const now = Math.floor(Date.now() / 1000);
       const validUntil = now + 60;
 
+      const extraData = encodeFunctionData({
+        abi: parseAbi(['function resolve(bytes calldata name, bytes calldata data) view returns (bytes memory)']),
+        functionName: 'resolve',
+        args: [name, data],
+      });
+
       // Throw if no transfer or the name was unregistered or the ENS request is unsupported
       if (!transfer || transfer.to === 0 || !ensRequest) {
         log.info(`No transfer or invalid request: ${fname}`);
-        return [keccak256(data), '0x', validUntil, '0x'];
+        return [keccak256(extraData), '0x', validUntil, '0x'];
       }
 
       const { plain, response } = await getRecordFromHub(transfer.user_fid, ensRequest);
@@ -61,8 +67,9 @@ server.add(RESOLVE_ABI, [
 
       // The L1 contract must be able to confirm that this response is for a recent request it initiated
       // To do that, the initial request must be included in the signed response from the gateway (hashed for efficiency)
-      const signature = await generateCCIPSignature(keccak256(data), response, validUntil, signer);
-      return [keccak256(data), response, validUntil, signature];
+      // The response is hashed beacuse EIP-712 doesn't support dynamic types
+      const signature = await generateCCIPSignature(keccak256(extraData), keccak256(response), validUntil, signer);
+      return [keccak256(extraData), response, validUntil, signature];
     },
   },
 ]);

@@ -11,20 +11,20 @@ const ccip_domain = {
 const types = {
   DataProof: [
     { name: 'request', type: 'bytes32' },
-    { name: 'response', type: 'bytes' },
+    { name: 'result', type: 'bytes32' },
     { name: 'validUntil', type: 'uint256' },
   ],
 };
 
 export async function generateCCIPSignature(
   request: `0x${string}`,
-  response: `0x${string}`,
+  result: `0x${string}`,
   validUntil: number,
   signer: ethers.Signer
 ) {
   const dataProof = {
     request,
-    response,
+    result,
     validUntil,
   };
 
@@ -34,14 +34,14 @@ export async function generateCCIPSignature(
 
 export function verifyCCIPSignature(
   request: `0x${string}`,
-  response: `0x${string}`,
+  result: `0x${string}`,
   validUntil: number,
   signature: string,
   signerAddress: string
 ) {
   const dataProof = {
     request,
-    response,
+    result,
     validUntil,
   };
   const signer = ethers.verifyTypedData(ccip_domain, types, dataProof, signature);

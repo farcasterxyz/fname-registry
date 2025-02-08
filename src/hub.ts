@@ -1,6 +1,5 @@
 import { encodeFunctionResult, zeroAddress } from 'viem';
 
-import { log } from './log.js';
 import { HUB_GRPC_URL } from './env.js';
 import { decodeEnsRequest, BASE_RESOLVER_ABI } from './util.js';
 
@@ -25,11 +24,10 @@ export async function getRecordFromHub(
 
     // Farcaster doesn't store different addresses per chain, so we'll assume all addresses are valid on all EVM chains
     // This checks if a request is for ETH or an L2 (ENSIP-11)
-    if (coinType !== 60n && coinType < 0x80000000) {
-      log.warn(`Unsupported coin type ${coinType}`);
-      result = zeroAddress;
-    } else {
+    if (coinType === 60n || coinType > 0x80000000) {
       result = await getEthAddressByFid(fid);
+    } else {
+      result = zeroAddress;
     }
   }
 

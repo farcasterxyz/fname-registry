@@ -10,22 +10,22 @@ const ccip_domain = {
 
 const types = {
   DataProof: [
-    { name: 'data', type: 'bytes' },
-    { name: 'timestamp', type: 'uint256' },
-    { name: 'owner', type: 'address' },
+    { name: 'request', type: 'bytes32' },
+    { name: 'response', type: 'bytes' },
+    { name: 'validUntil', type: 'uint256' },
   ],
 };
 
 export async function generateCCIPSignature(
-  functionResult: `0x${string}`,
-  timestamp: number,
-  owner: string,
+  request: `0x${string}`,
+  response: `0x${string}`,
+  validUntil: number,
   signer: ethers.Signer
 ) {
   const dataProof = {
-    data: functionResult,
-    timestamp,
-    owner: owner,
+    request,
+    response,
+    validUntil,
   };
 
   const signature = await signer.signTypedData(ccip_domain, types, dataProof);
@@ -33,16 +33,16 @@ export async function generateCCIPSignature(
 }
 
 export function verifyCCIPSignature(
-  functionResult: `0x${string}`,
-  timestamp: number,
-  owner: `0x${string}`,
+  request: `0x${string}`,
+  response: `0x${string}`,
+  validUntil: number,
   signature: string,
   signerAddress: string
 ) {
   const dataProof = {
-    data: functionResult,
-    timestamp,
-    owner: owner,
+    request,
+    response,
+    validUntil,
   };
   const signer = ethers.verifyTypedData(ccip_domain, types, dataProof, signature);
   return signer.toLowerCase() === signerAddress.toLowerCase();

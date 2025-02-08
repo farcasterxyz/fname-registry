@@ -10,7 +10,7 @@ import { createTestTransfer } from './utils.js';
 import { AbiCoder, ethers, Interface } from 'ethers';
 import { CCIP_ADDRESS } from '../src/env.js';
 import { jest } from '@jest/globals';
-import { encodeFunctionResult, zeroAddress } from 'viem';
+import { encodeFunctionResult, zeroAddress, keccak256 } from 'viem';
 
 const db = getWriteClient();
 const anotherSigner = ethers.Wallet.createRandom();
@@ -254,12 +254,13 @@ describe('app', () => {
             args: [dnsEncodedName, encodedResolveCall],
         })
       */
+      const encodedResolveCall = '0x3b3b57def92c9492f04f951f8a3b5f9bc1b8504c7950352e3641270b54ab9de19b7e3ad7';
       const encodedWildcardResolveCalldata =
         '0x9061b923000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000015057465737431096661726361737465720365746800000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57def92c9492f04f951f8a3b5f9bc1b8504c7950352e3641270b54ab9de19b7e3ad700000000000000000000000000000000000000000000000000000000';
 
       const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${encodedWildcardResolveCalldata}.json`);
       expect(response.status).toBe(200);
-      const [functionResult, timestamp, owner, signature] = AbiCoder.defaultAbiCoder().decode(
+      const [hashedRequest, result, validUntil, signature] = AbiCoder.defaultAbiCoder().decode(
         resolveABI.outputs,
         response.body.data
       );
@@ -270,25 +271,29 @@ describe('app', () => {
         result: zeroAddress,
       });
 
-      expect(functionResult).toBe(expectedFunctionResult);
-      expect(verifyCCIPSignature(functionResult, timestamp, owner, signature, signer.address)).toBe(true);
-      // CCIP domain is different from hub domain
-      expect(await verifySignature(functionResult, timestamp, owner, signature, signer.address)).toBe(false);
+      expect(result).toBe(expectedFunctionResult);
+      expect(validUntil).toBeGreaterThan(now);
+      // The signature is really only valid for 60 seconds, but `now` is from the start of the test running so we need some buffer
+      expect(validUntil).toBeLessThan(now + 90);
+      expect(hashedRequest).toBe(keccak256(encodedResolveCall));
+      expect(verifyCCIPSignature(hashedRequest, result, validUntil, signature, signer.address)).toBe(true);
     });
 
     it('should return an empty signature for a ccip lookup of an unregistered name', async () => {
       // Calldata for alice.farcaster.eth
-      const callData =
+      const encodedResolveCall = '0x3b3b57dee224cf2d7e9641e5b9cde025d9e3db25df5d8789bb7a5c9f4bb28b3e18c2717e';
+      const encodedWildcardResolveCall =
         '0x9061b92300000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001505616c696365096661726361737465720365746800000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57dee224cf2d7e9641e5b9cde025d9e3db25df5d8789bb7a5c9f4bb28b3e18c2717e00000000000000000000000000000000000000000000000000000000';
-      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${callData}.json`);
+      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${encodedWildcardResolveCall}.json`);
       expect(response.status).toBe(200);
-      const [functionResult, timestamp, owner, signature] = AbiCoder.defaultAbiCoder().decode(
+      const [hashedRequest, result, validUntil, signature] = AbiCoder.defaultAbiCoder().decode(
         resolveABI.outputs,
         response.body.data
       );
-      expect(functionResult).toBe('0x');
-      expect(timestamp.toString()).toEqual('0');
-      expect(owner).toBe(zeroAddress);
+      expect(hashedRequest).toBe(keccak256(encodedResolveCall));
+      expect(result).toBe('0x');
+      expect(validUntil).toBeGreaterThan(now);
+      expect(validUntil).toBeLessThan(now + 90);
       expect(signature).toBe('0x');
     });
   });

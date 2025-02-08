@@ -1,5 +1,5 @@
 import ccipread from '@chainlink/ccip-read-server';
-import { zeroAddress } from 'viem';
+import { keccak256 } from 'viem';
 
 import { getReadClient, getWriteClient, migrateToLatest } from './db.js';
 import './env.js';
@@ -21,7 +21,7 @@ import { getIdRegistryContract } from './ethereum.js';
 import { getRecordFromHub } from './hub.js';
 
 export const RESOLVE_ABI = [
-  'function resolve(bytes calldata name, bytes calldata data) external view returns(bytes memory result, uint256 timestamp, address owner, bytes memory sig)',
+  'function resolve(bytes calldata name, bytes calldata data) external view returns(bytes32 request, bytes memory result, uint256 validUntil, bytes memory sig)',
 ];
 
 const write = getWriteClient();
@@ -34,8 +34,9 @@ const server = new ccipread.Server();
 server.add(RESOLVE_ABI, [
   {
     type: 'resolve',
-    func: async ([name, data], _req) => {
-      // Incoming name should be 3 levels, eg alice.farcaster.eth
+    // `name` is the DNS encoded ENS name, eg alice.farcaster.eth
+    // `data` is the calldata for the encoded ENS resolver call, eg addr() or text()
+    func: async ([name, data]) => {
       const nameParts = decodeDnsName(name);
       const [fname, subdomain, tld] = nameParts;
 
@@ -46,17 +47,22 @@ server.add(RESOLVE_ABI, [
 
       const ensRequest = decodeEnsRequest(data);
       const transfer = await getLatestTransfer(fname, read);
+      const now = Math.floor(Date.now() / 1000);
+      const validUntil = now + 60;
 
       // Throw if no transfer or the name was unregistered or the ENS request is unsupported
       if (!transfer || transfer.to === 0 || !ensRequest) {
-        return ['0x', 0, zeroAddress, '0x'];
+        log.info(`No transfer or invalid request: ${fname}`);
+        return [keccak256(data), '0x', validUntil, '0x'];
       }
 
-      const { plain, encoded } = await getRecordFromHub(transfer.user_fid, ensRequest);
+      const { plain, response } = await getRecordFromHub(transfer.user_fid, ensRequest);
       log.info({ fname, ...ensRequest, res: plain }, 'getRecordFromHub');
 
-      const signature = await generateCCIPSignature(encoded, transfer.timestamp, transfer.owner, signer);
-      return [encoded, transfer.timestamp, transfer.owner, signature];
+      // The L1 contract must be able to confirm that this response is for a recent request it initiated
+      // To do that, the initial request must be included in the signed response from the gateway (hashed for efficiency)
+      const signature = await generateCCIPSignature(keccak256(data), response, validUntil, signer);
+      return [keccak256(data), response, validUntil, signature];
     },
   },
 ]);

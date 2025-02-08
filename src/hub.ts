@@ -44,8 +44,8 @@ export async function getRecordFromHub(
 
   return {
     plain: result,
-    // This is what the output of ENS resolve() expects, and will ultimately be returned to the client
-    encoded: encodeFunctionResult({
+    // This is what the response of ENS resolve() looks like, and will ultimately be returned to the client
+    response: encodeFunctionResult({
       abi: BASE_RESOLVER_ABI,
       functionName,
       result,

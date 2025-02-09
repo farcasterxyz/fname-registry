@@ -111,9 +111,9 @@ export function decodeDnsName(name: string) {
 }
 
 export const BASE_RESOLVER_ABI = parseAbi([
-  'function addr(bytes32) external pure returns (address)',
-  'function addr(bytes32, uint256) external pure returns (address)',
-  'function text(bytes32, string) external pure returns (string memory)',
+  'function addr(bytes32 node) view returns (address)',
+  'function addr(bytes32 node, uint256 coinType) view returns (bytes memory)',
+  'function text(bytes32 node, string key) view returns (string memory)',
 ]);
 
 export function decodeEnsRequest(data: `0x${string}`) {

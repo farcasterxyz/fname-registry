@@ -1,4 +1,4 @@
-import { encodeFunctionResult, zeroAddress } from 'viem';
+import { AbiItem, encodeFunctionResult, zeroAddress } from 'viem';
 
 import { HUB_GRPC_URL } from './env.js';
 import { decodeEnsRequest, BASE_RESOLVER_ABI } from './util.js';
@@ -40,11 +40,16 @@ export async function getRecordFromHub(
     }
   }
 
+  // Find the correct ABI item for each function, otherwise `addr(node, coinType)` gets incorrectly encoded as `addr(node)`
+  const abi: AbiItem | undefined = BASE_RESOLVER_ABI.find(
+    (abi) => abi.name === functionName && abi.inputs.length === args.length
+  );
+
   return {
     plain: result,
     // This is what the response of ENS resolve() looks like, and will ultimately be returned to the client
     response: encodeFunctionResult({
-      abi: BASE_RESOLVER_ABI,
+      abi: [abi],
       functionName,
       result,
     }),

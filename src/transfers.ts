@@ -231,6 +231,7 @@ function toTransferResponse(row: Selectable<TransfersTable> | undefined) {
     to: row.to,
     user_signature: bytesToHex(row.userSignature),
     server_signature: bytesToHex(row.serverSignature),
+    user_fid: row.userFid,
   };
 }
 

@@ -3,19 +3,14 @@ import { app, RESOLVE_ABI } from '../src/app.js';
 import { sql } from 'kysely';
 import { getWriteClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
-import {
-  generateSignature,
-  signer,
-  signerAddress,
-  signerFid,
-  verifyCCIPSignature,
-  verifySignature,
-} from '../src/signature.js';
-import { bytesToHex, currentTimestamp } from '../src/util.js';
+import { generateSignature, signer, signerAddress, signerFid, verifySignature } from '../src/signature.js';
+import { verifyCCIPSignature } from '../src/ccip-signature.js';
+import { BASE_RESOLVER_ABI, bytesToHex, currentTimestamp } from '../src/util.js';
 import { createTestTransfer } from './utils.js';
-import { AbiCoder, ethers, Interface, ZeroAddress } from 'ethers';
+import { AbiCoder, ethers, Interface } from 'ethers';
 import { CCIP_ADDRESS } from '../src/env.js';
 import { jest } from '@jest/globals';
+import { encodeFunctionResult, zeroAddress, keccak256 } from 'viem';
 
 const db = getWriteClient();
 const anotherSigner = ethers.Wallet.createRandom();
@@ -241,34 +236,62 @@ describe('app', () => {
     const resolveABI = new Interface(RESOLVE_ABI).getFunction('resolve')!;
 
     it('should return a valid signature for a ccip lookup of a registered name', async () => {
-      // Calldata for test1.farcaster.xyz
-      const callData =
-        '0x9061b923000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000015057465737431096661726361737465720378797a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57deeea35aa5de7e8da11d1636463a57da877fa0c0c65b969f7fecb7eb6c93a20c1b00000000000000000000000000000000000000000000000000000000';
-      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${callData}.json`);
+      /* 
+        Code used to generate the encodedWildcardResolveCalldata. Typescript doesn't like it directly in this test for some reason.
+
+        const name = 'test1.farcaster.eth';
+        const dnsEncodedName = toHex(packetToBytes(name));
+
+        const encodedResolveCall = encodeFunctionData({
+            abi: BASE_RESOLVER_ABI,
+            functionName: 'addr',
+            args: [namehash(name)],
+        });
+
+        const encodedWildcardResolveCall = encodeFunctionData({
+            abi: RESOLVE_ABI,
+            functionName: 'resolve',
+            args: [dnsEncodedName, encodedResolveCall],
+        })
+      */
+      const encodedWildcardResolveCalldata =
+        '0x9061b923000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000015057465737431096661726361737465720365746800000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57def92c9492f04f951f8a3b5f9bc1b8504c7950352e3641270b54ab9de19b7e3ad700000000000000000000000000000000000000000000000000000000';
+
+      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${encodedWildcardResolveCalldata}.json`);
       expect(response.status).toBe(200);
-      const [username, timestamp, owner, signature] = AbiCoder.defaultAbiCoder().decode(
+      const [hashedRequest, result, validUntil, signature] = AbiCoder.defaultAbiCoder().decode(
         resolveABI.outputs,
         response.body.data
       );
-      expect(username).toBe('test1');
-      expect(verifyCCIPSignature(username, timestamp, owner, signature, signer.address)).toBe(true);
-      // CCIP domain is different from hub domain
-      expect(await verifySignature(username, timestamp, owner, signature, signer.address)).toBe(false);
+
+      const expectedFunctionResult = encodeFunctionResult({
+        abi: BASE_RESOLVER_ABI,
+        functionName: 'addr',
+        result: zeroAddress,
+      });
+
+      expect(result).toBe(expectedFunctionResult);
+      expect(validUntil).toBeGreaterThan(now);
+      // The signature is really only valid for 60 seconds, but `now` is from the start of the test running so we need some buffer
+      expect(validUntil).toBeLessThan(now + 90);
+      expect(hashedRequest).toBe(keccak256(encodedWildcardResolveCalldata));
+      expect(verifyCCIPSignature(hashedRequest, keccak256(result), validUntil, signature, signer.address)).toBe(true);
     });
 
     it('should return an empty signature for a ccip lookup of an unregistered name', async () => {
-      // Calldata for alice.farcaster.xyz
-      const callData =
-        '0x9061b92300000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001505616c696365096661726361737465720378797a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57de00d4f449060ad2a07ff5ad355ae8da52281e95f6ad10fb923ae7cad9f2c43c2a00000000000000000000000000000000000000000000000000000000';
-      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${callData}.json`);
+      // Calldata for alice.farcaster.eth
+      const encodedWildcardResolveCall =
+        '0x9061b92300000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001505616c696365096661726361737465720365746800000000000000000000000000000000000000000000000000000000000000000000000000000000000000243b3b57dee224cf2d7e9641e5b9cde025d9e3db25df5d8789bb7a5c9f4bb28b3e18c2717e00000000000000000000000000000000000000000000000000000000';
+      const response = await request(app).get(`/ccip/${CCIP_ADDRESS}/${encodedWildcardResolveCall}.json`);
       expect(response.status).toBe(200);
-      const [username, timestamp, owner, signature] = AbiCoder.defaultAbiCoder().decode(
+      const [hashedRequest, result, validUntil, signature] = AbiCoder.defaultAbiCoder().decode(
         resolveABI.outputs,
         response.body.data
       );
-      expect(username).toBe('');
-      expect(timestamp.toString()).toEqual('0');
-      expect(owner).toBe(ZeroAddress);
+      expect(hashedRequest).toBe(keccak256(encodedWildcardResolveCall));
+      expect(result).toBe('0x');
+      expect(validUntil).toBeGreaterThan(now);
+      expect(validUntil).toBeLessThan(now + 90);
       expect(signature).toBe('0x');
     });
   });

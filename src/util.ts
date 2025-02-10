@@ -10,6 +10,7 @@ import {
   BigNumberish,
   ZeroHash,
 } from 'ethers';
+import { decodeFunctionData, parseAbi } from 'viem';
 
 export type EventArgBasicValue = string | number | boolean;
 type EventArgValue = EventArgBasicValue | EventArgBasicValue[] | EventArgs;
@@ -107,4 +108,22 @@ export function decodeDnsName(name: string) {
     idx += len + 1;
   }
   return labels;
+}
+
+export const BASE_RESOLVER_ABI = parseAbi([
+  'function addr(bytes32 node) view returns (address)',
+  'function addr(bytes32 node, uint256 coinType) view returns (bytes memory)',
+  'function text(bytes32 node, string key) view returns (string memory)',
+]);
+
+export function decodeEnsRequest(data: `0x${string}`) {
+  try {
+    return decodeFunctionData({
+      abi: BASE_RESOLVER_ABI,
+      data,
+    });
+  } catch {
+    // Handle lookups of records that we don't support like contenthash
+    return null;
+  }
 }

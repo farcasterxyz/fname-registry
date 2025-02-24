@@ -4312,10 +4312,10 @@ neverthrow@^6.0.0:
   resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-6.2.2.tgz#1d905abe20ef8882e4b195c7851787aa4553cf0e"
   integrity sha512-POR1FACqdK9jH0S2kRPzaZEvzT11wsOxLW520PQV/+vKi9dQe+hXq19EiOvYx7lSRaF5VB9lYGsPInynrnN05w==
 
-neverthrow@^8.1.1:
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-8.1.1.tgz#dc4ce87236a878e325946034690d342160981a0b"
-  integrity sha512-DpbZ/UDI0B+TxJB1JysXSfi1++3YK2xLBqQLTlRN0b4zxlZ2MoiB+dKKV8dMRzt1fAFjRKDknXOVJgpl+a4Amw==
+neverthrow@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-8.2.0.tgz#925d988295758534d01fb7468f998680b62064f2"
+  integrity sha512-kOCT/1MCPAxY5iUV3wytNFUMUolzuwd/VF/1KCx7kf6CutrOsTie+84zTGTpgQycjvfLdBBdvBvFLqFD2c0wkQ==
   optionalDependencies:
     "@rollup/rollup-linux-x64-gnu" "^4.24.0"
 

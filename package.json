@@ -22,7 +22,7 @@
     "dotenv": "^16.4.7",
     "ethers": "^6.13.5",
     "express": "^4.21.2",
-    "kysely": "^0.27.5",
+    "kysely": "^0.27.6",
     "kysely-postgres-js": "^2.0.0",
     "neverthrow": "^8.2.0",
     "pino": "^9.6.0",

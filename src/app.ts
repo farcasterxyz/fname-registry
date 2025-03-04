@@ -1,10 +1,11 @@
 import ccipread from '@chainlink/ccip-read-server';
-import { ZeroAddress } from 'ethers';
+import { encodeFunctionData, keccak256, parseAbi } from 'viem';
 
 import { getReadClient, getWriteClient, migrateToLatest } from './db.js';
 import './env.js';
 import { log } from './log.js';
-import { generateCCIPSignature, signer, signerAddress } from './signature.js';
+import { signer, signerAddress } from './signature.js';
+import { generateCCIPSignature } from './ccip-signature.js';
 import {
   createTransfer,
   getCurrentUsername,
@@ -15,11 +16,12 @@ import {
   ValidationError,
 } from './transfers.js';
 
-import { currentTimestamp, decodeDnsName } from './util.js';
+import { currentTimestamp, decodeDnsName, decodeEnsRequest } from './util.js';
 import { getIdRegistryContract } from './ethereum.js';
+import { getRecordFromHub } from './hub.js';
 
 export const RESOLVE_ABI = [
-  'function resolve(bytes calldata name, bytes calldata data) external view returns(string name, uint256 timestamp, address owner, bytes memory sig)',
+  'function resolve(bytes calldata name, bytes calldata data) external view returns(bytes32 request, bytes memory result, uint256 validUntil, bytes memory sig)',
 ];
 
 const write = getWriteClient();
@@ -32,15 +34,42 @@ const server = new ccipread.Server();
 server.add(RESOLVE_ABI, [
   {
     type: 'resolve',
-    func: async ([name, _data], _req) => {
-      const fname = decodeDnsName(name)[0];
-      const transfer = await getLatestTransfer(fname, read);
-      if (!transfer || transfer.to === 0) {
-        // If no transfer or the name was unregistered, return empty values
-        return ['', 0, ZeroAddress, '0x'];
+    // `name` is the DNS encoded ENS name, eg alice.farcaster.eth
+    // `data` is the calldata for the encoded ENS resolver call, eg addr() or text()
+    func: async ([name, data]) => {
+      const nameParts = decodeDnsName(name);
+      const [fname, subdomain, tld] = nameParts;
+
+      // Only support farcaster.eth subdomains
+      if (subdomain !== 'farcaster' && tld !== 'eth') {
+        throw new Error('Invalid name');
       }
-      const signature = await generateCCIPSignature(transfer.username, transfer.timestamp, transfer.owner, signer);
-      return [transfer.username, transfer.timestamp, transfer.owner, signature];
+
+      const ensRequest = decodeEnsRequest(data);
+      const transfer = await getLatestTransfer(fname, read);
+      const now = Math.floor(Date.now() / 1000);
+      const validUntil = now + 60;
+
+      const extraData = encodeFunctionData({
+        abi: parseAbi(['function resolve(bytes calldata name, bytes calldata data) view returns (bytes memory)']),
+        functionName: 'resolve',
+        args: [name, data],
+      });
+
+      // Throw if no transfer or the name was unregistered or the ENS request is unsupported
+      if (!transfer || transfer.to === 0 || !ensRequest) {
+        log.info(`No transfer or invalid request: ${fname}`);
+        return [keccak256(extraData), '0x', validUntil, '0x'];
+      }
+
+      const { plain, response } = await getRecordFromHub(transfer.user_fid, ensRequest);
+      log.info({ fname, ...ensRequest, res: plain }, 'getRecordFromHub');
+
+      // The L1 contract must be able to confirm that this response is for a recent request it initiated
+      // To do that, the initial request must be included in the signed response from the gateway (hashed for efficiency)
+      // The response is hashed beacuse EIP-712 doesn't support dynamic types
+      const signature = await generateCCIPSignature(keccak256(extraData), keccak256(response), validUntil, signer);
+      return [keccak256(extraData), response, validUntil, signature];
     },
   },
 ]);

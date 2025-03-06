@@ -263,7 +263,16 @@ describe('transfers', () => {
 
   describe('getLatestTransfer', () => {
     test('should return the latest transfer', async () => {
-      const latest = await getLatestTransfer('test123', db);
+      const latest = await getLatestTransfer(db, 'test123');
+      expect(latest).toBeDefined();
+      expect(latest!.username).toBe('test123');
+      expect(latest!.from).toBe(1);
+      expect(latest!.to).toBe(2);
+      expect(latest!.user_signature).toBeDefined();
+      expect(latest!.server_signature).toBeDefined();
+    });
+    test('returns latest transfer overall if no name is provided', async () => {
+      const latest = await getLatestTransfer(db);
       expect(latest).toBeDefined();
       expect(latest!.username).toBe('test123');
       expect(latest!.from).toBe(1);
@@ -272,7 +281,7 @@ describe('transfers', () => {
       expect(latest!.server_signature).toBeDefined();
     });
     test('returns undefined if no transfer', async () => {
-      const latest = await getLatestTransfer('nonexistent', db);
+      const latest = await getLatestTransfer(db, 'nonexistent');
       expect(latest).toBeUndefined();
     });
   });

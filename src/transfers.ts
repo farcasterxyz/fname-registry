@@ -127,7 +127,7 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('INVALID_USERNAME');
   }
 
-  const existingTransfer = await getLatestTransfer(req.username, db);
+  const existingTransfer = await getLatestTransfer(db, req.username);
 
   const existingName = await getCurrentUsername(req.to, db);
   if (existingName) {
@@ -181,16 +181,10 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
   }
 }
 
-export async function getLatestTransfer(name: string, db: Kysely<Database>) {
-  return toTransferResponse(
-    await db
-      .selectFrom('transfers')
-      .selectAll()
-      .where('username', '=', name)
-      .orderBy('timestamp', 'desc')
-      .limit(1)
-      .executeTakeFirst()
-  );
+export async function getLatestTransfer(db: Kysely<Database>, name?: string) {
+  const baseQuery = db.selectFrom('transfers').selectAll();
+  const query = name ? baseQuery.where('username', '=', name) : baseQuery;
+  return toTransferResponse(await query.orderBy('timestamp', 'desc').limit(1).executeTakeFirst());
 }
 
 export async function getCurrentUsername(fid: number, db: Kysely<Database>) {

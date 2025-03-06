@@ -34,7 +34,7 @@ server.add(RESOLVE_ABI, [
     type: 'resolve',
     func: async ([name, _data], _req) => {
       const fname = decodeDnsName(name)[0];
-      const transfer = await getLatestTransfer(fname, read);
+      const transfer = await getLatestTransfer(read, fname);
       if (!transfer || transfer.to === 0) {
         // If no transfer or the name was unregistered, return empty values
         return ['', 0, ZeroAddress, '0x'];
@@ -87,11 +87,11 @@ app.get('/transfers/current', async (req, res) => {
     } else if (req.query.name) {
       name = req.query.name.toString();
     }
-    if (!name || name === '') {
-      res.status(404).send({ error: 'Could not resolve current name' }).end();
+    if (name === '') {
+      res.status(404).send({ error: 'Could not resolve empty name' }).end();
       return;
     }
-    const transfer = await getLatestTransfer(name, read);
+    const transfer = await getLatestTransfer(read, name);
     if (!transfer || transfer.to === 0) {
       res.status(404).send({ error: 'No transfer found' }).end();
       return;

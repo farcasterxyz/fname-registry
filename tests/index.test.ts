@@ -106,10 +106,6 @@ describe('app', () => {
       response = await request(app).get('/transfers/current?fid=3');
       expect(response.status).toBe(404);
     });
-    test('returns error if no name or fid provided', async () => {
-      const response = await request(app).get('/transfers/current');
-      expect(response.status).toBe(404);
-    });
     test('returns latest transfer for fid', async () => {
       await createTestTransfer(db, { username: 'test-current', from: 0, to: 3, timestamp: now + 3 });
       const response = await request(app).get('/transfers/current?fid=3');
@@ -121,6 +117,12 @@ describe('app', () => {
       const response = await request(app).get('/transfers/current?name=test3');
       expect(response.status).toBe(200);
       expect(response.body.transfer).toMatchObject({ username: 'test3', from: 0, to: 10, timestamp: now + 3 });
+    });
+    test('returns latest transfer for no name', async () => {
+      await createTestTransfer(db, { username: 'test-latest', from: 0, to: 11, timestamp: now + 10 });
+      const response = await request(app).get('/transfers/current');
+      expect(response.status).toBe(200);
+      expect(response.body.transfer).toMatchObject({ username: 'test-latest', from: 0, to: 11, timestamp: now + 10 });
     });
   });
 

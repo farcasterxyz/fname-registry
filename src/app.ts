@@ -86,12 +86,14 @@ app.get('/transfers/current', async (req, res) => {
       const name = await getCurrentUsername(parseInt(req.query.fid.toString()), read);
       if (!name || name === '') {
         res.status(404).send({ error: 'Could not resolve current name' }).end();
+        return;
       }
       transfer = await getLatestTransfer(read, name);
     } else if (req.query.name) {
       const name = req.query.name.toString();
       if (!name || name === '') {
         res.status(404).send({ error: 'Could not resolve current name' }).end();
+        return;
       }
       transfer = await getLatestTransfer(read, name);
     } else {

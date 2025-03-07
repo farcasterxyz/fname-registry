@@ -27,6 +27,14 @@ beforeAll(async () => {
 describe('app', () => {
   const now = currentTimestamp();
 
+  const expectErrorWithText = (response: request.Response, includesText: string) => {
+    if (response.error === false) {
+      throw new Error('Expected error in response');
+    } else {
+      expect(response.error.text).toContain(includesText);
+    }
+  };
+
   beforeAll(async () => {
     await sql`TRUNCATE TABLE transfers RESTART IDENTITY`.execute(db);
     await createTestTransfer(db, { username: 'test1', to: 1, timestamp: now });
@@ -101,6 +109,7 @@ describe('app', () => {
     test('returns error for unknown fid', async () => {
       let response = await request(app).get('/transfers/current?fid=129837123');
       expect(response.status).toBe(404);
+      expectErrorWithText(response, 'Could not resolve current name');
 
       // Name was burned
       response = await request(app).get('/transfers/current?fid=3');

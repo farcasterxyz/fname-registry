@@ -18,7 +18,7 @@
     "@chainlink/ccip-read-server": "^0.2.1",
     "@farcaster/hub-nodejs": "^0.12.7",
     "body-parser": "^2.2.0",
-    "dd-trace": "^5.40.0",
+    "dd-trace": "^5.45.0",
     "dotenv": "^16.4.7",
     "ethers": "^6.13.5",
     "express": "^4.21.2",

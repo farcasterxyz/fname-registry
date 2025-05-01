@@ -59,6 +59,8 @@ const RESERVED_USERNAMES = new Set([
   'metamask',
   'microsoft',
   'midjourney',
+  'miniapp',
+  'miniapps',
   'mirror',
   'ml',
   'money',

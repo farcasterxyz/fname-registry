@@ -28,7 +28,7 @@
     "pino": "^9.7.0",
     "pino-pretty": "^13.0.0",
     "pm2": "^6.0.6",
-    "postgres": "^3.4.5",
+    "postgres": "^3.4.7",
     "viem": "^2.29.2"
   },
   "devDependencies": {

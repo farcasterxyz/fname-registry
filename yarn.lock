@@ -2938,10 +2938,10 @@ ethers@^5.3.1:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-ethers@^6.14.2:
-  version "6.14.2"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.14.2.tgz#c225a73ee23a896768537c810366a720c375fb56"
-  integrity sha512-mi3Q34c8gnOWmy2tkODeQBwK3E7G5SNY/dwYVf7Iv7l+w3CBt/vcTtFwdh/HjVQ5flP7gVnUYZvd9uVROCGk2g==
+ethers@^6.14.3:
+  version "6.14.3"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.14.3.tgz#7c4443c165ee59b2964e691600fd4586004b2000"
+  integrity sha512-qq7ft/oCJohoTcsNPFaXSQUm457MA5iWqkf1Mb11ujONdg7jBI6sAOrHaTi3j0CBqIGFSCeR/RMc+qwRRub7IA==
   dependencies:
     "@adraffy/ens-normalize" "1.10.1"
     "@noble/curves" "1.2.0"

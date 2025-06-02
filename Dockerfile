@@ -1,10 +1,10 @@
-# syntax=docker/dockerfile:1.5
+FROM node:24.1.0-alpine3.22 AS base
 
-# When updating image version, make sure to update below layer as well
-FROM node:24.1.0-alpine3.20 as builder
-
-# Create app directory
 WORKDIR /app
+
+###############################################################################
+
+FROM base AS build
 
 # Dev dependencies for building any local packages
 RUN <<EOF
@@ -42,10 +42,10 @@ COPY . .
 # Build the application so we can distribute
 RUN yarn build
 
-# When updating image version, make sure to update the above layer as well
-FROM node:24.1.0-alpine3.20 as app
+###############################################################################
 
-WORKDIR /app
+# When updating image version, make sure to update the above layer as well
+FROM base AS app
 
 RUN <<EOF
   # Requirement for Datadog runtime metrics integration
@@ -54,13 +54,15 @@ RUN <<EOF
 EOF
 
 # Copy all packages including compiled extensions
-COPY --from=builder /node_modules-production node_modules
+COPY --from=build /node_modules-production node_modules
 # Copy essential source code
-COPY --from=builder /app/build .
+COPY --from=build /app/build .
 COPY ./pm2.config.js /app/pm2.config.cjs
 
 # Dummy value to get ESM detection to work
 RUN echo '{"type":"module"}' > package.json
+
+###############################################################################
 
 # BuildKit doesn't support the --squash flag, so we emulate it
 # copying everything into a single layer.

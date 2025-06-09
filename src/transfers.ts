@@ -76,6 +76,9 @@ async function getAndValidateVerifierAddress(req: TransferRequest, idContract: I
     userFid = req.to;
   } else if (req.to === 0) {
     userFid = req.from;
+  } else {
+    // If both are specified, then we assume it's a transfer and use the from address
+    userFid = req.from;
   }
   if (req.userFid && userFid !== req.userFid) {
     log.warn(`User FID ${req.userFid} does not match FID ${userFid} in transfer request`);

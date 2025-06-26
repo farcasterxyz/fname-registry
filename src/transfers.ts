@@ -158,11 +158,6 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('INVALID_TIMESTAMP');
   }
 
-  // Non-admin users can only change their name once every 28 days
-  if (existingTransfer && !ADMIN_KEYS[req.userFid] && req.timestamp < existingTransfer.timestamp + NAME_CHANGE_DELAY) {
-    throw new ValidationError('THROTTLED');
-  }
-
   if (req.from === 0) {
     // Mint
     if (existingTransfer && existingTransfer.to !== 0) {
@@ -178,6 +173,11 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     if (!existingTransfer) {
       throw new ValidationError('USERNAME_NOT_FOUND');
     }
+  }
+
+  // Non-admin users can only change their name once every 28 days
+  if (existingTransfer && !ADMIN_KEYS[req.userFid] && req.timestamp < existingTransfer.timestamp + NAME_CHANGE_DELAY) {
+    throw new ValidationError('THROTTLED');
   }
 }
 

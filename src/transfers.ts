@@ -158,6 +158,12 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
     throw new ValidationError('INVALID_TIMESTAMP');
   }
 
+  // If the username is owned by someone, we need to ensure that only the owner can transfer it
+  if (existingTransfer && existingTransfer.to !== 0 && existingTransfer.to !== req.from) {
+    log.error(`Trying to transfer username ${req.username} from ${req.from} but it is owned by ${existingTransfer.to}`);
+    throw new ValidationError('USERNAME_TAKEN');
+  }
+
   if (req.from === 0) {
     // Mint
     if (existingTransfer && existingTransfer.to !== 0) {

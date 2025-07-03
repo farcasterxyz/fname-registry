@@ -67,6 +67,16 @@ describe('transfers', () => {
       );
     });
 
+    test('cannot transfer twice', async () => {
+      await createTestTransfer(db, { username: 'test10', from: 0, to: 10, timestamp: currentTimestamp() + 1 });
+      await createTestTransfer(db, { username: 'test10', from: 10, to: 11, timestamp: currentTimestamp() + 2 });
+
+      // 10 Cannot transfer again
+      await expect(
+        createTestTransfer(db, { username: 'test10', from: 10, to: 0, timestamp: currentTimestamp() + 3 })
+      ).rejects.toThrow('USERNAME_TAKEN');
+    });
+
     test('cannot register an invalid name', async () => {
       await expect(
         createTestTransfer(db, { username: 'namethatislongerthan16chars', from: 0, to: 10 })

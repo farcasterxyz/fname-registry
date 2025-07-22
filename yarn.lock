@@ -449,10 +449,10 @@
   resolved "https://registry.yarnpkg.com/@datadog/libdatadog/-/libdatadog-0.7.0.tgz#81e07d3040c628892db697ccd01ae3c4d2a76315"
   integrity sha512-VVZLspzQcfEU47gmGCVoRkngn7RgFRR4CHjw4YaX8eWT+xz4Q4l6PvA45b7CMk9nlt3MNN5MtGdYttYMIpo6Sg==
 
-"@datadog/native-appsec@9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@datadog/native-appsec/-/native-appsec-9.0.0.tgz#3ac854d8597ca75af0aa534aae28fa7f13057d2a"
-  integrity sha512-C7v16pP4p4Y+Cx0jcxTYmhZTptfVs8TYbn6LH/aQgTkwx2tWsWN5lss7fjBYjWyZoPMwVh2UX/yDm4ES25hJnQ==
+"@datadog/native-appsec@10.0.1":
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@datadog/native-appsec/-/native-appsec-10.0.1.tgz#220bd855971ebe3c517915a6db4caec50545b128"
+  integrity sha512-v60KOnQOAn6lcrFB8eHXfW5H227mk5tuj0CCqlk1FCZ5UxW8jjvXYV3cVjlQvSkwk55BN9jh6xa99QaX5WkqmQ==
   dependencies:
     node-gyp-build "^3.9.0"
 
@@ -2492,13 +2492,13 @@ dc-polyfill@^0.1.9:
   resolved "https://registry.yarnpkg.com/dc-polyfill/-/dc-polyfill-0.1.9.tgz#ee594f4366a6dcf006db1c1f9d3672f57a720856"
   integrity sha512-D5mJThEEk9hf+CJPwTf9JFsrWdlWp8Pccjxkhf7uUT/E/cU9Mx3ebWe2Bz2OawRmJ6WS9eaDPBkeBE4uOKq9uw==
 
-dd-trace@^5.58.0:
-  version "5.58.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.58.0.tgz#fa5cd37fd808b3844485e870eecb462cce36fd2c"
-  integrity sha512-DiogPbR2Sv96jBOBTfvoyLqGZoGYERH9d5Ym1oHgJIleWzwXxlAO7g43MAmx0DgdglLsorg2OMZNvlmgHXrcjw==
+dd-trace@^5.60.0:
+  version "5.60.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.60.0.tgz#2bad43be917b3f4b6a0e6a3730924c70d2c19e93"
+  integrity sha512-jMV/bQcGVKxWpMyXNg6p+qGWrXsUh6+GupLjeZvQYT2rGkG1W0DWUOaETmw1jGdiKMOHoyuo3ZKUnf1DM5AKIA==
   dependencies:
     "@datadog/libdatadog" "0.7.0"
-    "@datadog/native-appsec" "9.0.0"
+    "@datadog/native-appsec" "10.0.1"
     "@datadog/native-iast-taint-tracking" "4.0.0"
     "@datadog/native-metrics" "3.1.1"
     "@datadog/pprof" "5.9.0"
@@ -2509,7 +2509,7 @@ dd-trace@^5.58.0:
     "@opentelemetry/core" "^1.14.0"
     crypto-randomuuid "^1.0.0"
     dc-polyfill "^0.1.9"
-    ignore "^5.2.4"
+    ignore "^7.0.5"
     import-in-the-middle "^1.14.2"
     istanbul-lib-coverage "^3.2.2"
     jest-docblock "^29.7.0"
@@ -2517,10 +2517,10 @@ dd-trace@^5.58.0:
     koalas "^1.0.2"
     limiter "^1.1.5"
     lodash.sortby "^4.7.0"
-    lru-cache "^7.18.3"
+    lru-cache "^10.4.3"
     module-details-from-path "^1.0.4"
     mutexify "^1.4.0"
-    opentracing ">=0.12.1"
+    opentracing ">=0.14.7"
     path-to-regexp "^0.1.12"
     pprof-format "^2.1.0"
     protobufjs "^7.5.3"
@@ -3559,10 +3559,15 @@ iconv-lite@0.6.3, iconv-lite@^0.6.3:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
-ignore@^5.2.0, ignore@^5.2.4, ignore@^5.3.1:
+ignore@^5.2.0, ignore@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.1.tgz#5073e554cd42c5b33b394375f538b8593e34d4ef"
   integrity sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==
+
+ignore@^7.0.5:
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/ignore/-/ignore-7.0.5.tgz#4cb5f6cd7d4c7ab0365738c7aea888baa6d7efd9"
+  integrity sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==
 
 import-fresh@^3.2.1:
   version "3.3.0"
@@ -4312,6 +4317,11 @@ long@^5.0.0:
   resolved "https://registry.yarnpkg.com/long/-/long-5.2.3.tgz#a3ba97f3877cf1d778eccbcb048525ebb77499e1"
   integrity sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==
 
+lru-cache@^10.4.3:
+  version "10.4.3"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.4.3.tgz#410fc8a17b70e598013df257c2446b7f3383f119"
+  integrity sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==
+
 lru-cache@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-5.1.1.tgz#1da27e6710271947695daf6848e847f01d84b920"
@@ -4326,7 +4336,7 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lru-cache@^7.14.0, lru-cache@^7.14.1, lru-cache@^7.18.3:
+lru-cache@^7.14.0, lru-cache@^7.14.1:
   version "7.18.3"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
   integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
@@ -4614,7 +4624,7 @@ onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-opentracing@>=0.12.1:
+opentracing@>=0.14.7:
   version "0.14.7"
   resolved "https://registry.yarnpkg.com/opentracing/-/opentracing-0.14.7.tgz#25d472bd0296dc0b64d7b94cbc995219031428f5"
   integrity sha512-vz9iS7MJ5+Bp1URw8Khvdyw1H/hGvzHWlKQ7eRrQojSCDL1/SrWfrY9QebLw97n2deyRtzHRC3MkQfVNUCo91Q==

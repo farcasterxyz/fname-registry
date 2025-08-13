@@ -10,10 +10,6 @@ A centralized registry for Farcaster usernames (fnames). Exposes an HTTP API for
 4. Run tests: `yarn test`
 5. Run the server locally: `yarn start`
 
-## Deploying
-
-Once a change is merged it is deployed automatically. Check the GitHub Actions workflow result to confirm whether the deployment was successful.
-
 ## Updating Node.js version
 
 1. Update `.node-version` and `.tool-versions` files

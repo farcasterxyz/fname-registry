@@ -4827,10 +4827,10 @@ pino-std-serializers@^7.0.0:
   resolved "https://registry.yarnpkg.com/pino-std-serializers/-/pino-std-serializers-7.0.0.tgz#7c625038b13718dbbd84ab446bd673dc52259e3b"
   integrity sha512-e906FRY0+tV27iq4juKzSYPbUj2do2X2JX4EzSca1631EB2QJQUqGbDuERal7LCtOpxl6x3+nvo9NPZcmjkiFA==
 
-pino@^9.8.0:
-  version "9.8.0"
-  resolved "https://registry.yarnpkg.com/pino/-/pino-9.8.0.tgz#8730b8ff2e1b94ef3691666ee067f7352fef1de8"
-  integrity sha512-L5+rV1wL7vGAcxXP7sPpN5lrJ07Piruka6ArXr7EWBXxdVWjJshGVX8suFsiusJVcGKDGUFfbgbnKdg+VAC+0g==
+pino@^9.9.0:
+  version "9.9.0"
+  resolved "https://registry.yarnpkg.com/pino/-/pino-9.9.0.tgz#0d2667ab4a54b561a4434a321ec595f305ab9cd1"
+  integrity sha512-zxsRIQG9HzG+jEljmvmZupOMDUQ0Jpj0yAgE28jQvvrdYTlEaiGwelJpdndMl/MBuRr70heIj83QyqJUWaU8mQ==
   dependencies:
     atomic-sleep "^1.0.0"
     fast-redact "^3.1.1"

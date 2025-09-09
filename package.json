@@ -19,7 +19,7 @@
     "@farcaster/hub-nodejs": "^0.15.6",
     "body-parser": "^2.2.0",
     "dd-trace": "^5.64.0",
-    "dotenv": "^17.2.1",
+    "dotenv": "^17.2.2",
     "ethers": "^6.15.0",
     "express": "^4.21.2",
     "kysely": "^0.28.5",

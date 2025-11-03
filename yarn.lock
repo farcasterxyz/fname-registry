@@ -444,10 +444,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@datadog/flagging-core@0.1.0-preview.12":
-  version "0.1.0-preview.12"
-  resolved "https://registry.yarnpkg.com/@datadog/flagging-core/-/flagging-core-0.1.0-preview.12.tgz#7e9ebc8096d6c7cb1c9135bed37e50a02ac27b77"
-  integrity sha512-3oI/8dNpGkZaYf77KJpZMNoYpnkwCq3Dgy0UChEz6JX2jtxbwv1sQFAaG1z078T/FwPnB2hMuO5zLXKkx53StA==
+"@datadog/flagging-core@0.1.0-preview.13":
+  version "0.1.0-preview.13"
+  resolved "https://registry.yarnpkg.com/@datadog/flagging-core/-/flagging-core-0.1.0-preview.13.tgz#73fc80aeb21435fa2307f79f2d315b857616cd5d"
+  integrity sha512-DfQYeBgGvCerKx6coRiXMt0aXWJB8kRIsJhfdTKyejS9rfp6ZBjWc6dctKzhwMAQdpBiN42MEVXNt4Pdcmj1WA==
   dependencies:
     spark-md5 "^3.0.2"
 
@@ -478,18 +478,18 @@
     node-addon-api "^6.1.0"
     node-gyp-build "^3.9.0"
 
-"@datadog/openfeature-node-server@0.1.0-preview.12":
-  version "0.1.0-preview.12"
-  resolved "https://registry.yarnpkg.com/@datadog/openfeature-node-server/-/openfeature-node-server-0.1.0-preview.12.tgz#5b2a4629a76f994995935f2b1a3bc7150d7999ca"
-  integrity sha512-bzh2zk84bobSyOzcF6wxzFIKcEQV2M2QP5nWLfDNOPl4tS/qxoTpi3hvT8a6TnPvXmSZrcfB2JUq54qaT3BnKw==
+"@datadog/openfeature-node-server@0.1.0-preview.13":
+  version "0.1.0-preview.13"
+  resolved "https://registry.yarnpkg.com/@datadog/openfeature-node-server/-/openfeature-node-server-0.1.0-preview.13.tgz#355dacbbe927d29c903fb3c17d14dec7af34ba55"
+  integrity sha512-W7+Aff5Ex7EbNnH2P22zycSzIMIJ4+3DgSrSwxSguw9lvaj7rbnKmRv0G9q2kffbVymrUWEFkBEhqB+gRy9FLg==
   dependencies:
-    "@datadog/flagging-core" "0.1.0-preview.12"
+    "@datadog/flagging-core" "0.1.0-preview.13"
     "@openfeature/server-sdk" "~1.18.0"
 
-"@datadog/pprof@5.11.1":
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-5.11.1.tgz#3eea3fb815b2d06111954d66dfaf6197fd874576"
-  integrity sha512-DX3F0v0BVOuP7RUBiu7bDhuGfFfICJRcElB+ZrEykMvkvBXe7FdVXoybYFviLH177hulwYTtW9Rcly7NXGarTw==
+"@datadog/pprof@5.12.0":
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-5.12.0.tgz#1f0a592aec5ea3a48ad795d069e8a925d21667db"
+  integrity sha512-qX32upm9eqObGVGvqHpjQB2bXVPTX0ccXTW3mUqUWXgJrAKyHtTfo9PqfoXhflYs0WD9el9xl9c0bM1RS4vRmQ==
   dependencies:
     delay "^5.0.0"
     node-gyp-build "<4.0"
@@ -2548,17 +2548,17 @@ dc-polyfill@^0.1.10:
   resolved "https://registry.yarnpkg.com/dc-polyfill/-/dc-polyfill-0.1.10.tgz#6f2ada1a9e449587c363ca98cfb79b443cf74b70"
   integrity sha512-9iSbB8XZ7aIrhUtWI5ulEOJ+IyUN+axquodHK+bZO4r7HfY/xwmo6I4fYYf+aiDom+WMcN/wnzCz+pKvHDDCug==
 
-dd-trace@^5.74.0:
-  version "5.74.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.74.0.tgz#25cb97d4f8a91ffce709e1e2101064c4e373c12d"
-  integrity sha512-BeQiMDsl07EjQjX2y+klz4fuTRXRLQidH4WdtGUtLcww6W5W0TmY5PD0ZYqUZ8df9+mMsQ57fseh7hSoTDR3vw==
+dd-trace@^5.76.0:
+  version "5.76.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.76.0.tgz#11a7f12a51d9b3d08817b9d7f9b21cbf224643bc"
+  integrity sha512-MIYpc8gsBQHM606jcNBYQSYIOzO7ZaH2XGb2mykghXxjAXaxE1baBVC42d5d/v0d7GdXJLg75uCU/auiWzBncw==
   dependencies:
     "@datadog/libdatadog" "0.7.0"
     "@datadog/native-appsec" "10.3.0"
     "@datadog/native-iast-taint-tracking" "4.0.0"
     "@datadog/native-metrics" "3.1.1"
-    "@datadog/openfeature-node-server" "0.1.0-preview.12"
-    "@datadog/pprof" "5.11.1"
+    "@datadog/openfeature-node-server" "0.1.0-preview.13"
+    "@datadog/pprof" "5.12.0"
     "@datadog/sketches-js" "2.1.1"
     "@datadog/wasm-js-rewriter" "4.0.1"
     "@isaacs/ttlcache" "^1.4.1"
@@ -2568,6 +2568,7 @@ dd-trace@^5.74.0:
     "@opentelemetry/resources" ">=1.0.0 <1.10.0"
     crypto-randomuuid "^1.0.0"
     dc-polyfill "^0.1.10"
+    escape-string-regexp "^5.0.0"
     ignore "^7.0.5"
     import-in-the-middle "^1.14.2"
     istanbul-lib-coverage "^3.2.2"
@@ -2849,6 +2850,11 @@ escape-string-regexp@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
+
+escape-string-regexp@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-5.0.0.tgz#4683126b500b61762f2dbebace1806e8be31b1c8"
+  integrity sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==
 
 escodegen@^2.1.0:
   version "2.1.0"

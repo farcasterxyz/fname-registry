@@ -21,7 +21,7 @@
     "dd-trace": "^5.80.0",
     "dotenv": "^17.2.3",
     "ethers": "^6.15.0",
-    "express": "^4.21.2",
+    "express": "^5.2.1",
     "kysely": "^0.28.8",
     "kysely-postgres-js": "^3.0.0",
     "neverthrow": "^8.2.0",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@typechain/ethers-v6": "^0.5.1",
-    "@types/express": "^5.0.1",
+    "@types/express": "^5.0.6",
     "@types/jest": "^29.5.14",
     "@types/node": "^24.10.1",
     "@types/supertest": "^6.0.3",

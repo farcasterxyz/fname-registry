@@ -20,7 +20,7 @@
     "body-parser": "^2.2.1",
     "dd-trace": "^5.80.0",
     "dotenv": "^17.2.3",
-    "ethers": "^6.15.0",
+    "ethers": "^6.16.0",
     "express": "^5.2.1",
     "kysely": "^0.28.8",
     "kysely-postgres-js": "^3.0.0",

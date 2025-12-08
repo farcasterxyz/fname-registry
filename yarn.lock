@@ -6105,10 +6105,10 @@ vary@^1, vary@^1.1.2, vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-viem@^2.17.4, viem@^2.40.2:
-  version "2.40.2"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-2.40.2.tgz#d9b38c5f8e85a413b604f7652cd1f39dba6f691d"
-  integrity sha512-iZXVl5Uip1BUQv0PI9yOq+vHGRTnJ0a8azC5IAAJMSrvdkGrvghIwGskp3+g243fpzFlO/iqAFrWIG15SDoiTQ==
+viem@^2.17.4, viem@^2.41.2:
+  version "2.41.2"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.41.2.tgz#117eab182b6b5501e47462269bb63f8b365a802e"
+  integrity sha512-LYliajglBe1FU6+EH9mSWozp+gRA/QcHfxeD9Odf83AdH5fwUS7DroH4gHvlv6Sshqi1uXrYFA2B/EOczxd15g==
   dependencies:
     "@noble/curves" "1.9.1"
     "@noble/hashes" "1.8.0"

@@ -5816,9 +5816,9 @@ synckit@^0.11.7:
     "@pkgr/core" "^0.2.4"
 
 systeminformation@^5.7:
-  version "5.23.17"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.23.17.tgz#1ef40238a6594169532fb45acc7517d82ce5e092"
-  integrity sha512-jjcPB23YcoNN43Q+A0rPFsGMMSAW/Zeok8rMGko1DvO8b1SO7zizgAEVQ4lyJdlAuc6vTmqnkyMCDD3N9Uwksw==
+  version "5.27.14"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.27.14.tgz#9f2b181521c151dad4972d47936ebb49a3271e9d"
+  integrity sha512-3DoNDYSZBLxBwaJtQGWNpq0fonga/VZ47HY1+7/G3YoIPaPz93Df6egSzzTKbEMmlzUpy3eQ0nR9REuYIycXGg==
 
 table-layout@^1.0.2:
   version "1.0.2"

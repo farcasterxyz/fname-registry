@@ -12,10 +12,6 @@ inputs:
     description: What to tag the image with (full image name)
     required: false
     default: build:${{ github.sha }}
-  depot:
-    description: Whether to enable builds via Depot.
-    required: false
-    default: "false"
   dockerfile:
     description: Path to the Dockerfile to build
     required: false
@@ -29,7 +25,7 @@ inputs:
     required: false
     default: "false"
   platforms:
-    description: Which platform to build the image for (make sure you select a runner that matches so this isn't virtualized, unless using Depot)
+    description: Which platform to build the image for (make sure you select a runner that matches so this isn't virtualized)
     required: false
     default: 'linux/arm64'
 
@@ -49,11 +45,7 @@ runs:
       run: echo "image-tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
       shell: bash
 
-    - if: ${{ inputs.depot == 'true' }}
-      uses: depot/use-action@v1
-
-    - if: ${{ inputs.depot != 'true' }}
-      uses: docker/setup-buildx-action@v3
+    - uses: docker/setup-buildx-action@v3
 
     - name: Log in to Docker Hub so we don't get rate limited
       uses: docker/login-action@v3

@@ -444,10 +444,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@datadog/flagging-core@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@datadog/flagging-core/-/flagging-core-0.2.0.tgz#d29d81486068b870c41cebb2524721a71184eb16"
-  integrity sha512-DocYjr8NFJZfsnqzu3MuBUNqgbJquq1doimkKEXI5UImLmz/tR0LO09dd651pBhoz1Pa4SKcnPaxWFLTqxWtsA==
+"@datadog/flagging-core@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@datadog/flagging-core/-/flagging-core-0.3.3.tgz#cd0553b05a26f924e9d6f8450e4c073eb3d40b96"
+  integrity sha512-LnkTXMVxaCDGCOF2I+CCACndpbi4E8CP8NIsb1IbMmmATzkQHmYiL1ntFcS4mt5kNGAWXNrKquM02jhoiVc+dA==
   dependencies:
     spark-md5 "^3.0.2"
 
@@ -478,13 +478,12 @@
     node-addon-api "^6.1.0"
     node-gyp-build "^3.9.0"
 
-"@datadog/openfeature-node-server@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@datadog/openfeature-node-server/-/openfeature-node-server-0.2.0.tgz#905032cc6d7d1eb1d6620aabe323ed552366d65a"
-  integrity sha512-Jn8lShFyqNji0tiKntLcCRwu3xrhg93fTTJS3gHSPKMfBDBKxjB9uF8Hu5Ayn2k0QuwJexx5atN9GSiWX0h5qg==
+"@datadog/openfeature-node-server@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@datadog/openfeature-node-server/-/openfeature-node-server-0.3.3.tgz#bb4ee261398b120786fd756f2d468026e168c4e8"
+  integrity sha512-G3OdRxv3ZwFx+gTwot33nNcTmE8P7ObTLjviXv6zVMD4NB6R/yvCjJVe/Wh0WSTt/ZBjGYN2+SuZAPpf7gsR5g==
   dependencies:
-    "@datadog/flagging-core" "0.2.0"
-    "@openfeature/server-sdk" "~1.18.0"
+    "@datadog/flagging-core" "0.3.3"
 
 "@datadog/pprof@5.13.2":
   version "5.13.2"
@@ -1264,11 +1263,6 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
-
-"@openfeature/server-sdk@~1.18.0":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@openfeature/server-sdk/-/server-sdk-1.18.0.tgz#5fed5f1d0900b2535878db18a78295bbaebb997b"
-  integrity sha512-uP8nqEGBS58s3iWXx6d8vnJ6ZVt3DACJL4PWADOAuwIS4xXpID91783e9f6zQ0i1ijQpj3yx+3ZuCB2LfQMUMA==
 
 "@opentelemetry/api-logs@<1.0.0":
   version "0.207.0"
@@ -2514,10 +2508,10 @@ dc-polyfill@^0.1.10:
   resolved "https://registry.yarnpkg.com/dc-polyfill/-/dc-polyfill-0.1.10.tgz#6f2ada1a9e449587c363ca98cfb79b443cf74b70"
   integrity sha512-9iSbB8XZ7aIrhUtWI5ulEOJ+IyUN+axquodHK+bZO4r7HfY/xwmo6I4fYYf+aiDom+WMcN/wnzCz+pKvHDDCug==
 
-dd-trace@^5.83.0:
-  version "5.83.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.83.0.tgz#3f641c512c7f140d2b85cc7709b45aa2cf3f2787"
-  integrity sha512-12seR3wGc5Wp+NAHBO6gShCtg8wz0+p+rC6tc3G5MrSgowMqV0XdNqahOHqeM8kMRmSy1OnWRQcK8xjxVfnsew==
+dd-trace@^5.84.0:
+  version "5.84.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.84.0.tgz#ec6c45101f2377089cb1a3b0c3dec6a456b7c0fd"
+  integrity sha512-hP5btzefQ5Pc6+MGIab20z4lrTbET48aWkYXh1qfPrsYlXMrluAqzEoehEfwfuYzakUkM48OYqCu+ImwL1VCnA==
   dependencies:
     dc-polyfill "^0.1.10"
     import-in-the-middle "2.0.3"
@@ -2526,7 +2520,7 @@ dd-trace@^5.83.0:
     "@datadog/native-appsec" "10.3.0"
     "@datadog/native-iast-taint-tracking" "4.1.0"
     "@datadog/native-metrics" "3.1.1"
-    "@datadog/openfeature-node-server" "^0.2.0"
+    "@datadog/openfeature-node-server" "^0.3.3"
     "@datadog/pprof" "5.13.2"
     "@datadog/wasm-js-rewriter" "5.0.1"
     "@opentelemetry/api" ">=1.0.0 <1.10.0"

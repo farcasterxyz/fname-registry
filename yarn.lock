@@ -485,10 +485,10 @@
   dependencies:
     "@datadog/flagging-core" "0.3.3"
 
-"@datadog/pprof@5.13.2":
-  version "5.13.2"
-  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-5.13.2.tgz#9361809e712417e04c21e7f7ea239bfb3513c358"
-  integrity sha512-Th8u7pvoguTfbUx/mlZLHD9TxFCHO+wRAvlEaYFAYAmMvbPLww4YowvTy1UMvpi8LbUbwil3Fo8rKCrilvXHhQ==
+"@datadog/pprof@5.13.3":
+  version "5.13.3"
+  resolved "https://registry.yarnpkg.com/@datadog/pprof/-/pprof-5.13.3.tgz#7080d38b6c05736cb8a027835707ee4ee43eedf3"
+  integrity sha512-G25IicP7pc5CXmAfVz7nrIERsKK9hvPz6p7xsLTUwG4Qs+Zgd5KFedKCVsnvNasLc7l7OXQ6839ajowgQLWTyw==
   dependencies:
     delay "^5.0.0"
     node-gyp-build "<4.0"
@@ -2508,20 +2508,20 @@ dc-polyfill@^0.1.10:
   resolved "https://registry.yarnpkg.com/dc-polyfill/-/dc-polyfill-0.1.10.tgz#6f2ada1a9e449587c363ca98cfb79b443cf74b70"
   integrity sha512-9iSbB8XZ7aIrhUtWI5ulEOJ+IyUN+axquodHK+bZO4r7HfY/xwmo6I4fYYf+aiDom+WMcN/wnzCz+pKvHDDCug==
 
-dd-trace@^5.84.0:
-  version "5.84.0"
-  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.84.0.tgz#ec6c45101f2377089cb1a3b0c3dec6a456b7c0fd"
-  integrity sha512-hP5btzefQ5Pc6+MGIab20z4lrTbET48aWkYXh1qfPrsYlXMrluAqzEoehEfwfuYzakUkM48OYqCu+ImwL1VCnA==
+dd-trace@^5.85.0:
+  version "5.85.0"
+  resolved "https://registry.yarnpkg.com/dd-trace/-/dd-trace-5.85.0.tgz#c840064132ffe3c351ea8920b5ed8fc10d9c060c"
+  integrity sha512-6fylpFp8VYgGmOZuzGuNad3KUsytwZKR+2yCQjxSdMBOiHg6G05joSGKhhbR4aj1XC2s+UVjCSsIrnBuFd2KOQ==
   dependencies:
     dc-polyfill "^0.1.10"
-    import-in-the-middle "2.0.3"
+    import-in-the-middle "^2.0.6"
   optionalDependencies:
     "@datadog/libdatadog" "0.7.0"
     "@datadog/native-appsec" "10.3.0"
     "@datadog/native-iast-taint-tracking" "4.1.0"
     "@datadog/native-metrics" "3.1.1"
     "@datadog/openfeature-node-server" "^0.3.3"
-    "@datadog/pprof" "5.13.2"
+    "@datadog/pprof" "5.13.3"
     "@datadog/wasm-js-rewriter" "5.0.1"
     "@opentelemetry/api" ">=1.0.0 <1.10.0"
     "@opentelemetry/api-logs" "<1.0.0"
@@ -3635,10 +3635,10 @@ import-fresh@^3.2.1:
     parent-module "^1.0.0"
     resolve-from "^4.0.0"
 
-import-in-the-middle@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-2.0.3.tgz#2ba36d716faa3531a7946c4ee52a8e553f6ee0bd"
-  integrity sha512-BhJ3Rc6x+kA3EE0apAuGc4rsihsUrEj31lCkXRfwGzLKqgzlSyBLvthIinsvLg6J4bCCTgVAoAgD+KwkISjmBQ==
+import-in-the-middle@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-2.0.6.tgz#1972337bfe020d05f6b5e020c13334567436324f"
+  integrity sha512-3vZV3jX0XRFW3EJDTwzWoZa+RH1b8eTTx6YOCjglrLyPuepwoBti1k3L2dKwdCUrnVEfc5CuRuGstaC/uQJJaw==
   dependencies:
     acorn "^8.15.0"
     acorn-import-attributes "^1.9.5"

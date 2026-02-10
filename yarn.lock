@@ -885,10 +885,10 @@
   resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
   integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
 
-"@farcaster/core@0.18.9":
-  version "0.18.9"
-  resolved "https://registry.yarnpkg.com/@farcaster/core/-/core-0.18.9.tgz#03c309e81493db9850b162202b59eafcadaaf264"
-  integrity sha512-qwqTJXhaCJIKL6joHzXgMpWQaVxj0dri3hac0hcPsiHiJiKZw+vRpklXYrdfv53ZM3J5a5y7In41y+g5wc/IZQ==
+"@farcaster/core@0.18.10":
+  version "0.18.10"
+  resolved "https://registry.yarnpkg.com/@farcaster/core/-/core-0.18.10.tgz#62150e70507a0705bc63e68781103c02ed6ae314"
+  integrity sha512-k4mO3lQFAUr+9nzoMbGeDRMK3BZ/q/1z+hZvGGAfIlueca0wRSEkzRUv1eSJp4sSsZG6sVAdcEQD2q+mpMuw1w==
   dependencies:
     "@faker-js/faker" "^7.6.0"
     "@noble/curves" "^1.0.0"
@@ -897,12 +897,12 @@
     neverthrow "^6.0.0"
     viem "^2.17.4"
 
-"@farcaster/hub-nodejs@^0.15.9":
-  version "0.15.9"
-  resolved "https://registry.yarnpkg.com/@farcaster/hub-nodejs/-/hub-nodejs-0.15.9.tgz#b5fefca60f5d9d91682e08c79d03c1c299da215e"
-  integrity sha512-Dr+Lvv9393yeOeKBOoma5sQ7fMh5I+7127bv8RKXreRhV0HtSOst2WMASB4yq8/6U5efnf9XITiCRBBetC1ucw==
+"@farcaster/hub-nodejs@^0.15.10":
+  version "0.15.10"
+  resolved "https://registry.yarnpkg.com/@farcaster/hub-nodejs/-/hub-nodejs-0.15.10.tgz#3e0b7b5cbe17c84f9933a7c5c3e50222ea63c10d"
+  integrity sha512-Igch1Bd2LgiFYrn9maICvK5RXznBQRO8jXgq5a6ar2SkFglhKcKoar7U8bW6ntoFoO6frweeSOry78c0B4yZ8A==
   dependencies:
-    "@farcaster/core" "0.18.9"
+    "@farcaster/core" "0.18.10"
     "@grpc/grpc-js" "~1.11.1"
     "@noble/hashes" "^1.3.0"
     neverthrow "^6.0.0"

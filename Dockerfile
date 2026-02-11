@@ -12,7 +12,7 @@ RUN <<EOF
   apk add git             # Fetch some packages
   apk add python3         # Some node gyp bindings require Python
   apk add make g++        # Standard tools for building native extensions
-  npm install -g node-gyp # Compile native extensions
+  npm install -g node-gyp@12.2.0 # Compile native extensions
 EOF
 
 # Re-install packages if there were any changes
@@ -20,7 +20,7 @@ COPY package.json yarn.lock ./
 
 RUN <<EOF
   # Pre-download node-gyp headers to avoid parallel download race conditions
-  npx node-gyp install
+  npx node-gyp@12.2.0 install
 
   # Install development node modules so we can build the project, but we'll
   # eventually throw these away in favor of the trimmed production node_modules

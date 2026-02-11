@@ -19,6 +19,9 @@ EOF
 COPY package.json yarn.lock ./
 
 RUN <<EOF
+  # Pre-download node-gyp headers to avoid parallel download race conditions
+  npx node-gyp install
+
   # Install development node modules so we can build the project, but we'll
   # eventually throw these away in favor of the trimmed production node_modules
   yarn install && mv node_modules node_modules-development

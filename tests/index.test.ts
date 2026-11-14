@@ -283,4 +283,22 @@ describe('app', () => {
       expect(signature).toBe('0x');
     });
   });
+
+  describe('error handling', () => {
+    test('should return a generic JSON error for malformed JSON without leaking a stack trace', async () => {
+      const response = await request(app).post('/zz-no-q7k').set('Content-Type', 'application/json').send('{"a":');
+      expect(response.status).toBe(400);
+      expect(response.headers['content-type']).toMatch(/application\/json/);
+      expect(response.body).toEqual({ error: 'bad request' });
+      expect(response.text).not.toContain('SyntaxError');
+      expect(response.text).not.toContain('node_modules');
+    });
+
+    test('should return a generic JSON error for malformed JSON on a known route', async () => {
+      const response = await request(app).post('/transfers').set('Content-Type', 'application/json').send('{"name":');
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: 'bad request' });
+      expect(response.text).not.toContain('node_modules');
+    });
+  });
 });

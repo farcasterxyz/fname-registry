@@ -1,5 +1,6 @@
 import ccipread from '@chainlink/ccip-read-server';
 import { ZeroAddress } from 'ethers';
+import type { NextFunction, Request, Response } from 'express';
 
 import { getReadClient, getWriteClient, migrateToLatest } from './db.js';
 import './env.js';
@@ -159,3 +160,30 @@ app.get('/_health', async (_req, res) => {
 app.get('/current-time', async (_req, res) => {
   res.send({ currentTime: currentTimestamp() });
 });
+
+// Must be registered after all routes. Express's default error handler renders the full stack
+// trace as HTML unless NODE_ENV=production, so we always respond with a generic JSON body instead.
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    next(err);
+    return;
+  }
+  const status = getErrorStatus(err);
+  if (status >= 500) {
+    log.error(err, `Unhandled error for ${req.method} ${req.path}`);
+    res.status(status).json({ error: 'internal server error' });
+  } else {
+    res.status(status).json({ error: 'bad request' });
+  }
+});
+
+function getErrorStatus(err: unknown): number {
+  if (typeof err === 'object' && err !== null) {
+    const status =
+      (err as { status?: unknown; statusCode?: unknown }).status ?? (err as { statusCode?: unknown }).statusCode;
+    if (typeof status === 'number' && status >= 400 && status < 600) {
+      return status;
+    }
+  }
+  return 500;
+}

@@ -74,7 +74,4 @@ COPY --from=app / /
 
 WORKDIR /app
 
-# Keeps Express from rendering stack traces in error responses
-ENV NODE_ENV=production
-
 CMD ["npx", "pm2-runtime", "pm2.config.cjs"]

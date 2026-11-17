@@ -100,6 +100,13 @@ async function getAndValidateVerifierAddress(req: TransferRequest, idContract: I
 }
 
 export async function validateTransfer(req: TransferRequest, db: Kysely<Database>, idContract: IdRegistry) {
+  // Fid 0 is the mint/burn address, and an address that owns no fid also resolves to fid 0 on-chain. A 0 -> 0
+  // transfer would pass the fid ownership check for any such address, so it is never valid. The values come from an
+  // unvalidated JSON body, so compare them as numbers.
+  if (Number(req.from) === 0 && Number(req.to) === 0) {
+    throw new ValidationError('UNAUTHORIZED');
+  }
+
   const verifierAddress = await getAndValidateVerifierAddress(req, idContract);
   if (!verifierAddress) {
     throw new ValidationError('UNAUTHORIZED');
@@ -184,6 +191,15 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
   // Non-admin users can only change their name once every 28 days
   if (existingTransfer && !ADMIN_KEYS[req.userFid] && req.timestamp < existingTransfer.timestamp + NAME_CHANGE_DELAY) {
     throw new ValidationError('THROTTLED');
+  }
+
+  // The signed message is only (name, timestamp, owner). It does not cover from, to or fid, and both signatures of a
+  // transfer are public. A new transfer must therefore have a strictly newer timestamp than the latest one for the
+  // name, so that a signature can produce one transfer only. This check is last so that requests which were already
+  // rejected keep their error code.
+  if (existingTransfer && !(req.timestamp > existingTransfer.timestamp)) {
+    log.error(`Timestamp ${req.timestamp} was already used by transfer ${existingTransfer.id} of ${req.username}`);
+    throw new ValidationError('INVALID_TIMESTAMP');
   }
 }
 

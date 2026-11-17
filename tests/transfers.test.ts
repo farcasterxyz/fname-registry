@@ -432,4 +432,89 @@ describe('transfers', () => {
       expect((await getLatestTransfer(db, 'retryname'))!.to).toBe(722);
     });
   });
+
+  describe('concurrent requests', () => {
+    const countTransfers = async (username: string) => {
+      const rows = await db.selectFrom('transfers').select('id').where('username', '=', username).execute();
+      return rows.length;
+    };
+
+    // Signature checks call an RPC, so requests reach the database at different times and a race shows up only by
+    // chance. This holds a table lock until every request waits on a lock, then lets them all continue together.
+    const runTogether = async <T>(requests: (() => Promise<T>)[]) => {
+      const blocker = getWriteClient();
+      let release = () => {};
+      const released = new Promise<void>((resolve) => (release = resolve));
+      let tableLocked = () => {};
+      const locked = new Promise<void>((resolve) => (tableLocked = resolve));
+      const holder = blocker.transaction().execute(async (trx) => {
+        await sql`LOCK TABLE transfers IN ACCESS EXCLUSIVE MODE`.execute(trx);
+        tableLocked();
+        await released;
+      });
+      await locked;
+
+      const settled = Promise.allSettled(requests.map((run) => run()));
+      const deadline = Date.now() + 20_000;
+      while (Date.now() < deadline) {
+        const waiting = await sql<{
+          count: number;
+        }>`SELECT count(*)::int AS count FROM pg_locks WHERE NOT granted`.execute(blocker);
+        if (waiting.rows[0]!.count >= requests.length) break;
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      release();
+      await holder;
+      await blocker.destroy();
+      return settled;
+    };
+
+    test('one name cannot be registered to two fids at the same time', async () => {
+      const now = currentTimestamp();
+      const fids = [800, 801, 802, 803, 804, 805];
+      const results = await runTogether(
+        fids.map((to, i) => () => createTestTransfer(db, { username: 'racename', to, timestamp: now + i }))
+      );
+
+      expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
+      for (const result of results) {
+        if (result.status === 'rejected') {
+          expect(String(result.reason)).toMatch(/USERNAME_TAKEN|INVALID_TIMESTAMP/);
+        }
+      }
+      expect(await countTransfers('racename')).toBe(1);
+    });
+
+    test('one fid cannot register two names at the same time', async () => {
+      const now = currentTimestamp();
+      const names = ['racefid-a', 'racefid-b', 'racefid-c', 'racefid-d', 'racefid-e', 'racefid-f'];
+      const results = await runTogether(
+        names.map((username) => () => createTestTransfer(db, { username, to: 810, timestamp: now }))
+      );
+
+      expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
+      for (const result of results) {
+        if (result.status === 'rejected') {
+          expect(String(result.reason)).toMatch(/TOO_MANY_NAMES/);
+        }
+      }
+      const counts = await Promise.all(names.map(countTransfers));
+      expect(counts.reduce((a, b) => a + b, 0)).toBe(1);
+    });
+
+    test('overlapping retries of one request record one transfer', async () => {
+      const now = currentTimestamp();
+      const results = await runTogether(
+        Array.from(
+          { length: 6 },
+          () => () => createTestTransfer(db, { username: 'raceretry', to: 820, timestamp: now })
+        )
+      );
+
+      const ids = results.map((r) => (r.status === 'fulfilled' ? r.value!.id : r.reason));
+      expect(new Set(ids).size).toBe(1);
+      expect(typeof ids[0]).toBe('number');
+      expect(await countTransfers('raceretry')).toBe(1);
+    });
+  });
 });

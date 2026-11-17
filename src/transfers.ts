@@ -1,4 +1,5 @@
-import { Kysely, Selectable } from 'kysely';
+import { createHash } from 'crypto';
+import { Kysely, Selectable, Transaction, sql } from 'kysely';
 import { Database, TransfersTable } from './db.js';
 import { ADMIN_KEYS, generateSignature, signer, verifySignature } from './signature.js';
 import { reservedUsername } from './reserved.js';
@@ -49,18 +50,43 @@ export class ValidationError extends Error {
 }
 
 export async function createTransfer(req: TransferRequest, db: Kysely<Database>, idContract: IdRegistry) {
-  const existing_matching_transfer_id = await validateTransfer(req, db, idContract);
-  if (existing_matching_transfer_id) {
-    return { id: existing_matching_transfer_id };
+  // These checks call external RPCs and do not read the transfers table, so they run before the transaction to keep
+  // it short
+  await validateRequest(req, idContract);
+
+  return await db.transaction().execute(async (trx) => {
+    await lockNameAndFid(trx, req);
+
+    const existing_matching_transfer_id = await validateTransfer(req, trx);
+    if (existing_matching_transfer_id) {
+      return { id: existing_matching_transfer_id };
+    }
+    const serverSignature = await generateSignature(req.username, req.timestamp, req.owner, signer);
+    const transfer = {
+      ...req,
+      serverSignature,
+      owner: hexToBytes(req.owner),
+      userSignature: hexToBytes(req.userSignature),
+    };
+    return await trx.insertInto('transfers').values(transfer).returning('id').executeTakeFirst();
+  });
+}
+
+// Advisory lock keys are 64-bit integers. Hash a prefixed string so that a name and a fid do not share a key.
+function advisoryLockKey(kind: 'name' | 'fid', value: string | number) {
+  return createHash('sha256').update(`${kind}:${value}`).digest().readBigInt64BE(0).toString();
+}
+
+// validateTransfer reads the current state and the insert changes it. Without a lock, concurrent requests for one
+// name or one fid all read the same state and all pass. These locks are released when the transaction ends. Every
+// transaction takes the name lock first and at most one fid lock, so two transactions cannot deadlock.
+async function lockNameAndFid(trx: Transaction<Database>, req: TransferRequest) {
+  // Do not hold a connection forever if another transaction is stuck
+  await sql`SET LOCAL lock_timeout = '5s'`.execute(trx);
+  await sql`SELECT pg_advisory_xact_lock(${advisoryLockKey('name', String(req.username))}::bigint)`.execute(trx);
+  if (Number(req.to) !== 0) {
+    await sql`SELECT pg_advisory_xact_lock(${advisoryLockKey('fid', Number(req.to))}::bigint)`.execute(trx);
   }
-  const serverSignature = await generateSignature(req.username, req.timestamp, req.owner, signer);
-  const transfer = {
-    ...req,
-    serverSignature,
-    owner: hexToBytes(req.owner),
-    userSignature: hexToBytes(req.userSignature),
-  };
-  return await db.insertInto('transfers').values(transfer).returning('id').executeTakeFirst();
 }
 
 async function getAndValidateVerifierAddress(req: TransferRequest, idContract: IdRegistry) {
@@ -99,7 +125,7 @@ async function getAndValidateVerifierAddress(req: TransferRequest, idContract: I
   return req.owner;
 }
 
-export async function validateTransfer(req: TransferRequest, db: Kysely<Database>, idContract: IdRegistry) {
+async function validateRequest(req: TransferRequest, idContract: IdRegistry) {
   // Fid 0 is the mint/burn address, and an address that owns no fid also resolves to fid 0 on-chain. A 0 -> 0
   // transfer would pass the fid ownership check for any such address, so it is never valid. The values come from an
   // unvalidated JSON body, so compare them as numbers.
@@ -133,7 +159,9 @@ export async function validateTransfer(req: TransferRequest, db: Kysely<Database
   if (validationResult.isErr()) {
     throw new ValidationError('INVALID_USERNAME');
   }
+}
 
+export async function validateTransfer(req: TransferRequest, db: Kysely<Database>) {
   const existingTransfer = await getLatestTransfer(db, req.username);
 
   const existingName = await getCurrentUsername(req.to, db);

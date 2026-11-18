@@ -212,6 +212,25 @@ describe('app', () => {
       expect(response.body.code).toBe('USERNAME_NOT_FOUND');
     });
 
+    test('should reject a transfer from fid 0 to fid 0 without an fid', async () => {
+      const stranger = ethers.Wallet.createRandom();
+      const response = await request(app)
+        .post('/transfers')
+        .send({
+          name: 'zerotozero',
+          from: 0,
+          to: 0,
+          owner: stranger.address,
+          timestamp: now,
+          signature: bytesToHex(await generateSignature('zerotozero', now, stranger.address, stranger)),
+        });
+      expect(response.status).toBe(400);
+      expect(response.body.code).toBe('UNAUTHORIZED');
+
+      const lookup = await request(app).get('/transfers?name=zerotozero');
+      expect(lookup.body.transfers).toHaveLength(0);
+    });
+
     test('should throw error if signature is invalid', async () => {
       const response = await request(app)
         .post('/transfers')

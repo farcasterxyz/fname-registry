@@ -2,7 +2,7 @@ import { getWriteClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
 import { sql } from 'kysely';
 import { getCurrentUsername, getLatestTransfer, TIMESTAMP_TOLERANCE } from '../src/transfers.js';
-import { currentTimestamp } from '../src/util.js';
+import { currentTimestamp, hexToBytes } from '../src/util.js';
 import { createTestTransfer } from './utils.js';
 import { generateSignature, signer, signerAddress, signerFid } from '../src/signature.js';
 import { ethers } from 'ethers';
@@ -309,6 +309,127 @@ describe('transfers', () => {
       await createTestTransfer(db, { username: 'test3', from: 3, to: 0 });
       const username_for_0 = await getCurrentUsername(0, db);
       expect(username_for_0).toBeUndefined();
+    });
+  });
+
+  describe('signature replay', () => {
+    test('rejects a transfer from fid 0 to fid 0', async () => {
+      // An address that owns no fid resolves to fid 0 on-chain, so it would pass the fid ownership check
+      const stranger = ethers.Wallet.createRandom();
+      const now = currentTimestamp();
+      await expect(
+        createTestTransfer(
+          db,
+          {
+            username: 'zerotozero',
+            from: 0,
+            to: 0,
+            owner: stranger.address,
+            timestamp: now,
+            userSignature: await generateSignature('zerotozero', now, stranger.address, stranger),
+            userFid: 0,
+          },
+          0
+        )
+      ).rejects.toThrow('UNAUTHORIZED');
+
+      // Admins cannot do it either
+      await expect(createTestTransfer(db, { username: 'zerotozero', from: 0, to: 0 })).rejects.toThrow('UNAUTHORIZED');
+
+      // The request body is not validated, so the fids can arrive as strings
+      const zero = '0' as unknown as number;
+      await expect(createTestTransfer(db, { username: 'zerotozero', from: zero, to: zero })).rejects.toThrow(
+        'UNAUTHORIZED'
+      );
+      expect(await getLatestTransfer(db, 'zerotozero')).toBeUndefined();
+    });
+
+    test('a server signature cannot be replayed as an admin signature', async () => {
+      const user = ethers.Wallet.createRandom();
+      const now = currentTimestamp();
+      await createTestTransfer(
+        db,
+        {
+          username: 'replayserver',
+          to: 600,
+          owner: user.address,
+          timestamp: now,
+          userSignature: await generateSignature('replayserver', now, user.address, user),
+          userFid: 600,
+        },
+        600
+      );
+      const minted = await getLatestTransfer(db, 'replayserver');
+      expect(minted!.server_signature).not.toBe(minted!.user_signature);
+
+      // The server key is an admin key and it signs the same message, so its public signature verifies as an admin's
+      await expect(
+        createTestTransfer(db, {
+          username: 'replayserver',
+          from: 600,
+          to: 601,
+          owner: user.address,
+          timestamp: now,
+          userSignature: hexToBytes(minted!.server_signature),
+          userFid: signerFid,
+        })
+      ).rejects.toThrow('INVALID_TIMESTAMP');
+      expect((await getLatestTransfer(db, 'replayserver'))!.to).toBe(600);
+    });
+
+    test('an admin signature cannot be replayed with a different from and to', async () => {
+      const now = currentTimestamp();
+      await createTestTransfer(db, { username: 'replayadmin', to: 700, timestamp: now });
+
+      // createTestTransfer signs (name, timestamp, owner) again, which gives the same signature as the mint
+      await expect(
+        createTestTransfer(db, { username: 'replayadmin', from: 700, to: 701, timestamp: now })
+      ).rejects.toThrow('INVALID_TIMESTAMP');
+      await expect(
+        createTestTransfer(db, { username: 'replayadmin', from: 700, to: 0, timestamp: now })
+      ).rejects.toThrow('INVALID_TIMESTAMP');
+      expect((await getLatestTransfer(db, 'replayadmin'))!.to).toBe(700);
+
+      // A new signature with a later timestamp still works
+      await createTestTransfer(db, { username: 'replayadmin', from: 700, to: 701, timestamp: now + 1 });
+      expect((await getLatestTransfer(db, 'replayadmin'))!.to).toBe(701);
+    });
+
+    test('a reused timestamp is rejected when it arrives as a string', async () => {
+      const now = currentTimestamp();
+      await createTestTransfer(db, { username: 'replaystring', to: 710, timestamp: now });
+
+      await expect(
+        createTestTransfer(db, {
+          username: 'replaystring',
+          from: 710,
+          to: 711,
+          timestamp: String(now) as unknown as number,
+        })
+      ).rejects.toThrow('INVALID_TIMESTAMP');
+      expect((await getLatestTransfer(db, 'replaystring'))!.to).toBe(710);
+    });
+
+    test('retrying a request that already succeeded behaves as before', async () => {
+      const now = currentTimestamp();
+
+      // Mint and transfer retries return the existing transfer
+      const mint = await createTestTransfer(db, { username: 'retryname', to: 720, timestamp: now });
+      expect(await createTestTransfer(db, { username: 'retryname', to: 720, timestamp: now })).toEqual(mint);
+      const transfer = await createTestTransfer(db, { username: 'retryname', from: 720, to: 721, timestamp: now + 1 });
+      expect(await createTestTransfer(db, { username: 'retryname', from: 720, to: 721, timestamp: now + 1 })).toEqual(
+        transfer
+      );
+
+      // A burn retry keeps its error code
+      await createTestTransfer(db, { username: 'retryname', from: 721, to: 0, timestamp: now + 2 });
+      await expect(
+        createTestTransfer(db, { username: 'retryname', from: 721, to: 0, timestamp: now + 2 })
+      ).rejects.toThrow('USERNAME_NOT_FOUND');
+
+      // The name can be registered again with a later timestamp
+      await createTestTransfer(db, { username: 'retryname', to: 722, timestamp: now + 3 });
+      expect((await getLatestTransfer(db, 'retryname'))!.to).toBe(722);
     });
   });
 });

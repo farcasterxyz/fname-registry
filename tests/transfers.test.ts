@@ -452,19 +452,28 @@ describe('transfers', () => {
         tableLocked();
         await released;
       });
+      let settled: Promise<PromiseSettledResult<T>[]> | undefined;
       try {
         // If the table lock fails, holder rejects and this wait ends
         await Promise.race([locked, holder]);
 
-        const settled = Promise.allSettled(requests.map((run) => run()));
+        settled = Promise.allSettled(requests.map((run) => run()));
         // Release before a waiting request can reach the 5 second lock_timeout of createTransfer
         const deadline = Date.now() + 3_000;
+        let waiting = 0;
         while (Date.now() < deadline) {
-          const waiting = await sql<{
+          const result = await sql<{
             count: number;
           }>`SELECT count(*)::int AS count FROM pg_locks WHERE NOT granted`.execute(blocker);
-          if (waiting.rows[0]!.count >= requests.length) break;
+          waiting = result.rows[0]!.count;
+          if (waiting >= requests.length) break;
           await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+        // Without this, requests that reach the database one at a time pass the race tests without any locking
+        if (waiting < requests.length) {
+          throw new Error(
+            `runTogether: only ${waiting} of ${requests.length} requests were waiting on a lock at the deadline`
+          );
         }
         release();
         await holder;
@@ -473,6 +482,9 @@ describe('transfers', () => {
         // Always release the table lock, or the tests after this one hang
         release();
         await holder.catch(() => {});
+        // Started requests use the suite client, so wait for them before the next test. allSettled never rejects,
+        // so the original error is kept.
+        await settled;
         await blocker.destroy();
       }
     };

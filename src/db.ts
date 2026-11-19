@@ -35,11 +35,12 @@ export interface TransfersTable {
   userFid: number;
 }
 
-const getDbClient = (connectionUrl: string) => {
+const getDbClient = (connectionUrl: string, applicationName?: string) => {
   return new Kysely<Database>({
     dialect: new PostgresJSDialect({
       postgres: postgres(connectionUrl, {
         max: 20,
+        ...(applicationName ? { connection: { application_name: applicationName } } : {}),
         types: {
           // BigInts will not exceed Number.MAX_SAFE_INTEGER for our use case.
           // Return as JavaScript's `number` type so it's easier to work with.
@@ -60,8 +61,9 @@ export const getReadClient = () => {
   return getDbClient(POSTGRES_URL_READ);
 };
 
-export const getWriteClient = () => {
-  return getDbClient(POSTGRES_URL_WRITE);
+// applicationName tags the connections, so a query on pg_stat_activity can find them
+export const getWriteClient = (applicationName?: string) => {
+  return getDbClient(POSTGRES_URL_WRITE, applicationName);
 };
 
 export const migrateToLatest = async (db: Kysely<any>, log: Logger): Promise<Result<void, unknown>> => {

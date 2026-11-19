@@ -1,6 +1,7 @@
-import { getWriteClient, migrateToLatest } from '../src/db.js';
+import { randomUUID } from 'crypto';
+import { Database, getWriteClient, migrateToLatest } from '../src/db.js';
 import { log } from '../src/log.js';
-import { sql } from 'kysely';
+import { Kysely, sql } from 'kysely';
 import { getCurrentUsername, getLatestTransfer, TIMESTAMP_TOLERANCE } from '../src/transfers.js';
 import { currentTimestamp, hexToBytes } from '../src/util.js';
 import { createTestTransfer } from './utils.js';
@@ -434,6 +435,12 @@ describe('transfers', () => {
   });
 
   describe('concurrent requests', () => {
+    // The barrier wait plus the drain must fit in the raceTest timeout, so a barrier error is reported instead of a
+    // Jest timeout
+    const BARRIER_MS = 3_000;
+    const DRAIN_MS = 2_000;
+    const raceTest = (name: string, fn: () => Promise<void>) => test(name, fn, 15_000);
+
     const countTransfers = async (username: string) => {
       const rows = await db.selectFrom('transfers').select('id').where('username', '=', username).execute();
       return rows.length;
@@ -441,7 +448,11 @@ describe('transfers', () => {
 
     // Signature checks call an RPC, so requests reach the database at different times and a race shows up only by
     // chance. This holds a table lock until every request waits on a lock, then lets them all continue together.
-    const runTogether = async <T>(requests: (() => Promise<T>)[]) => {
+    // Each batch runs on its own client with a unique application_name, so the readiness count ignores sessions from
+    // other test files that share registry_test and also wait on the table lock.
+    const runTogether = async <T>(requests: ((client: Kysely<Database>) => Promise<T>)[]) => {
+      const batchName = `runTogether-${randomUUID()}`;
+      const batch = getWriteClient(batchName);
       const blocker = getWriteClient();
       let release = () => {};
       const released = new Promise<void>((resolve) => (release = resolve));
@@ -457,14 +468,15 @@ describe('transfers', () => {
         // If the table lock fails, holder rejects and this wait ends
         await Promise.race([locked, holder]);
 
-        settled = Promise.allSettled(requests.map((run) => run()));
+        settled = Promise.allSettled(requests.map((run) => run(batch)));
         // Release before a waiting request can reach the 5 second lock_timeout of createTransfer
-        const deadline = Date.now() + 3_000;
+        const deadline = Date.now() + BARRIER_MS;
         let waiting = 0;
         while (Date.now() < deadline) {
-          const result = await sql<{
-            count: number;
-          }>`SELECT count(*)::int AS count FROM pg_locks WHERE NOT granted`.execute(blocker);
+          const result = await sql<{ count: number }>`
+            SELECT count(DISTINCT l.pid)::int AS count
+            FROM pg_locks l JOIN pg_stat_activity a ON a.pid = l.pid
+            WHERE NOT l.granted AND a.application_name = ${batchName}`.execute(blocker);
           waiting = result.rows[0]!.count;
           if (waiting >= requests.length) break;
           await new Promise((resolve) => setTimeout(resolve, 50));
@@ -482,18 +494,23 @@ describe('transfers', () => {
         // Always release the table lock, or the tests after this one hang
         release();
         await holder.catch(() => {});
-        // Started requests use the suite client, so wait for them before the next test. allSettled never rejects,
-        // so the original error is kept.
-        await settled;
-        await blocker.destroy();
+        // On a failed barrier, some requests can still be in the signature RPC. Wait for them for at most DRAIN_MS,
+        // then close the batch client. A request that reaches the database after that fails, so it cannot write into
+        // the next test. allSettled never rejects and nothing here throws, so the original error is kept.
+        if (settled) {
+          let timer: ReturnType<typeof setTimeout> | undefined;
+          await Promise.race([settled, new Promise((resolve) => (timer = setTimeout(resolve, DRAIN_MS)))]);
+          clearTimeout(timer);
+        }
+        await Promise.allSettled([batch.destroy(), blocker.destroy()]);
       }
     };
 
-    test('one name cannot be registered to two fids at the same time', async () => {
+    raceTest('one name cannot be registered to two fids at the same time', async () => {
       const now = currentTimestamp();
       const fids = [800, 801, 802, 803, 804, 805];
       const results = await runTogether(
-        fids.map((to, i) => () => createTestTransfer(db, { username: 'racename', to, timestamp: now + i }))
+        fids.map((to, i) => (client) => createTestTransfer(client, { username: 'racename', to, timestamp: now + i }))
       );
 
       expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
@@ -505,11 +522,11 @@ describe('transfers', () => {
       expect(await countTransfers('racename')).toBe(1);
     });
 
-    test('one fid cannot register two names at the same time', async () => {
+    raceTest('one fid cannot register two names at the same time', async () => {
       const now = currentTimestamp();
       const names = ['racefid-a', 'racefid-b', 'racefid-c', 'racefid-d', 'racefid-e', 'racefid-f'];
       const results = await runTogether(
-        names.map((username) => () => createTestTransfer(db, { username, to: 810, timestamp: now }))
+        names.map((username) => (client) => createTestTransfer(client, { username, to: 810, timestamp: now }))
       );
 
       expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
@@ -522,12 +539,13 @@ describe('transfers', () => {
       expect(counts.reduce((a, b) => a + b, 0)).toBe(1);
     });
 
-    test('overlapping retries of one request record one transfer', async () => {
+    raceTest('overlapping retries of one request record one transfer', async () => {
       const now = currentTimestamp();
       const results = await runTogether(
         Array.from(
           { length: 6 },
-          () => () => createTestTransfer(db, { username: 'raceretry', to: 820, timestamp: now })
+          () => (client: Kysely<Database>) =>
+            createTestTransfer(client, { username: 'raceretry', to: 820, timestamp: now })
         )
       );
 
